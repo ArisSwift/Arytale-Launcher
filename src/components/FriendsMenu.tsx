@@ -283,6 +283,7 @@ const openExternalSafe = async (url: string) => {
 const API_BASE = "https://butter.lat";
 const WS_BASE = API_BASE.replace(/^http/, "ws");
 const WS_URL = `${WS_BASE}/api/matcha/ws`;
+const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
 const LS_TOKEN = "matcha:token";
 const LS_UNREAD_PREFIX = "matcha:unread:";
 const LS_DND_PREFIX = "matcha:dnd:";
@@ -292,6 +293,9 @@ type MatchaMe = {
   id: string;
   handle: string;
   role?: string;
+  supporter?: boolean;
+  supporterRank?: number;
+  supporterUntil?: string | null;
   createdAt?: string;
   messagesSentTotal?: number;
   totalMessagesSent?: number;
@@ -302,6 +306,7 @@ type MatchaMe = {
   avatarDisabled?: boolean;
   settings?: {
     hideServerIp?: boolean;
+    supporterColor?: string;
   };
 };
 
@@ -309,11 +314,15 @@ type MatchaPublicProfile = {
   id: string;
   handle: string;
   role?: string;
+  supporter?: boolean;
+  supporterRank?: number;
+  supporterUntil?: string | null;
   createdAt?: string | null;
   messagesSentTotal?: number;
   avatarHash?: string;
   avatarMode?: "hytale" | "custom" | string;
   avatarDisabled?: boolean;
+  supporterColor?: string;
   presence?: {
     state?:
       | "online"
@@ -355,6 +364,7 @@ type MsgRow = {
   fromHandle: string;
   fromIsDev?: boolean;
   fromBadge?: string;
+  fromColor?: string;
   fromAvatarHash?: string;
   toId: string | null;
   body: string;
@@ -645,6 +655,98 @@ export default function FriendsMenu({
   );
   const [userProfileRequestWorking, setUserProfileRequestWorking] = useState(false);
   const userProfileTargetIdRef = useRef<string>("");
+
+  const SUPPORTER_CTA_W = 320;
+  const [supporterCtaOpen, setSupporterCtaOpen] = useState(false);
+  const [supporterCtaPos, setSupporterCtaPos] = useState<
+    null | { left: number; top: number; placement: "above" | "below" }
+  >(null);
+  const supporterCtaAnchorRef = useRef<HTMLElement | null>(null);
+  const supporterCtaCloseTRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+
+  const [supporterBenefitsOpen, setSupporterBenefitsOpen] = useState(false);
+
+  const cancelCloseSupporterCta = useCallback(() => {
+    if (supporterCtaCloseTRef.current) {
+      clearTimeout(supporterCtaCloseTRef.current);
+      supporterCtaCloseTRef.current = null;
+    }
+  }, []);
+
+  const updateSupporterCtaPos = useCallback(() => {
+    const el = supporterCtaAnchorRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const half = SUPPORTER_CTA_W / 2;
+    const pad = 12;
+    const left = Math.min(
+      Math.max(x, pad + half),
+      Math.max(pad + half, window.innerWidth - pad - half),
+    );
+
+    const estH = 190;
+    const belowTop = rect.bottom + 10;
+    const overflowBelow = belowTop + estH > window.innerHeight - 8;
+    if (overflowBelow) {
+      setSupporterCtaPos({ left, top: rect.top - 10, placement: "above" });
+    } else {
+      setSupporterCtaPos({ left, top: belowTop, placement: "below" });
+    }
+  }, []);
+
+  const openSupporterCta = useCallback(
+    (el: HTMLElement | null) => {
+      if (!el) return;
+      supporterCtaAnchorRef.current = el;
+      cancelCloseSupporterCta();
+      setSupporterCtaOpen(true);
+      // Position immediately.
+      try {
+        const rect = el.getBoundingClientRect();
+        const x = rect.left + rect.width / 2;
+        const half = SUPPORTER_CTA_W / 2;
+        const pad = 12;
+        const left = Math.min(
+          Math.max(x, pad + half),
+          Math.max(pad + half, window.innerWidth - pad - half),
+        );
+        const estH = 190;
+        const belowTop = rect.bottom + 10;
+        const overflowBelow = belowTop + estH > window.innerHeight - 8;
+        setSupporterCtaPos(
+          overflowBelow
+            ? { left, top: rect.top - 10, placement: "above" }
+            : { left, top: belowTop, placement: "below" },
+        );
+      } catch {
+        // ignore
+      }
+    },
+    [cancelCloseSupporterCta],
+  );
+
+  const scheduleCloseSupporterCta = useCallback(() => {
+    cancelCloseSupporterCta();
+    supporterCtaCloseTRef.current = setTimeout(() => {
+      setSupporterCtaOpen(false);
+      supporterCtaAnchorRef.current = null;
+      supporterCtaCloseTRef.current = null;
+    }, 160);
+  }, [cancelCloseSupporterCta]);
+
+  useEffect(() => {
+    if (!supporterCtaOpen) return;
+    const onPos = () => updateSupporterCtaPos();
+    window.addEventListener("resize", onPos);
+    window.addEventListener("scroll", onPos, true);
+    return () => {
+      window.removeEventListener("resize", onPos);
+      window.removeEventListener("scroll", onPos, true);
+    };
+  }, [supporterCtaOpen, updateSupporterCtaPos]);
 
   const [regUser, setRegUser] = useState("");
   const [regPass, setRegPass] = useState("");
@@ -1681,6 +1783,61 @@ export default function FriendsMenu({
             }
           : prev,
       );
+    } catch (e) {
+      setProfileErr(String((e as any)?.message || "Failed"));
+    } finally {
+      setProfileSettingsWorking(false);
+    }
+  };
+
+  const [supporterColorDraft, setSupporterColorDraft] = useState<string>("");
+
+  useEffect(() => {
+    const current = String(me?.settings?.supporterColor || "").trim();
+    if (!supporterColorDraft) {
+      setSupporterColorDraft(current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [me?.settings?.supporterColor]);
+
+  const updateSupporterColor = async (nextValueRaw: string) => {
+    if (!token) return;
+    if (profileSettingsWorking) return;
+
+    const raw = String(nextValueRaw || "").trim();
+    if (raw && !/^#?[0-9a-fA-F]{6}$/.test(raw)) {
+      setProfileErr("Invalid color");
+      return;
+    }
+    const nextValue = raw ? (raw.startsWith("#") ? raw : `#${raw}`) : "";
+
+    setProfileSettingsWorking(true);
+    try {
+      const resp = await apiJson("/api/matcha/me/settings", {
+        method: "POST",
+        headers: authHeaders(token),
+        body: JSON.stringify({ supporterColor: nextValue }),
+      });
+      if (!resp?.ok) throw new Error(String(resp?.error || "Failed"));
+
+      const supporterColor = String(resp?.settings?.supporterColor || "");
+      setMe((prev) =>
+        prev
+          ? {
+              ...prev,
+              settings: { ...(prev.settings || {}), supporterColor },
+            }
+          : prev,
+      );
+      setProfileUser((prev) =>
+        prev
+          ? {
+              ...prev,
+              settings: { ...(prev.settings || {}), supporterColor },
+            }
+          : prev,
+      );
+      setSupporterColorDraft(supporterColor);
     } catch (e) {
       setProfileErr(String((e as any)?.message || "Failed"));
     } finally {
@@ -3180,54 +3337,77 @@ export default function FriendsMenu({
           <div className="flex items-center gap-2">
             {mode === "app" && me ? (
               <>
-                <button
-                  type="button"
-                  className={cn(
-                    "relative h-9 w-9 rounded-full border border-white/10 bg-black/35 hover:bg-white/5 hover:border-white/20 transition",
-                    "flex items-center justify-center overflow-hidden",
-                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
-                  )}
-                  title={t("friendsMenu.profile.open")}
-                  aria-label={t("friendsMenu.profile.open")}
-                  onClick={() => void openProfile()}
-                >
-                  <IconUserCircle
-                    className="absolute inset-0 h-full w-full text-white/35 pointer-events-none"
-                    stroke={1.6}
-                  />
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative h-9 w-9 rounded-full border border-white/10 bg-transparent hover:bg-white/5 hover:border-white/20 transition",
+                      "flex items-center justify-center",
+                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                    )}
+                    title={t("friendsMenu.supporterBenefits.open")}
+                    aria-label={t("friendsMenu.supporterBenefits.open")}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSupporterCtaOpen(false);
+                      supporterCtaAnchorRef.current = null;
+                      setSupporterBenefitsOpen(true);
+                    }}
+                  >
+                    <span className="text-[16px] leading-none opacity-90">👑</span>
+                  </button>
 
-                  {(() => {
-                    const userId = String(me.id || "").trim();
-                    const h =
-                      avatarHashByUserId[userId] || String(me.avatarHash || "").trim();
-                    const broken = !!avatarBrokenByUserId[userId];
-                    const src = !broken ? avatarUrlFor(userId, h) : null;
-                    if (src) {
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative h-9 w-9 rounded-full border border-white/10 bg-black/35 hover:bg-white/5 hover:border-white/20 transition",
+                      "flex items-center justify-center overflow-hidden",
+                      "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                    )}
+                    title={t("friendsMenu.profile.open")}
+                    aria-label={t("friendsMenu.profile.open")}
+                    onClick={() => void openProfile()}
+                  >
+                    <IconUserCircle
+                      className="absolute inset-0 h-full w-full text-white/35 pointer-events-none"
+                      stroke={1.6}
+                    />
+
+                    {(() => {
+                      const userId = String(me.id || "").trim();
+                      const h =
+                        avatarHashByUserId[userId] ||
+                        String(me.avatarHash || "").trim();
+                      const broken = !!avatarBrokenByUserId[userId];
+                      const src = !broken ? avatarUrlFor(userId, h) : null;
+                      if (src) {
+                        return (
+                          <div className="relative h-7 w-7 rounded-full overflow-hidden border border-white/10 bg-black/35">
+                            <img
+                              src={src}
+                              alt={String(me.handle || "")}
+                              className="h-full w-full object-cover"
+                              onError={() =>
+                                setAvatarBrokenByUserId((prev) => ({
+                                  ...prev,
+                                  [userId]: true,
+                                }))
+                              }
+                            />
+                          </div>
+                        );
+                      }
                       return (
-                        <div className="relative h-7 w-7 rounded-full overflow-hidden border border-white/10 bg-black/35">
-                          <img
-                            src={src}
-                            alt={String(me.handle || "")}
-                            className="h-full w-full object-cover"
-                            onError={() =>
-                              setAvatarBrokenByUserId((prev) => ({
-                                ...prev,
-                                [userId]: true,
-                              }))
-                            }
-                          />
+                        <div className="relative h-7 w-7 rounded-full overflow-hidden border border-white/10 bg-black/35 flex items-center justify-center">
+                          <span className="text-[10px] font-extrabold text-white/80">
+                            {initials(String(me.handle || ""))}
+                          </span>
                         </div>
                       );
-                    }
-                    return (
-                      <div className="relative h-7 w-7 rounded-full overflow-hidden border border-white/10 bg-black/35 flex items-center justify-center">
-                        <span className="text-[10px] font-extrabold text-white/80">
-                          {initials(String(me.handle || ""))}
-                        </span>
-                      </div>
-                    );
-                  })()}
-                </button>
+                    })()}
+                  </button>
+                </div>
 
                 <button
                   type="button"
@@ -3276,6 +3456,113 @@ export default function FriendsMenu({
             logout();
           }}
         />
+
+        {supporterBenefitsOpen && typeof document !== "undefined" && document.body
+          ? createPortal(
+              <div
+                className="fixed inset-0 z-[999999] flex items-center justify-center glass-backdrop animate-fade-in"
+                onMouseDown={(e) => {
+                  if (e.target !== e.currentTarget) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSupporterBenefitsOpen(false);
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                role="dialog"
+                aria-modal="true"
+                aria-label={t("friendsMenu.supporterBenefits.title")}
+              >
+                <div
+                  className={cn(
+                    "w-full max-w-[460px] rounded-2xl border border-white/10",
+                    "bg-black/70 backdrop-blur shadow-2xl p-4",
+                    "animate-popIn",
+                  )}
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="text-xs font-extrabold tracking-widest text-white/70 uppercase">
+                      {t("friendsMenu.supporterBenefits.title")}
+                    </div>
+                    <button
+                      type="button"
+                      className="px-2 py-1 text-xs rounded-lg border border-white/10 bg-black/25 hover:bg-white/5 transition text-white"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSupporterBenefitsOpen(false);
+                      }}
+                    >
+                      {t("common.close")}
+                    </button>
+                  </div>
+
+                  <div className="mt-2 text-xs text-gray-200 leading-relaxed">
+                    {t("friendsMenu.supporterBenefits.body")}
+                  </div>
+
+                  <div className="mt-3 rounded-xl border border-white/10 bg-black/25 px-3 py-3">
+                    <div className="text-[10px] font-extrabold tracking-widest text-white/60 uppercase">
+                      {t("friendsMenu.supporterBenefits.benefitsTitle")}
+                    </div>
+                    <ul className="mt-2 space-y-1.5 text-xs text-white/80">
+                      <li className="flex gap-2">
+                        <span className="text-white/40">•</span>
+                        <span>{t("friendsMenu.supporterBenefits.benefit1")}</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="text-white/40">•</span>
+                        <span>{t("friendsMenu.supporterBenefits.benefit2")}</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="text-white/40">•</span>
+                        <span>{t("friendsMenu.supporterBenefits.benefit3")}</span>
+                      </li>
+                      <li className="flex gap-2">
+                        <span className="text-white/40">•</span>
+                        <span>{t("friendsMenu.supporterBenefits.benefit4")}</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="mt-4 flex gap-2">
+                    <button
+                      type="button"
+                      className="flex-1 px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg flex items-center justify-center gap-2"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        void openExternalSafe(SUPPORTER_PATREON_URL);
+                      }}
+                    >
+                      <span>{t("friendsMenu.supporterBenefits.patreonButton")}</span>
+                      <IconArrowUpRight className="h-4 w-4" stroke={2} />
+                    </button>
+                    <button
+                      type="button"
+                      className="px-4 py-2 rounded-lg border border-white/10 bg-black/25 hover:bg-white/5 transition text-white font-bold"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSupporterBenefitsOpen(false);
+                      }}
+                    >
+                      {t("common.close")}
+                    </button>
+                  </div>
+                </div>
+              </div>,
+              document.body,
+            )
+          : null}
 
         {profileOpen && typeof document !== "undefined" && document.body
           ? createPortal(
@@ -4068,6 +4355,72 @@ export default function FriendsMenu({
                         />
                       </div>
                     </div>
+
+                    {!!(profileUser || me)?.supporter ? (
+                      <div className="rounded-xl border border-white/10 bg-black/25 px-3 py-2">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="min-w-0">
+                            <div className="text-[10px] font-extrabold tracking-widest text-white/60 uppercase">
+                              {t("friendsMenu.profile.supporterColorTitle", {
+                                defaultValue: "Supporter message color",
+                              })}
+                            </div>
+                            <div className="mt-1 text-[11px] text-white/70">
+                              {t("friendsMenu.profile.supporterColorHint", {
+                                defaultValue:
+                                  "This color is used for your chat bubbles.",
+                              })}
+                            </div>
+                          </div>
+
+                          <div className="shrink-0 flex items-center gap-2">
+                            <input
+                              type="color"
+                              value={(() => {
+                                const v = String(supporterColorDraft || "").trim();
+                                return /^#?[0-9a-fA-F]{6}$/.test(v)
+                                  ? v.startsWith("#")
+                                    ? v
+                                    : `#${v}`
+                                  : "#ffffff";
+                              })()}
+                              disabled={
+                                profileLoading ||
+                                profileSettingsWorking ||
+                                !token ||
+                                mode !== "app"
+                              }
+                              onChange={(e) => {
+                                const v = String(e.target.value || "").trim();
+                                setSupporterColorDraft(v);
+                              }}
+                              className={cn(
+                                "h-8 w-10 rounded-lg border border-white/10 bg-black/35",
+                                (profileLoading || profileSettingsWorking) && "opacity-60",
+                              )}
+                            />
+                            <button
+                              type="button"
+                              className={cn(
+                                "px-3 h-8 rounded-lg font-extrabold text-xs border border-white/10",
+                                "bg-black/35 hover:bg-white/5 transition text-white",
+                                (profileLoading || profileSettingsWorking) &&
+                                  "opacity-60 cursor-not-allowed hover:bg-black/35",
+                              )}
+                              disabled={
+                                profileLoading ||
+                                profileSettingsWorking ||
+                                !token ||
+                                mode !== "app"
+                              }
+                              onClick={() => void updateSupporterColor(supporterColorDraft)}
+                            >
+                              {t("common.save", { defaultValue: "Save" })}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </div>,
@@ -4099,12 +4452,38 @@ export default function FriendsMenu({
                   className={cn(
                     "w-full max-w-[460px] rounded-3xl border border-white/10",
                     "bg-black/75 backdrop-blur shadow-2xl overflow-hidden",
-                    "animate-popIn",
+                    "animate-popIn relative",
                   )}
+                  style={(() => {
+                    const isSupporter = !!userProfileUser?.supporter;
+                    if (!isSupporter) return undefined;
+                    const c = String(userProfileUser?.supporterColor || "").trim();
+                    if (!/^#[0-9a-fA-F]{6}$/.test(c)) return undefined;
+                    const r = parseInt(c.slice(1, 3), 16);
+                    const g = parseInt(c.slice(3, 5), 16);
+                    const b = parseInt(c.slice(5, 7), 16);
+                    return {
+                      borderColor: c,
+                      backgroundImage: `linear-gradient(180deg, rgba(${r}, ${g}, ${b}, 0.22) 0%, rgba(0,0,0,0.78) 58%)`,
+                    };
+                  })()}
                   onClick={(e) => e.stopPropagation()}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <div className="p-4">
+                  {(() => {
+                    const isSupporter = !!userProfileUser?.supporter;
+                    if (!isSupporter) return null;
+                    const c = String(userProfileUser?.supporterColor || "").trim();
+                    if (!/^#[0-9a-fA-F]{6}$/.test(c)) return null;
+                    return (
+                      <div
+                        className="pointer-events-none absolute left-0 top-0 h-1 w-full"
+                        style={{ backgroundColor: c }}
+                      />
+                    );
+                  })()}
+
+                  <div className="relative z-10 p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="text-[10px] font-extrabold tracking-widest text-white/70 uppercase">
@@ -4118,6 +4497,7 @@ export default function FriendsMenu({
 
                           {(() => {
                             const role = String(userProfileUser?.role || "").toLowerCase();
+                            const isSupporter = !!userProfileUser?.supporter;
                             if (role === "dev") {
                               return (
                                 <span className="px-2 py-1 rounded-lg bg-red-600/80 text-white text-[10px] font-black tracking-widest uppercase">
@@ -4130,6 +4510,42 @@ export default function FriendsMenu({
                                 <span className="px-2 py-1 rounded-lg border border-sky-300/25 bg-sky-500/15 text-sky-200 text-[10px] font-black tracking-widest uppercase">
                                   MOD
                                 </span>
+                              );
+                            }
+                            if (isSupporter) {
+                              const c = String(userProfileUser?.supporterColor || "").trim();
+                              const hasC = /^#[0-9a-fA-F]{6}$/.test(c);
+                              return (
+                                <button
+                                  type="button"
+                                  className={cn(
+                                    "px-2.5 py-1 rounded-xl text-[12px] font-black leading-none",
+                                    hasC
+                                      ? "text-white shadow-lg border border-white/15 ring-1 ring-white/10"
+                                      : "border border-blue-300/35 ring-1 ring-white/10 shadow-lg shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-cyan-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
+                                  )}
+                                  style={
+                                    hasC
+                                      ? {
+                                          backgroundColor: c,
+                                        }
+                                      : undefined
+                                  }
+                                  title={t("friendsMenu.supporter", {
+                                    defaultValue: "Supporter",
+                                  })}
+                                  onMouseEnter={(e) =>
+                                    openSupporterCta(e.currentTarget as HTMLElement)
+                                  }
+                                  onMouseLeave={() => scheduleCloseSupporterCta()}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    void openExternalSafe(SUPPORTER_PATREON_URL);
+                                  }}
+                                >
+                                  👑
+                                </button>
                               );
                             }
                             return null;
@@ -5635,6 +6051,7 @@ export default function FriendsMenu({
                                           const isDev =
                                             m.fromIsDev || badge === "dev";
                                           const isMod = badge === "mod";
+                                          const isSupporter = badge === "supporter";
 
                                           if (isDev) {
                                             return (
@@ -5648,6 +6065,46 @@ export default function FriendsMenu({
                                               <span className="px-1.5 py-0.5 rounded-full border border-sky-300/25 bg-sky-500/15 text-sky-200 text-[9px] font-black uppercase">
                                                 MOD
                                               </span>
+                                            );
+                                          }
+                                          if (isSupporter) {
+                                            const c = String(m.fromColor || "").trim();
+                                            const hasC = /^#[0-9a-fA-F]{6}$/.test(c);
+                                            return (
+                                              <button
+                                                type="button"
+                                                className={cn(
+                                                  "px-1.5 py-0.5 rounded-full text-[9px] font-black leading-none",
+                                                  hasC
+                                                    ? "text-white shadow-sm border border-white/15 ring-1 ring-white/10"
+                                                    : "border border-blue-300/35 ring-1 ring-white/10 shadow-md shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-cyan-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
+                                                )}
+                                                style={
+                                                  hasC
+                                                    ? {
+                                                        backgroundColor: c,
+                                                      }
+                                                    : undefined
+                                                }
+                                                title={t("friendsMenu.supporter", {
+                                                  defaultValue: "Supporter",
+                                                })}
+                                                onMouseEnter={(e) =>
+                                                  openSupporterCta(
+                                                    e.currentTarget as HTMLElement,
+                                                  )
+                                                }
+                                                onMouseLeave={() => scheduleCloseSupporterCta()}
+                                                onClick={(e) => {
+                                                  e.preventDefault();
+                                                  e.stopPropagation();
+                                                  void openExternalSafe(
+                                                    SUPPORTER_PATREON_URL,
+                                                  );
+                                                }}
+                                              >
+                                                👑
+                                              </button>
                                             );
                                           }
                                           return null;
@@ -5706,6 +6163,20 @@ export default function FriendsMenu({
                                     highlightMsgId === m.id &&
                                       "border-blue-300/90 ring-4 ring-blue-400/60 shadow-xl shadow-blue-500/30 motion-safe:animate-pulse",
                                   )}
+                                  style={(() => {
+                                    const badge = String(m.fromBadge || "").toLowerCase();
+                                    if (badge !== "supporter") return undefined;
+                                    const c = String(m.fromColor || "").trim();
+                                    if (!/^#[0-9a-fA-F]{6}$/.test(c)) return undefined;
+                                    const r = parseInt(c.slice(1, 3), 16);
+                                    const g = parseInt(c.slice(3, 5), 16);
+                                    const b = parseInt(c.slice(5, 7), 16);
+                                    const a = isMe ? 0.65 : 0.12;
+                                    return {
+                                      borderColor: c,
+                                      backgroundColor: `rgba(${r}, ${g}, ${b}, ${a})`,
+                                    };
+                                  })()}
                                 >
                                   {m.replyToId ? (
                                     <button
@@ -6790,6 +7261,63 @@ export default function FriendsMenu({
             </div>
           </div>
         ) : null}
+
+        {supporterCtaOpen && supporterCtaPos
+          ? createPortal(
+              <div
+                className={cn(
+                  "fixed z-[999999]",
+                  "w-[320px] max-w-[calc(100vw-24px)]",
+                  "rounded-2xl border border-white/10 bg-black/80 backdrop-blur",
+                  "shadow-2xl p-3",
+                )}
+                style={{
+                  left: supporterCtaPos.left,
+                  top: supporterCtaPos.top,
+                  transform:
+                    supporterCtaPos.placement === "above"
+                      ? "translate(-50%, -100%)"
+                      : "translateX(-50%)",
+                }}
+                role="tooltip"
+                onMouseEnter={() => cancelCloseSupporterCta()}
+                onMouseLeave={() => scheduleCloseSupporterCta()}
+                onMouseDown={(e) => {
+                  e.stopPropagation();
+                  try {
+                    (e.nativeEvent as any)?.stopImmediatePropagation?.();
+                  } catch {}
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  try {
+                    (e.nativeEvent as any)?.stopImmediatePropagation?.();
+                  } catch {}
+                }}
+              >
+                <div className="text-[10px] font-extrabold tracking-widest text-white/70 uppercase">
+                  {t("friendsMenu.supporter", { defaultValue: "Supporter" })}
+                </div>
+                <div className="mt-1 text-[11px] text-gray-200 leading-snug">
+                  {t("friendsMenu.supporterCta")}
+                </div>
+                <button
+                  type="button"
+                  className="mt-3 w-full px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    void openExternalSafe(SUPPORTER_PATREON_URL);
+                    setSupporterCtaOpen(false);
+                    supporterCtaAnchorRef.current = null;
+                  }}
+                >
+                  {t("friendsMenu.supporterCtaButton")}
+                </button>
+              </div>,
+              document.body,
+            )
+          : null}
       </div>
     </div>
   );

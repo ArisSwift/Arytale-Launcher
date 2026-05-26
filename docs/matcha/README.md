@@ -49,6 +49,24 @@ Common auth failures:
   - Global chat: `with=global`
   - DMs: load by user id: `with=<otherUserId>`
 
+## Roles, badges, and Supporter Rank
+
+Matcha has **two parallel concepts** you can surface in the UI:
+
+- **Role** (`user.role`): staff-like roles used for moderation/administration.
+   - Typical values: `user`, `mod`, `dev`.
+   - Clients normally render this as a badge/tag next to the name.
+- **Supporter Rank** (`user.supporter*` fields): a separate, time-limited entitlement.
+   - `supporter`: boolean flag (true if an active entitlement exists).
+   - `supporterRank`: number (tier/level).
+   - `supporterUntil`: ISO date string (expiry).
+
+Notes:
+
+- Supporter Rank is **not** the same as `role` and should not grant moderation permissions.
+- In UI, it’s common to display a crown 👑 for supporters. If you want strict precedence, show staff badges (`dev`/`mod`) first, then the supporter crown.
+- Supporters may have a cosmetic `supporterColor` for message styling (server may normalize/validate the value).
+
 ## Recommended integration flow
 
 1. Register (recommended: two-step “Secure Key” flow) or login.

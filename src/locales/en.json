@@ -160,6 +160,13 @@
       "requiresBuild1": "You must install Build-1 before downloading other versions.",
       "manualInstallRequired": "Needs to be installed manually.",
       "invalidBuild1Folder": "The selected folder doesn't look like Build-1. Missing: {{missing}}. Select the folder that contains Client, Server and assets.zip."
+    },
+    "supporters": {
+      "required": {
+        "title": "Supporters only",
+        "message": "Supporter Rank is required to use the version manager.",
+        "donate": "Donate on Patreon"
+      }
     }
   },
   "serversModal": {
@@ -239,7 +246,9 @@
       "dndTitle": "Do Not Disturb",
       "dndHint": "Mutes DM notification sounds",
       "hideServerIpTitle": "Hide server IP",
-      "hideServerIpHint": "Hides the server address from friends while you’re in multiplayer"
+      "hideServerIpHint": "Hides the server address from friends while you’re in multiplayer",
+      "supporterColorTitle": "Supporter message color",
+      "supporterColorHint": "This color is used for your chat bubbles."
     },
 
     "userProfile": {
@@ -262,7 +271,7 @@
     },
     "friendsHeader": "FRIENDS ({{online}}/{{total}} Online)",
     "friends": "Friends",
-    "globalChat": "Global Chat",
+    "globalChat": "Chat",
     "logout": "Logout",
     "logoutConfirmTitle": "Logout",
     "logoutConfirmMessage": "Are you sure you want to log out?",
@@ -273,6 +282,20 @@
     "createAccount": "Create account",
     "you": "You",
     "devs": "DEV",
+    "supporter": "Supporter",
+    "supporterCta": "Want a special role, version manager, custom color, and many more benefits? Get Supporter Rank by donating on Patreon.",
+    "supporterCtaButton": "Donate on Patreon",
+    "supporterBenefits": {
+      "open": "Supporter Rank",
+      "title": "SUPPORTER RANK",
+      "body": "Supporters help keep Butter Launcher alive and improve Matcha. If you enjoy the launcher, consider supporting on Patreon.",
+      "benefitsTitle": "BENEFITS",
+      "benefit1": "Supporter crown in Matcha.",
+      "benefit2": "Custom supporter color (used on your crown, profile accents, and chat bubbles).",
+      "benefit3": "Unlocks pre-releases and older versions.",
+      "benefit4": "Your name appears highlighted in the Supporters list.",
+      "patreonButton": "Open Patreon"
+    },
     "deleted": "Message deleted.",
     "deletedByAdmin": "Message deleted by an administrator.",
     "scrollUp": "Scroll up to load older messages.",
@@ -927,6 +950,14 @@
       "onlineFix": "Online Fix",
       "systemLauncher": "System Launcher",
       "designLauncher": "Design Launcher"
+    },
+    "supporters": {
+      "label": "Supporters",
+      "description": "Supporters help keep Butter Launcher running. Supporter Rank also unlocks pre-releases and older versions, plus Matcha perks like the Supporter crown and a custom profile color.",
+      "donate": "Donate on Patreon",
+      "loadFailed": "Failed to load supporters list.",
+      "hint": "Set VITE_SUPPORTERS_URL to a public supporters.json.",
+      "empty": "No supporters listed yet."
     },
     "updates": {
       "check": "CHECK FOR UPDATES",

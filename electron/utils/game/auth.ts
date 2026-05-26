@@ -11,7 +11,7 @@ export type AuthTokens = {
 
 const OFFICIAL_ACCOUNT_DATA_BASE = "https://account-data.hytale.com";
 const OFFICIAL_SESSIONS_BASE = "https://sessions.hytale.com";
-const DEFAULT_HYTALE_LAUNCHER_UA = "hytale-launcher/2026.02.12-54e579b";
+const DEFAULT_HYTALE_LAUNCHER_UA = "hytale-launcher/2026.05.14-26cebac";
 const OFFICIAL_ISSUER = "https://sessions.hytale.com";
 
 const premiumHttpDebugEnabled = () => {

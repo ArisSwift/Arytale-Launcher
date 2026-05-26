@@ -1210,6 +1210,66 @@ const restoreFromBackground = () => {
   // Keep current presence; if no game is running it will be "Choosing Version".
 };
 
+const BACKGROUNDING_ANIM_MS = 360;
+let backgroundingAnimToken = 0;
+let backgroundingAnimPending: { token: number; resolve: () => void; timeout: NodeJS.Timeout } | null = null;
+
+ipcMain.on("window:backgrounding:done", (_, payload?: { token?: unknown }) => {
+  const token = typeof payload?.token === "number" ? payload.token : null;
+  if (!token) return;
+  if (!backgroundingAnimPending) return;
+  if (backgroundingAnimPending.token !== token) return;
+
+  try {
+    clearTimeout(backgroundingAnimPending.timeout);
+  } catch {
+    // ignore
+  }
+
+  try {
+    backgroundingAnimPending.resolve();
+  } finally {
+    backgroundingAnimPending = null;
+  }
+});
+
+const requestRendererBackgroundingAnimation = async (ms = BACKGROUNDING_ANIM_MS): Promise<void> => {
+  if (!win) return;
+  if (win.isDestroyed()) return;
+
+  // If a previous animation request is pending, resolve it early.
+  if (backgroundingAnimPending) {
+    try {
+      clearTimeout(backgroundingAnimPending.timeout);
+    } catch {
+      // ignore
+    }
+    try {
+      backgroundingAnimPending.resolve();
+    } catch {
+      // ignore
+    }
+    backgroundingAnimPending = null;
+  }
+
+  const token = ++backgroundingAnimToken;
+  const safeMs = Number.isFinite(ms) ? Math.max(120, Math.min(1200, ms)) : BACKGROUNDING_ANIM_MS;
+
+  try {
+    win.webContents.send("window:backgrounding", { token, ms: safeMs });
+  } catch {
+    return;
+  }
+
+  await new Promise<void>((resolve) => {
+    const timeout = setTimeout(() => {
+      if (backgroundingAnimPending?.token === token) backgroundingAnimPending = null;
+      resolve();
+    }, safeMs + 250);
+    backgroundingAnimPending = { token, resolve, timeout };
+  });
+};
+
 const ensureTray = () => {
   if (tray) return tray;
   if (trayUnavailable) return null;
@@ -1249,7 +1309,7 @@ const ensureTray = () => {
   return tray;
 };
 
-const moveToBackground = () => {
+const moveToBackgroundNow = () => {
   if (!win) return;
 
   isBackgroundMode = true;
@@ -1271,6 +1331,19 @@ const moveToBackground = () => {
 
   // Reduce background chatter (best-effort).
   // Note: keep Discord Rich Presence active while in tray/background.
+};
+
+const moveToBackground = async (opts?: { animate?: boolean; ms?: number }) => {
+  const animate = !!opts?.animate;
+  if (animate) {
+    try {
+      await requestRendererBackgroundingAnimation(typeof opts?.ms === "number" ? opts.ms : BACKGROUNDING_ANIM_MS);
+    } catch {
+      // ignore
+    }
+  }
+
+  moveToBackgroundNow();
 };
 
 const blockDevToolsHotkey = (w: BrowserWindow) => {
@@ -1506,7 +1579,7 @@ function createWindow() {
 
     if (isGameRunning || isHostServerRunning()) {
       e.preventDefault();
-      moveToBackground();
+      void moveToBackground({ animate: isGameRunning });
       return;
     }
 
@@ -5319,7 +5392,7 @@ ipcMain.on(
             // Give the user a few seconds to see the launcher state change,
             // then move to tray/background while the game is running.
             backgroundTimeout = setTimeout(() => {
-              moveToBackground();
+              void moveToBackground({ animate: true });
               backgroundTimeout = null;
             }, 3000);
           }

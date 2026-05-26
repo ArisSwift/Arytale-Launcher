@@ -169,7 +169,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
 
     const timer = window.setTimeout(() => {
       try {
-        window.ipcRenderer?.send("focus-window");
+        window.ipcRenderer?.send("focus-window");//ipconfig flush dn
       } catch {
         // ignore
       }

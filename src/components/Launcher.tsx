@@ -58,6 +58,9 @@ type HytaleFeedItem = {
 const HYTALE_FEED_URL =
   "https://launcher.hytale.com/launcher-feed/release/feed.json";
 
+const MATCHA_API_BASE = "https://butter.lat";
+const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
+
 const HYTALE_FEED_IMAGE_BASE =
   "https://launcher.hytale.com/launcher-feed/release/";
 
@@ -222,6 +225,93 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
   const [friendsMenuOpenTo, setFriendsMenuOpenTo] = useState<"friends" | "globalChat">("friends");
   const [friendsMenuOpenNonce, setFriendsMenuOpenNonce] = useState(0);
   const [friendsHasUnread, setFriendsHasUnread] = useState(false);
+
+  const [supporterGateOpen, setSupporterGateOpen] = useState(false);
+  const [matchaSupporter, setMatchaSupporter] = useState<boolean | null>(null);
+  const [matchaSupporterCheckedAt, setMatchaSupporterCheckedAt] =
+    useState<number>(0);
+
+  const accountType = (() => {
+    try {
+      const raw = (localStorage.getItem("accountType") || "").trim();
+      // Normalize any non-empty legacy value to the non-official mode.
+      return raw === "premium" ? "premium" : raw ? "custom" : raw;
+    } catch {
+      return "";
+    }
+  })();
+
+  const isCustom = accountType === "custom";
+  const isPremium = accountType === "premium";
+  const restrictVersionsUntilBuild1 = isCustom || isPremium;
+
+  const checkMatchaSupporterRank = useCallback(async (): Promise<boolean> => {
+    const now = Date.now();
+    if (matchaSupporter !== null && now - matchaSupporterCheckedAt < 60_000) {
+      return matchaSupporter;
+    }
+
+    let token = "";
+    try {
+      token = (localStorage.getItem("matcha:token") || "").trim();
+    } catch {
+      token = "";
+    }
+
+    if (!token) {
+      setMatchaSupporter(false);
+      setMatchaSupporterCheckedAt(now);
+      return false;
+    }
+
+    try {
+      const resp = await window.ipcRenderer.invoke(
+        "fetch:json",
+        `${MATCHA_API_BASE}/api/matcha/me`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const ok = !!resp?.user?.supporter;
+      setMatchaSupporter(ok);
+      setMatchaSupporterCheckedAt(now);
+      return ok;
+    } catch {
+      setMatchaSupporter(false);
+      setMatchaSupporterCheckedAt(now);
+      return false;
+    }
+  }, [matchaSupporter, matchaSupporterCheckedAt]);
+
+  const isSupporterOnlyVersion = useCallback((v: GameVersion | null): boolean => {
+    if (!v) return false;
+    if (v.type === "pre-release") {
+      // Non-premium: all pre-releases require Supporter Rank.
+      if (!isPremium) return true;
+
+      // Premium: allow the latest pre-release for everyone; gate older ones.
+      if (v.isLatest) return false;
+      const maxBuildIndex = availableVersions.reduce((acc, x) => {
+        if (!x || x.type !== "pre-release") return acc;
+        const n = typeof x.build_index === "number" ? x.build_index : Number(x.build_index);
+        return Number.isFinite(n) ? Math.max(acc, n) : acc;
+      }, -Infinity);
+      if (Number.isFinite(maxBuildIndex) && v.build_index === maxBuildIndex) return false;
+      return true;
+    }
+
+    // Old release builds are supporters-only.
+    if (v.type === "release") {
+      if (v.isLatest) return false;
+      const maxBuildIndex = availableVersions.reduce((acc, x) => {
+        if (!x || x.type !== "release") return acc;
+        const n = typeof x.build_index === "number" ? x.build_index : Number(x.build_index);
+        return Number.isFinite(n) ? Math.max(acc, n) : acc;
+      }, -Infinity);
+      if (Number.isFinite(maxBuildIndex) && v.build_index === maxBuildIndex) return false;
+      return true;
+    }
+
+    return false;
+  }, [availableVersions, isPremium]);
 
   useEffect(() => {
     const ipc = (window as any)?.ipcRenderer;
@@ -477,20 +567,6 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
   const [versionToDelete, setVersionToDelete] = useState<GameVersion | null>(
     null,
   );
-
-  const accountType = (() => {
-    try {
-      const raw = (localStorage.getItem("accountType") || "").trim();
-      // Normalize any non-empty legacy value to the non-official mode.
-      return raw === "premium" ? "premium" : raw ? "custom" : raw;
-    } catch {
-      return "";
-    }
-  })();
-
-  const isCustom = accountType === "custom";
-  const isPremium = accountType === "premium";
-  const restrictVersionsUntilBuild1 = isCustom || isPremium;
 
   const hasInstalledBaseBelow = (targetBuildIndex: number): boolean => {
     const target = Number(targetBuildIndex);
@@ -996,7 +1072,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
     };
   }, [gameDir, refreshOnlinePatchHealth]);
 
-  const handleLaunch = () => {
+  const handleLaunch = async () => {
     if (selectedVersion == null || !availableVersions[selectedVersion]) return;
     if (!username) return;
 
@@ -1024,6 +1100,14 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
     if (v.installed) {
       launchGame(v, username);
       return;
+    }
+
+    if (isSupporterOnlyVersion(v)) {
+      const ok = await checkMatchaSupporterRank();
+      if (!ok) {
+        setSupporterGateOpen(true);
+        return;
+      }
     }
 
     installGame(v);
@@ -1225,7 +1309,16 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     "bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white shadow",
                 )}
                 onClick={() => {
-                  setVersionType("pre-release");
+                  void (async () => {
+                    if (!isPremium) {
+                      const ok = await checkMatchaSupporterRank();
+                      if (!ok) {
+                        setSupporterGateOpen(true);
+                        return;
+                      }
+                    }
+                    setVersionType("pre-release");
+                  })();
                 }}
               >
                 {t("launcher.version.preRelease")}
@@ -1266,13 +1359,23 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                         isLocked && "opacity-40 cursor-not-allowed hover:bg-transparent hover:text-gray-200",
                       )}
                       onClick={() => {
-                        if (isLocked) {
-                          alert(t("launcher.version.requiresBuild1"));
-                          return;
-                        }
+                        void (async () => {
+                          if (isLocked) {
+                            alert(t("launcher.version.requiresBuild1"));
+                            return;
+                          }
 
-                        setSelectedVersion(idx);
-                        setVersionsOpen(false);
+                          if (isSupporterOnlyVersion(v)) {
+                            const ok = await checkMatchaSupporterRank();
+                            if (!ok) {
+                              setSupporterGateOpen(true);
+                              return;
+                            }
+                          }
+
+                          setSelectedVersion(idx);
+                          setVersionsOpen(false);
+                        })();
                       }}
                     >
                       <div className="flex flex-col">
@@ -2193,6 +2296,30 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
         markdownUrl={patchNotesUrl}
         channel={patchNotesChannel}
         onClose={() => setPatchNotesOpen(false)}
+      />
+
+      <ConfirmModal
+        open={supporterGateOpen}
+        title={t("launcher.supporters.required.title", {
+          defaultValue: "Supporters only",
+        })}
+        message={t("launcher.supporters.required.message", {
+          defaultValue:
+            "You need Supporter Rank in your Matcha Account to use the version manager.",
+        })}
+        cancelText={t("common.back")}
+        confirmText={t("launcher.supporters.required.donate", {
+          defaultValue: "Donate on Patreon",
+        })}
+        onCancel={() => setSupporterGateOpen(false)}
+        onConfirm={() => {
+          setSupporterGateOpen(false);
+          try {
+            void window.config.openExternal(SUPPORTER_PATREON_URL);
+          } catch {
+            // ignore
+          }
+        }}
       />
 
       <ConfirmModal

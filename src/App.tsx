@@ -438,6 +438,72 @@ export default function App() {
     };
   }, [setUsername]);
 
+  useEffect(() => {
+    const ipc = window.ipcRenderer;
+    if (!ipc) return;
+
+    let cleanupTimeout: number | null = null;
+    let ackTimeout: number | null = null;
+
+    const onBackgrounding = (_: unknown, payload?: { token?: unknown; ms?: unknown }) => {
+      const token = typeof payload?.token === "number" ? payload.token : null;
+      if (!token) return;
+
+      const msRaw = typeof payload?.ms === "number" ? payload.ms : 360;
+      const ms = Number.isFinite(msRaw) ? Math.max(120, Math.min(1200, msRaw)) : 360;
+
+      try {
+        document.body.style.setProperty("--butter-tray-close-ms", `${ms}ms`);
+      } catch {
+        // ignore
+      }
+
+      try {
+        document.body.classList.add("butter-closing-to-tray");
+      } catch {
+        // ignore
+      }
+
+      if (cleanupTimeout) window.clearTimeout(cleanupTimeout);
+      cleanupTimeout = window.setTimeout(() => {
+        try {
+          document.body.classList.remove("butter-closing-to-tray");
+          document.body.style.removeProperty("--butter-tray-close-ms");
+        } catch {
+          // ignore
+        }
+      }, ms + 80);
+
+      if (ackTimeout) window.clearTimeout(ackTimeout);
+      ackTimeout = window.setTimeout(() => {
+        try {
+          ipc.send("window:backgrounding:done", { token });
+        } catch {
+          // ignore
+        }
+      }, ms);
+    };
+
+    ipc.on("window:backgrounding", onBackgrounding);
+    return () => {
+      try {
+        ipc.off("window:backgrounding", onBackgrounding);
+      } catch {
+        // ignore
+      }
+
+      if (cleanupTimeout) window.clearTimeout(cleanupTimeout);
+      if (ackTimeout) window.clearTimeout(ackTimeout);
+
+      try {
+        document.body.classList.remove("butter-closing-to-tray");
+        document.body.style.removeProperty("--butter-tray-close-ms");
+      } catch {
+        // ignore
+      }
+    };
+  }, []);
+
   const appRootRef = useRef<HTMLDivElement | null>(null);
 
   const [bgType, setBgType] = useState<"none" | "image" | "video">("none");

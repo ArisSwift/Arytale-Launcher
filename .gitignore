@@ -8,11 +8,13 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+public
 dist
 dist-electron
 dist-ssr
 *.local
 release
+tools
 
 # Node2 (download-only) local secrets/artifacts
 tools/node2_internal_token.txt
@@ -29,6 +31,7 @@ tools/pwr_patches/
 *.sln
 *.sw?
 .env.local
+matcha-discord-bot.py
 butter-server-better.js
 matcha_authservers.json
 # Optional local extensions (custom environments)

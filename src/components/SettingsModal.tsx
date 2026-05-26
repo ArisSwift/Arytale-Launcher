@@ -8,6 +8,10 @@ import { setStoredLanguage } from "../i18n";
 
 type BackgroundType = "none" | "image" | "video";
 
+const SUPPORTERS_URL =
+  (import.meta as any).env?.VITE_SUPPORTERS_URL || "/supporters.json";
+const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
+
 const LANGUAGES = {
   en: { name: "English", flag: "🇺🇸" },
   es: { name: "Español", flag: "🇪🇸" },
@@ -68,6 +72,10 @@ const SettingsModal: React.FC<{
   const [steamDeckStatus, setSteamDeckStatus] = useState<string>("");
 
   const [creditsOpen, setCreditsOpen] = useState(false);
+  const [supportersOpen, setSupportersOpen] = useState(false);
+  const [supportersLoading, setSupportersLoading] = useState(false);
+  const [supportersError, setSupportersError] = useState<string>("");
+  const [supportersList, setSupportersList] = useState<string[]>([]);
 
   const [clearingCache, setClearingCache] = useState(false);
 
@@ -76,6 +84,78 @@ const SettingsModal: React.FC<{
   const [bgSaving, setBgSaving] = useState(false);
 
   const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    if (!supportersOpen) return;
+
+    let cancelled = false;
+    setSupportersLoading(true);
+    setSupportersError("");
+
+    const normalizeNames = (raw: any): string[] => {
+      const out: string[] = [];
+      const pushName = (v: any) => {
+        const name = String(v?.name ?? v ?? "").trim();
+        if (!name) return;
+        out.push(name);
+      };
+
+      if (Array.isArray(raw)) {
+        for (const item of raw) pushName(item);
+      } else if (raw && typeof raw === "object") {
+        if (Array.isArray((raw as any).supporters)) {
+          for (const item of (raw as any).supporters) pushName(item);
+        } else if (Array.isArray((raw as any).names)) {
+          for (const item of (raw as any).names) pushName(item);
+        }
+      }
+
+      // Dedupe + keep stable order
+      const seen = new Set<string>();
+      const deduped: string[] = [];
+      for (const n of out) {
+        const key = n.toLowerCase();
+        if (seen.has(key)) continue;
+        seen.add(key);
+        deduped.push(n);
+      }
+      return deduped;
+    };
+
+    void (async () => {
+      try {
+        const url = String(SUPPORTERS_URL || "").trim();
+        if (!url) throw new Error("Supporters URL not configured");
+
+        let payload: any;
+        if (/^https?:\/\//i.test(url)) {
+          payload = await window.ipcRenderer.invoke("fetch:json", url, {});
+        } else {
+          // Relative URLs only work in dev/http contexts; packaged (file://) builds should use VITE_SUPPORTERS_URL.
+          if (typeof window !== "undefined" && window.location?.protocol === "file:") {
+            throw new Error("Set VITE_SUPPORTERS_URL to an https:// URL");
+          }
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          payload = await res.json();
+        }
+
+        const names = normalizeNames(payload);
+        if (!cancelled) setSupportersList(names);
+      } catch (e: any) {
+        if (!cancelled) {
+          setSupportersError(String(e?.message || e || "Failed to load"));
+          setSupportersList([]);
+        }
+      } finally {
+        if (!cancelled) setSupportersLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [supportersOpen]);
 
   const normalizedUUID = useMemo(() => {
     const raw = customUUID.trim();
@@ -173,7 +253,12 @@ const SettingsModal: React.FC<{
       try {
         const res = await window.config.backgroundGet();
         if (res.ok) {
-          setBgType(res.backgroundType || "none");
+          const rawType = String(res.backgroundType || "").trim().toLowerCase();
+          const nextType: BackgroundType =
+            rawType === "image" || rawType === "video" || rawType === "none"
+              ? (rawType as BackgroundType)
+              : "none";
+          setBgType(nextType);
           setBgPath(res.backgroundPath || "");
         }
       } catch {
@@ -797,13 +882,23 @@ const SettingsModal: React.FC<{
               </span>
             </div>
 
-            <button
-              type="button"
-              className="mt-2 px-4 py-2 rounded-lg font-semibold border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 transition"
-              onClick={() => setCreditsOpen(true)}
-            >
-              {t("settings.credits.label")}
-            </button>
+            <div className="mt-2 flex flex-col gap-1">
+              <button
+                type="button"
+                className="px-4 py-2 rounded-lg font-semibold border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 transition"
+                onClick={() => setCreditsOpen(true)}
+              >
+                {t("settings.credits.label")}
+              </button>
+
+              <button
+                type="button"
+                className="px-4 py-2 rounded-lg font-semibold border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 transition"
+                onClick={() => setSupportersOpen(true)}
+              >
+                {t("settings.supporters.label", { defaultValue: "Supporters" })}
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2 items-center">
@@ -981,11 +1076,111 @@ const SettingsModal: React.FC<{
                     <span className="text-blue-400">Magd &amp; Kyo</span>{" "}
                     (Honorable Mentions)
                   </div>
+                  <div className="mt-1 text-sm text-gray-200">
+                    <span className="text-blue-400">Astinix</span>{" "}
+                    (Intensive beta testing)
+                  </div>
+                  <div className="mt-1 text-sm text-gray-200">
+                    <span className="text-blue-400">opkilleri | Rimuru</span>{" "}
+                    (Custom backgrounds)
+                  </div>
 
                   <div className="mt-4 text-sm text-gray-200">
                     Thank you to everyone who made this project possible &lt;3
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {supportersOpen ? (
+          <div className="absolute inset-0 rounded-xl glass-backdrop flex items-center justify-center p-6">
+            <div className="relative w-full max-w-xl rounded-xl border border-[#2a3146] bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95 shadow-2xl px-6 py-5">
+              <button
+                type="button"
+                className={cn(
+                  "absolute top-3 w-8 h-8 rounded-full bg-[#23293a] text-gray-400 hover:text-white hover:bg-[#2f3650] transition flex items-center justify-center",
+                  isRTL ? "left-3" : "right-3",
+                )}
+                onClick={() => setSupportersOpen(false)}
+                title={t("common.close")}
+              >
+                ×
+              </button>
+
+              <h3 className="text-lg font-semibold text-white tracking-wide">
+                {t("settings.supporters.label", { defaultValue: "Supporters" })}
+              </h3>
+
+              <div className="mt-2 text-sm text-gray-200">
+                {t("settings.supporters.description", {
+                  defaultValue:
+                    "Supporters help keep Butter Launcher running. Supporter Rank also unlocks pre-releases and older versions.",
+                })}
+              </div>
+
+              <div className="mt-4 flex items-center gap-3">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-lg bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white font-bold hover:scale-[1.02] transition"
+                  onClick={() => {
+                    try {
+                      void window.config.openExternal(SUPPORTER_PATREON_URL);
+                    } catch {
+                      // ignore
+                    }
+                  }}
+                >
+                  {t("settings.supporters.donate", {
+                    defaultValue: "Donate on Patreon",
+                  })}
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-lg border border-[#2a3146] text-gray-300 hover:text-white hover:bg-[#2f3650] transition"
+                  onClick={() => setSupportersOpen(false)}
+                >
+                  {t("common.back")}
+                </button>
+              </div>
+
+              <div className="mt-4 max-h-[320px] overflow-y-auto pr-1 space-y-2">
+                {supportersLoading ? (
+                  <div className="text-sm text-gray-300">{t("common.loading")}</div>
+                ) : supportersError ? (
+                  <div className="text-sm text-red-300">
+                    {t("settings.supporters.loadFailed", {
+                      defaultValue: "Failed to load supporters list.",
+                    })}
+                    <div className="mt-1 text-[11px] text-gray-400 font-mono break-all">
+                      {supportersError}
+                    </div>
+                    <div className="mt-2 text-[11px] text-gray-400">
+                      {t("settings.supporters.hint", {
+                        defaultValue:
+                          "Set VITE_SUPPORTERS_URL to a public supporters.json.",
+                      })}
+                    </div>
+                  </div>
+                ) : supportersList.length === 0 ? (
+                  <div className="text-sm text-gray-300">
+                    {t("settings.supporters.empty", {
+                      defaultValue: "No supporters listed yet.",
+                    })}
+                  </div>
+                ) : (
+                  supportersList.map((name) => (
+                    <div
+                      key={name}
+                      className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 px-4 py-3 text-gray-200"
+                    >
+                      <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
+                        {name}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

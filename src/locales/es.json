@@ -49,6 +49,24 @@
     "preparing": "Preparando tu sesión"
   },
   "friendsMenu": {
+    "supporter": "Supporter",
+    "supporterCta": "¿Quieres tener un rol especial, gestor de versiones, un color customizado y muchos más beneficios? Consigue el Supporter Rank donando en Patreon.",
+    "supporterCtaButton": "Donar en Patreon",
+    "supporterBenefits": {
+      "open": "Supporter Rank",
+      "title": "SUPPORTER RANK",
+      "body": "Los supporters ayudan a mantener Butter Launcher con vida y a mejorar Matcha. Si te gusta el launcher, considera apoyarnos en Patreon.",
+      "benefitsTitle": "BENEFICIOS",
+      "benefit1": "Corona de Supporter en Matcha.",
+      "benefit2": "Color custom de Supporter (se usa en tu corona, acentos del perfil y burbujas de chat).",
+      "benefit3": "Desbloquea pre-releases y versiones antiguas.",
+      "benefit4": "Tu nombre aparece destacado en la lista de Supporters.",
+      "patreonButton": "Abrir Patreon"
+    },
+    "profile": {
+      "supporterColorTitle": "Color de mensajes de Supporter",
+      "supporterColorHint": "Este color se usa para tus burbujas de chat."
+    },
     "game": {
       "inviteTitle": "Invitar a jugar",
       "requestJoinTitle": "Solicitar unirse",
@@ -152,6 +170,13 @@
       "deleteTitle": "Eliminar versión",
       "deleteConfirm": "¿Seguro que quieres eliminar {{name}}?",
       "cannotDeleteRunning": "No puedes borrar la build que está corriendo. Cierra el juego primero."
+    },
+    "supporters": {
+      "required": {
+        "title": "Solo Supporters",
+        "message": "El Supporter Rank es necesario para poder usar el gestor de versiones.",
+        "donate": "Donar en Patreon"
+      }
     }
   },
   "serversModal": {
@@ -412,6 +437,14 @@
       "systemLauncher": "System Launcher",
       "designLauncher": "Design Launcher",
       "language": "Language"
+    },
+    "supporters": {
+      "label": "Supporters",
+      "description": "Los Supporters ayudan a mantener Butter Launcher. El Supporter Rank también desbloquea pre-lanzamientos y versiones anteriores, y beneficios en Matcha como la corona de Supporter y un color de perfil personalizado.",
+      "donate": "Donar en Patreon",
+      "loadFailed": "No se pudo cargar la lista de supporters.",
+      "hint": "Configura VITE_SUPPORTERS_URL con un supporters.json público.",
+      "empty": "Todavía no hay supporters listados."
     },
     "updates": {
       "check": "BUSCAR ACTUALIZACIONES",
