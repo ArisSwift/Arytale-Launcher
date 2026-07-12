@@ -503,19 +503,24 @@ const SettingsModal: React.FC<{
           `
           relative w-[92vw] max-w-[1800px] h-[88vh] mx-auto
           rounded-xl
-          bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95
-          border border-[#2a3146]
           shadow-2xl
           px-10 py-6
           flex flex-col animate-settings-in`,
           closing && "animate-settings-out",
         )}
+        style={{
+          background: "var(--modal-bg)",
+          border: "1px solid var(--modal-border)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+        }}
       >
         <button
           className={cn(
-            "absolute top-3 w-8 h-8 rounded-full bg-[#23293a] text-gray-400 hover:text-white hover:bg-[#2f3650] transition flex items-center justify-center",
+            "absolute top-3 w-8 h-8 rounded-full transition flex items-center justify-center",
             isRTL ? "left-3" : "right-3",
           )}
+          style={{ background: "var(--card-bg)", color: "var(--text-on-surface-muted)", border: "1px solid var(--card-border)" }}
           onClick={() => {
             setClosing(true);
             setTimeout(() => {
@@ -528,7 +533,7 @@ const SettingsModal: React.FC<{
           ×
         </button>
 
-        <h2 className="text-lg font-semibold text-white tracking-wide mb-4">
+        <h2 className="text-lg font-semibold tracking-wide mb-4" style={{ color: "var(--text-on-surface)" }}>
           {t("settings.title")}
         </h2>
 
@@ -539,18 +544,19 @@ const SettingsModal: React.FC<{
               <label className="text-gray-200 text-sm font-semibold mb-1 block">
                 Patchline
               </label>
-              <select className="w-full mt-1 p-2 rounded bg-[#23293a] text-white border border-[#3b82f6] focus:outline-none">
+              <select className="w-full mt-1 p-2 rounded bg-[var(--card-bg)] text-[var(--text-on-surface)] border border-[#3b82f6] focus:outline-none">
                 <option>release</option>
                 <option>snapshot</option>
               </select>
             </div> */}
 
             <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-400">
+              <label className="text-xs uppercase tracking-widest" style={{ color: "var(--text-on-surface-muted)" }}>
                 {t("settings.gameDirectory.label")}
               </label>
               <button
-                className="w-full flex items-center justify-between bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition"
+                className="w-full flex items-center justify-between rounded-lg px-4 py-2 transition"
+                style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", color: "var(--text-on-surface)" }}
                 onClick={handleOpenGameDir}
               >
                 <span className="text-sm">
@@ -561,11 +567,12 @@ const SettingsModal: React.FC<{
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-400">
+              <label className="text-xs uppercase tracking-widest" style={{ color: "var(--text-on-surface-muted)" }}>
                 {t("settings.downloadDirectory.label")}
               </label>
               <button
-                className="w-full flex items-center justify-between bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition disabled:opacity-60"
+                className="w-full flex items-center justify-between rounded-lg px-4 py-2 transition disabled:opacity-60"
+                style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", color: "var(--text-on-surface)" }}
                 onClick={handleChangeDownloadDir}
                 disabled={changingDir}
               >
@@ -576,28 +583,29 @@ const SettingsModal: React.FC<{
                 </span>
                 <IconFolderOpen size={18} />
               </button>
-              <div className="text-[10px] text-gray-400 font-mono break-all">
+              <div className="text-[10px] font-mono break-all" style={{ color: "var(--text-on-surface-muted)" }}>
                 {gameDir || t("settings.downloadDirectory.loading")}
               </div>
             </div>
 
             {accountType === "custom" && (
               <div className="col-span-2 space-y-2">
-                <label className="text-xs uppercase tracking-widest text-gray-400">
+                <label className="text-xs uppercase tracking-widest" style={{ color: "var(--text-on-surface-muted)" }}>
                   {t("settings.customUUID.label")}
                 </label>
                 <input
                   value={customUUID}
                   onChange={(e) => setCustomUUID(e.target.value)}
                   placeholder={t("settings.customUUID.placeholder")}
-                  className="w-full px-3 py-2 rounded-lg bg-[#1f2538] text-white border border-[#2a3146] focus:outline-none focus:border-blue-500 transition"
+                  className="w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-1 transition"
+                  style={{ background: "var(--input-bg)", color: "var(--text-on-surface)", border: "1px solid var(--input-border)" }}
                   spellCheck={false}
                   autoCapitalize="none"
                   autoCorrect="off"
                   inputMode="text"
                 />
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-gray-400">
+                  <span className="text-[10px] text-[var(--text-on-surface-muted)]">
                     {customUUID.trim().length === 0
                       ? t("settings.customUUID.usesAuto")
                       : normalizedUUID === "__invalid__"
@@ -620,7 +628,7 @@ const SettingsModal: React.FC<{
               </div>
             )}
 
-            <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-gray-400">
+            <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
               <p>{t("settings.discordRPC")}:</p>
               <input
                 type="checkbox"
@@ -630,13 +638,13 @@ const SettingsModal: React.FC<{
               />
               <div
                 className={cn(
-                  "px-4 py-2 flex items-center gap-2 bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg text-white transition",
+                  "px-4 py-2 flex items-center gap-2 bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg text-[var(--text-on-surface)] transition",
                   enableRPC && "border-blue-500/60 bg-blue-600/15",
                 )}
               >
                 <span
                   className={cn(
-                    "w-4 h-4 rounded-sm border border-[#2a3146] bg-transparent",
+                    "w-4 h-4 rounded-sm border border-[var(--card-border)] bg-transparent",
                     enableRPC && "border-blue-300 bg-blue-500",
                   )}
                 />
@@ -644,7 +652,7 @@ const SettingsModal: React.FC<{
               </div>
             </label>
 
-            <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-gray-400">
+            <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
               <p>{t("settings.startupSound")}:</p>
               <input
                 type="checkbox"
@@ -654,13 +662,13 @@ const SettingsModal: React.FC<{
               />
               <div
                 className={cn(
-                  "px-4 py-2 flex items-center gap-2 bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg text-white transition",
+                  "px-4 py-2 flex items-center gap-2 bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg text-[var(--text-on-surface)] transition",
                   startupSoundEnabled && "border-blue-500/60 bg-blue-600/15",
                 )}
               >
                 <span
                   className={cn(
-                    "w-4 h-4 rounded-sm border border-[#2a3146] bg-transparent",
+                    "w-4 h-4 rounded-sm border border-[var(--card-border)] bg-transparent",
                     startupSoundEnabled && "border-blue-300 bg-blue-500",
                   )}
                 />
@@ -671,7 +679,7 @@ const SettingsModal: React.FC<{
             </label>
 
             <div className="col-span-2">
-              <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-gray-400">
+              <label className="w-fit flex gap-2 items-center text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
                 <p>{t("settings.steamDeck.label")}:</p>
                 <input
                   type="checkbox"
@@ -684,7 +692,7 @@ const SettingsModal: React.FC<{
                 />
                 <div
                   className={cn(
-                    "px-4 py-2 flex items-center gap-2 bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg text-white transition disabled:opacity-60",
+                    "px-4 py-2 flex items-center gap-2 bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg text-[var(--text-on-surface)] transition disabled:opacity-60",
                     steamDeckMode && "border-blue-500/60 bg-blue-600/15",
                     (!isLinux || steamDeckWorking) && "opacity-60",
                   )}
@@ -696,7 +704,7 @@ const SettingsModal: React.FC<{
                 >
                   <span
                     className={cn(
-                      "w-4 h-4 rounded-sm border border-[#2a3146] bg-transparent",
+                      "w-4 h-4 rounded-sm border border-[var(--card-border)] bg-transparent",
                       steamDeckMode && "border-blue-300 bg-blue-500",
                     )}
                   />
@@ -708,27 +716,27 @@ const SettingsModal: React.FC<{
                 </div>
               </label>
 
-              <div className="mt-2 text-[11px] text-gray-400">
+              <div className="mt-2 text-[11px] text-[var(--text-on-surface-muted)]">
                 {isLinux
                   ? t("settings.steamDeck.hintLinux")
                   : t("settings.steamDeck.linuxOnly")}
               </div>
 
               {steamDeckStatus ? (
-                <div className="mt-2 text-[11px] text-gray-400 font-mono break-words">
+                <div className="mt-2 text-[11px] text-[var(--text-on-surface-muted)] font-mono break-words">
                   {steamDeckStatus}
                 </div>
               ) : null}
             </div>
 
             <div className="col-span-2 space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-400">
+              <label className="text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
                 {t("settings.onlinePatch.label")}
               </label>
               <button
                 type="button"
                 className={cn(
-                  "w-full flex items-center justify-between bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition disabled:opacity-60",
+                  "w-full flex items-center justify-between bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--text-on-surface)] transition disabled:opacity-60",
                   "border-red-500/30 text-red-300 hover:bg-red-500/10",
                 )}
                 disabled={!canRemoveOnlinePatch}
@@ -767,30 +775,30 @@ const SettingsModal: React.FC<{
               !patchingOnline &&
               !checkingOnlinePatchState &&
               !onlinePatchEnabledForSelected ? (
-                <div className="mt-1 text-[11px] text-gray-400">
+                <div className="mt-1 text-[11px] text-[var(--text-on-surface-muted)]">
                   {t("settings.onlinePatch.hintEnableToRemove")}
                 </div>
               ) : null}
 
               {selectedIsRunning ? (
-                <div className="mt-1 text-[11px] text-gray-400">
+                <div className="mt-1 text-[11px] text-[var(--text-on-surface-muted)]">
                   {t("settings.onlinePatch.hintCloseGame")}
                 </div>
               ) : null}
 
-              <div className="text-[11px] text-gray-400">
+              <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                 {t("settings.onlinePatch.description")}
               </div>
             </div>
 
             <div className="col-span-2 space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-400">
+              <label className="text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
                 {t("settings.cache.label")}
               </label>
               <button
                 type="button"
                 className={cn(
-                  "w-full flex items-center justify-between bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition disabled:opacity-60",
+                  "w-full flex items-center justify-between bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--text-on-surface)] transition disabled:opacity-60",
                 )}
                 disabled={clearingCache}
                 onClick={() => void handleClearInstallCache()}
@@ -801,21 +809,21 @@ const SettingsModal: React.FC<{
                     : t("settings.cache.clearButton")}
                 </span>
               </button>
-              <div className="text-[11px] text-gray-400">
+              <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                 {t("settings.cache.description")}
               </div>
             </div>
 
             {/* CUSTOM BACKGROUND */}
             <div className="col-span-2 space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-400">
+              <label className="text-xs uppercase tracking-widest text-[var(--text-on-surface-muted)]">
                 {t("settings.background.label")}
               </label>
               <div className="flex gap-2">
                 <button
                   type="button"
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-2 bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition disabled:opacity-60",
+                    "flex-1 flex items-center justify-center gap-2 bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--text-on-surface)] transition disabled:opacity-60",
                     bgType === "image" && "border-blue-500/60 bg-blue-600/15",
                   )}
                   disabled={bgSaving}
@@ -827,7 +835,7 @@ const SettingsModal: React.FC<{
                 <button
                   type="button"
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-2 bg-[#1f2538] hover:bg-[#262d44] border border-[#2a3146] rounded-lg px-4 py-2 text-white transition disabled:opacity-60",
+                    "flex-1 flex items-center justify-center gap-2 bg-[var(--card-bg)] hover:bg-[#262d44] border border-[var(--card-border)] rounded-lg px-4 py-2 text-[var(--text-on-surface)] transition disabled:opacity-60",
                     bgType === "video" && "border-blue-500/60 bg-blue-600/15",
                   )}
                   disabled={bgSaving}
@@ -839,7 +847,7 @@ const SettingsModal: React.FC<{
                 {bgType !== "none" && (
                   <button
                     type="button"
-                    className="flex items-center justify-center gap-1 bg-[#1f2538] hover:bg-red-500/15 border border-[#2a3146] hover:border-red-500/30 rounded-lg px-3 py-2 text-red-400 transition disabled:opacity-60"
+                    className="flex items-center justify-center gap-1 bg-[var(--card-bg)] hover:bg-red-500/15 border border-[var(--card-border)] hover:border-red-500/30 rounded-lg px-3 py-2 text-red-400 transition disabled:opacity-60"
                     disabled={bgSaving}
                     onClick={() => void handleClearBackground()}
                     title={t("settings.background.clear")}
@@ -849,11 +857,11 @@ const SettingsModal: React.FC<{
                 )}
               </div>
               {bgType !== "none" && bgPath && (
-                <div className="text-[10px] text-gray-400 font-mono break-all">
+                <div className="text-[10px] text-[var(--text-on-surface-muted)] font-mono break-all">
                   {bgType === "image" ? "🖼️" : "🎬"} {bgPath}
                 </div>
               )}
-              <div className="text-[11px] text-gray-400">
+              <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                 {t("settings.background.description")}
               </div>
             </div>
@@ -861,11 +869,11 @@ const SettingsModal: React.FC<{
             {/* <div>
               <label className="text-gray-200 text-sm font-semibold mb-1 block">
                 Previous Version{" "}
-                <span className="text-xs text-gray-400 font-normal">
+                <span className="text-xs text-[var(--text-on-surface-muted)] font-normal">
                   (Not available)
                 </span>
               </label>
-              <button className="w-full bg-[#23293a] text-gray-400 px-4 py-2 rounded mt-1 cursor-not-allowed" disabled>
+              <button className="w-full bg-[var(--card-bg)] text-[var(--text-on-surface-muted)] px-4 py-2 rounded mt-1 cursor-not-allowed" disabled>
                 LAUNCH
               </button>
             </div> */}
@@ -873,9 +881,9 @@ const SettingsModal: React.FC<{
         </div>
 
         {/* FOOTER */}
-        <div className="pt-4 mt-4 border-t border-[#2a3146] flex items-center justify-between gap-4">
+        <div className="pt-4 mt-4 border-t border-[var(--card-border)] flex items-center justify-between gap-4">
           <div className="text-left">
-            <div className="text-xs text-gray-400">
+            <div className="text-xs text-[var(--text-on-surface-muted)]">
               {t("settings.madeBy")}:{" "}
               <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
                 {t("settings.teamName")}
@@ -902,7 +910,7 @@ const SettingsModal: React.FC<{
           </div>
 
           <div className="flex flex-col gap-2 items-center">
-            <label className="text-[10px] text-gray-400 font-bold uppercase">
+            <label className="text-[10px] text-[var(--text-on-surface-muted)] font-bold uppercase">
               {t("settings.language.label")} {LANGUAGES[lang].flag}
             </label>
             <select
@@ -910,7 +918,7 @@ const SettingsModal: React.FC<{
               onChange={(e) =>
                 changeLanguage(e.target.value as keyof typeof LANGUAGES)
               }
-              className="bg-[#1a1f2e] border border-[#2a3146] text-white rounded-lg p-2 outline-none"
+              className="bg-[#1a1f2e] border border-[var(--card-border)] text-[var(--text-on-surface)] rounded-lg p-2 outline-none"
             >
               {Object.entries(LANGUAGES).map(([code, info]) => (
                 <option
@@ -929,7 +937,7 @@ const SettingsModal: React.FC<{
           </div>
 
           <div className="flex flex-col gap-3">
-            <div className="text-[11px] font-mono text-gray-400">
+            <div className="text-[11px] font-mono text-[var(--text-on-surface-muted)]">
               {`${window.config.BUILD_DATE} V${window.config.VERSION}`}
             </div>
             <button
@@ -944,7 +952,7 @@ const SettingsModal: React.FC<{
 
             {onLogout && (
               <button
-                className="px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
+                className="px-5 py-2 rounded-lg font-bold text-[var(--text-on-surface)] bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
                 onClick={onLogout}
               >
                 {t("settings.logout")}
@@ -955,11 +963,11 @@ const SettingsModal: React.FC<{
 
         {creditsOpen ? (
           <div className="absolute inset-0 rounded-xl glass-backdrop flex items-center justify-center p-6">
-            <div className="relative w-full max-w-xl rounded-xl border border-[#2a3146] bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95 shadow-2xl px-6 py-5">
+            <div className="relative w-full max-w-xl rounded-xl border border-[var(--card-border)] bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95 shadow-2xl px-6 py-5">
               <button
                 type="button"
                 className={cn(
-                  "absolute top-3 w-8 h-8 rounded-full bg-[#23293a] text-gray-400 hover:text-white hover:bg-[#2f3650] transition flex items-center justify-center",
+                  "absolute top-3 w-8 h-8 rounded-full bg-[var(--card-bg)] text-[var(--text-on-surface-muted)] hover:text-[var(--text-on-surface)] hover:bg-[#2f3650] transition flex items-center justify-center",
                   isRTL ? "left-3" : "right-3",
                 )}
                 onClick={() => setCreditsOpen(false)}
@@ -968,13 +976,13 @@ const SettingsModal: React.FC<{
                 ×
               </button>
 
-              <h3 className="text-lg font-semibold text-white tracking-wide">
+              <h3 className="text-lg font-semibold text-[var(--text-on-surface)] tracking-wide">
                 {t("settings.credits.label")}
               </h3>
 
               <div className="mt-4 max-h-[320px] overflow-y-auto pr-1 space-y-2">
-                <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 px-4 py-3">
-                  <div className="text-[11px] text-gray-400 font-bold uppercase">
+                <div className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 px-4 py-3">
+                  <div className="text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Project Lead &amp; Lead Developer
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -983,7 +991,7 @@ const SettingsModal: React.FC<{
                     System)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Launcher Developer
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -991,7 +999,7 @@ const SettingsModal: React.FC<{
                     Programming)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Lead Graphic Designer
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -999,7 +1007,7 @@ const SettingsModal: React.FC<{
                     (Graphic Design and Matcha! system)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Operations Manager &amp; Localization Lead
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -1007,7 +1015,7 @@ const SettingsModal: React.FC<{
                     Management, Server Organization, Translation Systems)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Server Patching &amp; Deployment Specialist
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -1016,7 +1024,7 @@ const SettingsModal: React.FC<{
                     Slovak Translation)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Technical Advisor
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -1024,7 +1032,7 @@ const SettingsModal: React.FC<{
                     Architecture Consultant)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Web Designer
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -1032,7 +1040,7 @@ const SettingsModal: React.FC<{
                     Design)
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Localization Team
                   </div>
                   <div className="mt-2 space-y-1 text-sm text-gray-200">
@@ -1069,7 +1077,7 @@ const SettingsModal: React.FC<{
                     </div>
                   </div>
 
-                  <div className="mt-4 text-[11px] text-gray-400 font-bold uppercase">
+                  <div className="mt-4 text-[11px] text-[var(--text-on-surface-muted)] font-bold uppercase">
                     Special Thanks
                   </div>
                   <div className="mt-1 text-sm text-gray-200">
@@ -1096,11 +1104,11 @@ const SettingsModal: React.FC<{
 
         {supportersOpen ? (
           <div className="absolute inset-0 rounded-xl glass-backdrop flex items-center justify-center p-6">
-            <div className="relative w-full max-w-xl rounded-xl border border-[#2a3146] bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95 shadow-2xl px-6 py-5">
+            <div className="relative w-full max-w-xl rounded-xl border border-[var(--card-border)] bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95 shadow-2xl px-6 py-5">
               <button
                 type="button"
                 className={cn(
-                  "absolute top-3 w-8 h-8 rounded-full bg-[#23293a] text-gray-400 hover:text-white hover:bg-[#2f3650] transition flex items-center justify-center",
+                  "absolute top-3 w-8 h-8 rounded-full bg-[var(--card-bg)] text-[var(--text-on-surface-muted)] hover:text-[var(--text-on-surface)] hover:bg-[#2f3650] transition flex items-center justify-center",
                   isRTL ? "left-3" : "right-3",
                 )}
                 onClick={() => setSupportersOpen(false)}
@@ -1109,7 +1117,7 @@ const SettingsModal: React.FC<{
                 ×
               </button>
 
-              <h3 className="text-lg font-semibold text-white tracking-wide">
+              <h3 className="text-lg font-semibold text-[var(--text-on-surface)] tracking-wide">
                 {t("settings.supporters.label", { defaultValue: "Supporters" })}
               </h3>
 
@@ -1123,7 +1131,7 @@ const SettingsModal: React.FC<{
               <div className="mt-4 flex items-center gap-3">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-bold hover:scale-[1.02] transition"
+                  className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-[var(--text-on-surface)] font-bold hover:scale-[1.02] transition"
                   onClick={() => {
                     try {
                       void window.config.openExternal(SUPPORTER_PATREON_URL);
@@ -1138,7 +1146,7 @@ const SettingsModal: React.FC<{
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-lg border border-[#2a3146] text-gray-300 hover:text-white hover:bg-[#2f3650] transition"
+                  className="px-4 py-2 rounded-lg border border-[var(--card-border)] text-gray-300 hover:text-[var(--text-on-surface)] hover:bg-[#2f3650] transition"
                   onClick={() => setSupportersOpen(false)}
                 >
                   {t("common.back")}
@@ -1153,10 +1161,10 @@ const SettingsModal: React.FC<{
                     {t("settings.supporters.loadFailed", {
                       defaultValue: "Failed to load supporters list.",
                     })}
-                    <div className="mt-1 text-[11px] text-gray-400 font-mono break-all">
+                    <div className="mt-1 text-[11px] text-[var(--text-on-surface-muted)] font-mono break-all">
                       {supportersError}
                     </div>
-                    <div className="mt-2 text-[11px] text-gray-400">
+                    <div className="mt-2 text-[11px] text-[var(--text-on-surface-muted)]">
                       {t("settings.supporters.hint", {
                         defaultValue:
                           "Set VITE_SUPPORTERS_URL to a public supporters.json.",
@@ -1173,7 +1181,7 @@ const SettingsModal: React.FC<{
                   supportersList.map((name) => (
                     <div
                       key={name}
-                      className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 px-4 py-3 text-gray-200"
+                      className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 px-4 py-3 text-gray-200"
                     >
                       <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
                         {name}

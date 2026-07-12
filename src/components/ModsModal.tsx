@@ -872,10 +872,10 @@ const ModsModal: React.FC<{
   const tabButtonClass = (active: boolean) =>
     cn(
       "px-3 py-1.5 rounded-lg border text-xs font-semibold transition",
-      "border-[#2a3146]",
+      "border-[var(--card-border)]",
       active
         ? "bg-[#3B82F6]/20 text-[#BFDBFE] border-[#60A5FA]/60 shadow-[0_0_16px_rgba(59,130,246,0.55)]"
-        : "bg-transparent text-gray-200 hover:bg-[#3B82F6]/10 hover:text-white",
+        : "bg-transparent text-gray-200 hover:bg-[#3B82F6]/10 hover:text-[var(--text-on-surface)]",
     );
 
   const formatNumber = (n?: number) => {
@@ -938,7 +938,7 @@ const ModsModal: React.FC<{
             >
               <button
                 type="button"
-                className="absolute top-4 right-4 w-9 h-9 rounded-full border border-white/10 bg-[#141824]/80 text-gray-200 hover:text-white hover:bg-[#23293a] transition flex items-center justify-center"
+                className="absolute top-4 right-4 w-9 h-9 rounded-full border border-white/10 bg-[#141824]/80 text-gray-200 hover:text-[var(--text-on-surface)] hover:bg-[var(--card-bg)] transition flex items-center justify-center"
                 onClick={(e) => {
                   e.stopPropagation();
                   closeImageViewer();
@@ -1014,16 +1014,20 @@ const ModsModal: React.FC<{
           `
           relative w-[92vw] max-w-[2200px] h-[88vh] mx-auto
           rounded-xl
-          bg-linear-to-b from-[#1b2030]/95 to-[#141824]/95
-          border border-[#2a3146]
           shadow-2xl
           px-10 py-6
           flex flex-col animate-settings-in`,
           closing && "animate-settings-out",
         )}
+        style={{
+          background: "var(--modal-bg)",
+          border: "1px solid var(--modal-border)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+        }}
       >
         <button
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#23293a] text-gray-400 hover:text-white hover:bg-[#2f3650] transition flex items-center justify-center"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[var(--card-bg)] text-[var(--text-on-surface-muted)] hover:text-[var(--text-on-surface)] hover:bg-[#2f3650] transition flex items-center justify-center"
           onClick={close}
           title={t("common.close")}
         >
@@ -1031,7 +1035,7 @@ const ModsModal: React.FC<{
         </button>
 
         <div className="flex items-center justify-between gap-3 mb-4 pr-12">
-          <h2 className="text-lg font-semibold text-white tracking-wide">
+          <h2 className="text-lg font-semibold text-[var(--text-on-surface)] tracking-wide">
             {t("modsModal.title")}
           </h2>
 
@@ -1079,14 +1083,14 @@ const ModsModal: React.FC<{
           ref={scrollRootRef}
         >
           {tab === "discover" ? (
-            <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-3">
+            <div className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 p-3">
               <div className="flex items-center gap-2 mb-3">
                 {detailsId != null ? (
                   <button
                     type="button"
                     className={cn(
-                      "px-3 py-2 rounded-lg border border-[#2a3146]",
-                      "bg-[#23293a] hover:bg-[#2f3650] text-white transition flex items-center gap-2",
+                      "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+                      "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition flex items-center gap-2",
                     )}
                     onClick={() => {
                       setDetailsId(null);
@@ -1105,7 +1109,7 @@ const ModsModal: React.FC<{
                 <div className="flex-1 relative">
                   <IconSearch
                     size={16}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-on-surface-muted)]"
                   />
                   <input
                     value={query}
@@ -1121,7 +1125,7 @@ const ModsModal: React.FC<{
                       }
                     }}
                     placeholder={t("modsModal.searchPlaceholder")}
-                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+                    className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#141824]/80 border border-[var(--card-border)] text-[var(--text-on-surface)] text-sm outline-none focus:border-blue-400/60"
                     disabled={discoverLoading}
                   />
                 </div>
@@ -1138,7 +1142,7 @@ const ModsModal: React.FC<{
                       sort: next,
                     });
                   }}
-                  className="px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+                  className="px-3 py-2 rounded-lg bg-[#141824]/80 border border-[var(--card-border)] text-[var(--text-on-surface)] text-sm outline-none focus:border-blue-400/60"
                   title={t("common.sortBy")}
                 >
                   <option value="installedFirst">
@@ -1165,8 +1169,8 @@ const ModsModal: React.FC<{
                 <button
                   type="button"
                   className={cn(
-                    "px-3 py-2 rounded-lg border border-[#2a3146]",
-                    "bg-[#23293a] hover:bg-[#2f3650] text-white transition",
+                    "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+                    "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition",
                     discoverLoading && "opacity-60 cursor-not-allowed",
                   )}
                   onClick={() => {
@@ -1182,7 +1186,7 @@ const ModsModal: React.FC<{
                 <button
                   type="button"
                   className={cn(
-                    "px-3 py-2 rounded-lg border border-[#2a3146]",
+                    "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                     "bg-transparent hover:bg-white/5 text-gray-200 transition flex items-center gap-2",
                   )}
                   onClick={() => void handleOpenModsFolder()}
@@ -1202,7 +1206,7 @@ const ModsModal: React.FC<{
               ) : null}
 
               {detailsId != null ? (
-                <div className="rounded-lg border border-[#2a3146] bg-[#141824]/60 p-3">
+                <div className="rounded-lg border border-[var(--card-border)] bg-[#141824]/60 p-3">
                   {detailsError ? (
                     <div className="text-xs text-red-300 mb-2">
                       {detailsError}
@@ -1217,7 +1221,7 @@ const ModsModal: React.FC<{
                     <div className="flex flex-col gap-3">
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <div className="text-lg font-semibold text-white leading-tight">
+                          <div className="text-lg font-semibold text-[var(--text-on-surface)] leading-tight">
                             {detailsMod.name}
                           </div>
                           <div className="text-xs text-gray-100 mt-1">
@@ -1268,7 +1272,7 @@ const ModsModal: React.FC<{
                                 className={cn(
                                   "px-3 py-2 rounded-lg border border-blue-400/30",
                                   "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                                  "text-white text-sm font-bold",
+                                  "text-[var(--text-on-surface)] text-sm font-bold",
                                   "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                   (installingId === detailsMod.id ||
                                     status === "installed") &&
@@ -1373,8 +1377,8 @@ const ModsModal: React.FC<{
                         </div>
                       ) : null}
 
-                      <div className="rounded-lg border border-[#2a3146] bg-[#0f1422]/70 p-3">
-                        <div className="text-sm text-white font-semibold mb-2">
+                      <div className="rounded-lg border border-[var(--card-border)] bg-[#0f1422]/70 p-3">
+                        <div className="text-sm text-[var(--text-on-surface)] font-semibold mb-2">
                           {t("modsModal.details.description")}
                         </div>
                         {detailsLoading && !detailsHtml ? (
@@ -1385,10 +1389,10 @@ const ModsModal: React.FC<{
                           <div
                             className={cn(
                               "prose prose-invert max-w-none",
-                              "text-white",
-                              "prose-headings:text-white prose-p:text-gray-100 prose-li:text-gray-100",
-                              "prose-strong:text-white prose-em:text-gray-100",
-                              "prose-a:no-underline prose-a:text-[#8ad8ff] prose-a:hover:text-white",
+                              "text-[var(--text-on-surface)]",
+                              "prose-headings:text-[var(--text-on-surface)] prose-p:text-gray-100 prose-li:text-gray-100",
+                              "prose-strong:text-[var(--text-on-surface)] prose-em:text-gray-100",
+                              "prose-a:no-underline prose-a:text-[#8ad8ff] prose-a:hover:text-[var(--text-on-surface)]",
                               "prose-code:text-gray-100 prose-pre:bg-[#0b1020] prose-pre:border prose-pre:border-white/10",
                               "prose-img:rounded-lg prose-img:border prose-img:border-white/10",
                             )}
@@ -1411,8 +1415,8 @@ const ModsModal: React.FC<{
                         )}
                       </div>
 
-                      <div className="rounded-lg border border-[#2a3146] bg-[#0f1422]/70 p-3">
-                        <div className="text-sm text-white font-semibold mb-2">
+                      <div className="rounded-lg border border-[var(--card-border)] bg-[#0f1422]/70 p-3">
+                        <div className="text-sm text-[var(--text-on-surface)] font-semibold mb-2">
                           {t("modsModal.details.files")}
                         </div>
                         {detailsLoading && !detailsFiles.length ? (
@@ -1427,12 +1431,12 @@ const ModsModal: React.FC<{
                                 className="flex items-start justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
                               >
                                 <div className="min-w-0">
-                                  <div className="text-xs text-white font-semibold truncate">
+                                  <div className="text-xs text-[var(--text-on-surface)] font-semibold truncate">
                                     {f.displayName ||
                                       f.fileName ||
                                       `File #${f.id}`}
                                   </div>
-                                  <div className="text-[11px] text-gray-400 mt-0.5">
+                                  <div className="text-[11px] text-[var(--text-on-surface-muted)] mt-0.5">
                                     {f.fileDate
                                       ? t("modsModal.details.updatedShort", {
                                           date: formatDate(f.fileDate),
@@ -1490,7 +1494,7 @@ const ModsModal: React.FC<{
                                         className={cn(
                                           "px-3 py-1.5 rounded-lg border border-blue-400/30",
                                           "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                                          "text-white text-xs font-bold",
+                                          "text-[var(--text-on-surface)] text-xs font-bold",
                                           "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                           (installingId === detailsMod.id ||
                                             isInstalledThisFile) &&
@@ -1531,7 +1535,7 @@ const ModsModal: React.FC<{
                             ))}
                           </div>
                         ) : (
-                          <div className="text-xs text-gray-400">
+                          <div className="text-xs text-[var(--text-on-surface-muted)]">
                             {t("modsModal.details.noFilesReturned")}
                           </div>
                         )}
@@ -1545,7 +1549,7 @@ const ModsModal: React.FC<{
                 </div>
               ) : (
                 <>
-                  <div className="text-[11px] text-gray-400 mb-2">
+                  <div className="text-[11px] text-[var(--text-on-surface-muted)] mb-2">
                     {totalCount != null
                       ? t("modsModal.details.results", {
                           value: formatNumber(totalCount),
@@ -1582,7 +1586,7 @@ const ModsModal: React.FC<{
                               key={m.id}
                               type="button"
                               className={cn(
-                                "text-left rounded-xl border border-[#2a3146] bg-[#141824]/60",
+                                "text-left rounded-xl border border-[var(--card-border)] bg-[#141824]/60",
                                 "hover:bg-[#141824]/80 hover:border-[#60A5FA]/30 transition",
                                 "p-3 flex flex-col gap-2",
                               )}
@@ -1605,11 +1609,11 @@ const ModsModal: React.FC<{
                                     }}
                                   />
                                 ) : (
-                                  <div className="w-12 h-12 rounded-lg bg-[#23293a] border border-white/10 shrink-0" />
+                                  <div className="w-12 h-12 rounded-lg bg-[var(--card-bg)] border border-white/10 shrink-0" />
                                 )}
 
                                 <div className="min-w-0 flex-1">
-                                  <div className="text-sm font-semibold text-white leading-tight line-clamp-1">
+                                  <div className="text-sm font-semibold text-[var(--text-on-surface)] leading-tight line-clamp-1">
                                     {m.name}
                                   </div>
                                   <div className="text-[11px] text-gray-100 line-clamp-2 mt-0.5">
@@ -1625,7 +1629,7 @@ const ModsModal: React.FC<{
                               </div>
 
                               <div className="flex items-center justify-between gap-2 mt-1">
-                                <div className="text-[10px] text-gray-400">
+                                <div className="text-[10px] text-[var(--text-on-surface-muted)]">
                                   {typeof m.downloadCount === "number"
                                     ? t("modsModal.details.downloads", {
                                         value: formatNumber(m.downloadCount),
@@ -1646,7 +1650,7 @@ const ModsModal: React.FC<{
                                   className={cn(
                                     "px-3 py-1.5 rounded-lg border border-blue-400/30",
                                     "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                                    "text-white text-xs font-bold",
+                                    "text-[var(--text-on-surface)] text-xs font-bold",
                                     "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                     (installing || status === "installed") &&
                                       "opacity-70 cursor-not-allowed",
@@ -1700,7 +1704,7 @@ const ModsModal: React.FC<{
                   </div>
 
                   <div className="mt-3 flex items-center justify-between gap-2">
-                    <div className="text-[11px] text-gray-400">
+                    <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                       {totalCount != null
                         ? t("modsModal.details.loadedOf", {
                             loaded: formatNumber(
@@ -1714,7 +1718,7 @@ const ModsModal: React.FC<{
                             })
                           : ""}
                     </div>
-                    <div className="text-[11px] text-gray-400">
+                    <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                       {discoverLoading && hasMore && discoverMods.length
                         ? t("common.loading")
                         : ""}
@@ -1726,14 +1730,14 @@ const ModsModal: React.FC<{
               )}
             </div>
           ) :  tab === "installed" ? (
-  <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-4">
+  <div className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 p-4">
     {/* Contenedor de botones principales centrado */}
     <div className="flex items-center justify-center gap-3 mb-2 w-full">
       <div className="flex items-center justify-center gap-2 flex-wrap">
         <button
           type="button"
           className={cn(
-            "px-3 py-2 rounded-lg border border-[#2a3146]",
+            "px-3 py-2 rounded-lg border border-[var(--card-border)]",
             "bg-transparent hover:bg-white/5 text-gray-200 transition",
             (installedLoading || updatesWorking) &&
               "opacity-60 cursor-not-allowed",
@@ -1820,8 +1824,8 @@ const ModsModal: React.FC<{
         <button
           type="button"
           className={cn(
-            "px-3 py-2 rounded-lg border border-[#2a3146]",
-            "bg-[#23293a] hover:bg-[#2f3650] text-white transition",
+            "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+            "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition",
             installedLoading && "opacity-60 cursor-not-allowed",
           )}
           onClick={() => {
@@ -1856,7 +1860,7 @@ const ModsModal: React.FC<{
         <button
           type="button"
           className={cn(
-            "px-3 py-2 rounded-lg border border-[#2a3146]",
+            "px-3 py-2 rounded-lg border border-[var(--card-border)]",
             "bg-transparent hover:bg-white/5 text-gray-200 transition",
             installedLoading && "opacity-60 cursor-not-allowed",
           )}
@@ -1892,8 +1896,8 @@ const ModsModal: React.FC<{
         <button
           type="button"
           className={cn(
-            "px-3 py-2 rounded-lg border border-[#2a3146]",
-            "bg-[#23293a] hover:bg-[#2f3650] text-white transition flex items-center gap-2",
+            "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+            "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition flex items-center gap-2",
             installedLoading && "opacity-60 cursor-not-allowed",
           )}
           onClick={() => void loadInstalled()}
@@ -1905,7 +1909,7 @@ const ModsModal: React.FC<{
         </button>
         <button
           type="button"
-          className="px-3 py-2 rounded-lg border border-[#2a3146] bg-transparent hover:bg-white/5 text-gray-200 transition flex items-center gap-2"
+          className="px-3 py-2 rounded-lg border border-[var(--card-border)] bg-transparent hover:bg-white/5 text-gray-200 transition flex items-center gap-2"
           onClick={() => void handleOpenModsFolder()}
         >
           <IconFolderOpen size={18} />
@@ -1914,7 +1918,7 @@ const ModsModal: React.FC<{
       </div>
     </div>
 
-    <div className="text-[11px] text-gray-400 overflow-x-auto whitespace-nowrap mt-2">
+    <div className="text-[11px] text-[var(--text-on-surface-muted)] overflow-x-auto whitespace-nowrap mt-2">
       {t("modsModal.installed.counts", {
         downloaded: formatNumber(installedItems.length),
         active: formatNumber(
@@ -1927,7 +1931,7 @@ const ModsModal: React.FC<{
     </div>
 
     <div
-      className="text-[11px] text-gray-400 overflow-x-auto whitespace-nowrap select-text"
+      className="text-[11px] text-[var(--text-on-surface-muted)] overflow-x-auto whitespace-nowrap select-text"
       title={modsDir || ""}
     >
       {modsDir || ""}
@@ -1941,7 +1945,7 @@ const ModsModal: React.FC<{
 
     {/* Separador de Ordenamiento con Opciones */}
     <div className="flex items-center gap-4 px-2 mt-4 mb-2 text-sm border-b border-white/5 pb-2">
-      <span className="text-gray-400 font-medium">{t("common.sortBy")}:</span>
+      <span className="text-[var(--text-on-surface-muted)] font-medium">{t("common.sortBy")}:</span>
       
       <div className="flex items-center gap-3 overflow-x-auto whitespace-nowrap">
         {[
@@ -1979,7 +1983,7 @@ const ModsModal: React.FC<{
       </button>
     </div>
 
-    <div className="pr-1 rounded-lg border border-[#2a3146] bg-[#141824]/60">
+    <div className="pr-1 rounded-lg border border-[var(--card-border)] bg-[#141824]/60">
       {installedLoading ? (
         <div className="p-3 text-xs text-gray-100">
           {t("common.loading")}
@@ -2010,7 +2014,7 @@ const ModsModal: React.FC<{
                 className="flex items-center justify-between gap-3 px-3 py-2 border-b border-white/5"
               >
                 <div className="min-w-0">
-                  <div className="text-xs text-white truncate">
+                  <div className="text-xs text-[var(--text-on-surface)] truncate">
                     {it.fileName}
                   </div>
                   <div className="mt-0.5 flex items-center gap-2">
@@ -2033,7 +2037,7 @@ const ModsModal: React.FC<{
                   </div>
 
                   {!isManual && checked?.updateAvailable ? (
-                    <div className="text-[10px] text-gray-400 mt-0.5 truncate">
+                    <div className="text-[10px] text-[var(--text-on-surface-muted)] mt-0.5 truncate">
                       {t("modsModal.installed.latestVersion")}: {checked.latestName || ""}
                     </div>
                   ) : null}
@@ -2044,7 +2048,7 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-1.5 rounded-lg border border-[#2a3146] text-xs",
+                        "px-3 py-1.5 rounded-lg border border-[var(--card-border)] text-xs",
                         "bg-transparent hover:bg-white/5 text-yellow-100 transition",
                       )}
                       onClick={() => openAttachPrompt(it.fileName)}
@@ -2056,7 +2060,7 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-1.5 rounded-lg border border-[#2a3146] text-xs",
+                        "px-3 py-1.5 rounded-lg border border-[var(--card-border)] text-xs",
                         "bg-transparent hover:bg-white/5 text-gray-200 transition",
                         (updatesWorking || installingId === managedModId) &&
                           "opacity-60 cursor-not-allowed",
@@ -2141,10 +2145,10 @@ const ModsModal: React.FC<{
                   <button
                     type="button"
                     className={cn(
-                      "px-3 py-1.5 rounded-lg border border-[#2a3146] text-xs",
+                      "px-3 py-1.5 rounded-lg border border-[var(--card-border)] text-xs",
                       it.enabled
                         ? "bg-transparent hover:bg-white/5 text-gray-200"
-                        : "bg-[#23293a] hover:bg-[#2f3650] text-white",
+                        : "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)]",
                       "transition",
                     )}
                     onClick={() => {
@@ -2180,7 +2184,7 @@ const ModsModal: React.FC<{
 
                   <button
                     type="button"
-                    className="w-9 h-9 rounded-lg border border-[#2a3146] bg-transparent hover:bg-red-500/15 text-red-300 hover:text-red-200 transition flex items-center justify-center"
+                    className="w-9 h-9 rounded-lg border border-[var(--card-border)] bg-transparent hover:bg-red-500/15 text-red-300 hover:text-red-200 transition flex items-center justify-center"
                     onClick={() => {
                       setDeleteModPrompt({
                         open: true,
@@ -2205,8 +2209,8 @@ const ModsModal: React.FC<{
   </div>
           ) : (
             <div className="grid grid-cols-[260px_1fr] gap-4 min-h-0 h-full">
-              <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-3 flex flex-col min-h-0">
-                <div className="text-sm text-white font-semibold mb-2">
+              <div className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 p-3 flex flex-col min-h-0">
+                <div className="text-sm text-[var(--text-on-surface)] font-semibold mb-2">
                   {t("modsModal.profiles.title")}
                 </div>
 
@@ -2215,14 +2219,14 @@ const ModsModal: React.FC<{
                     value={profileNameInput}
                     onChange={(e) => setProfileNameInput(e.target.value)}
                     placeholder={t("modsModal.profiles.namePlaceholder")}
-                    className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+                    className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[var(--card-border)] text-[var(--text-on-surface)] text-sm outline-none focus:border-blue-400/60"
                   />
                   <button
                     type="button"
                     className={cn(
                       "px-3 py-2 rounded-lg border border-blue-400/30",
                       "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                      "text-white text-sm font-bold",
+                      "text-[var(--text-on-surface)] text-sm font-bold",
                       "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                     )}
                     onClick={() => {
@@ -2314,7 +2318,7 @@ const ModsModal: React.FC<{
                   </div>
                 ) : null}
 
-                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1 rounded-lg border border-[#2a3146] bg-[#141824]/60">
+                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1 rounded-lg border border-[var(--card-border)] bg-[#141824]/60">
                   {profilesLoading ? (
                     <div className="p-3 text-xs text-gray-300">
                       {t("common.loading")}
@@ -2366,10 +2370,10 @@ const ModsModal: React.FC<{
                             });
                           }}
                         >
-                          <div className="text-xs text-white truncate">
+                          <div className="text-xs text-[var(--text-on-surface)] truncate">
                             {p.name}
                           </div>
-                          <div className="text-[10px] text-gray-400">
+                          <div className="text-[10px] text-[var(--text-on-surface-muted)]">
                             {t("modsModal.countMods", {
                               count: p.mods?.length ?? 0,
                             })}
@@ -2389,8 +2393,8 @@ const ModsModal: React.FC<{
                     type="button"
                     title={t("common.apply")}
                     className={cn(
-                      "px-3 py-2 rounded-lg border border-[#2a3146]",
-                      "bg-[#23293a] hover:bg-[#2f3650] text-white transition",
+                      "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+                      "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition",
                       (!selectedProfileName || profilesLoading) &&
                         "opacity-60 cursor-not-allowed",
                     )}
@@ -2431,7 +2435,7 @@ const ModsModal: React.FC<{
                     type="button"
                     title={t("common.delete")}
                     className={cn(
-                      "px-3 py-2 rounded-lg border border-[#2a3146]",
+                      "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                       "bg-transparent hover:bg-red-500/15 text-red-300 hover:text-red-200 transition",
                       (!selectedProfileName ||
                         profilesLoading ||
@@ -2518,7 +2522,7 @@ const ModsModal: React.FC<{
                     className={cn(
                       "px-3 py-2 rounded-lg border border-blue-400/30",
                       "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                      "text-white text-sm font-bold",
+                      "text-[var(--text-on-surface)] text-sm font-bold",
                       "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                       (importing || shareWorking) &&
                         "opacity-60 cursor-not-allowed",
@@ -2552,17 +2556,17 @@ const ModsModal: React.FC<{
                         className={cn(
                           "absolute left-0 bottom-full mb-2 z-[10000]",
                           "w-[560px] max-w-[92vw]",
-                          "rounded-lg border border-[#2a3146] bg-[#141824]/60 p-3",
+                          "rounded-lg border border-[var(--card-border)] bg-[#141824]/60 p-3",
                         )}
                         onMouseDown={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between gap-3 mb-2">
-                          <div className="text-xs text-white font-semibold">
+                          <div className="text-xs text-[var(--text-on-surface)] font-semibold">
                             {t("modsModal.profiles.share.importPromptTitle")}
                           </div>
                           <button
                             type="button"
-                            className="text-gray-300 hover:text-white transition-colors text-lg leading-none"
+                            className="text-gray-300 hover:text-[var(--text-on-surface)] transition-colors text-lg leading-none"
                             onClick={() => {
                               setImportPromptOpen(false);
                               setImportPromptError("");
@@ -2592,14 +2596,14 @@ const ModsModal: React.FC<{
                           placeholder={t(
                             "modsModal.profiles.share.importPromptPlaceholder",
                           )}
-                          className="w-full h-[92px] resize-none px-3 py-2 rounded-lg bg-[#0f1422]/70 border border-[#2a3146] text-white text-[11px] font-mono outline-none"
+                          className="w-full h-[92px] resize-none px-3 py-2 rounded-lg bg-[#0f1422]/70 border border-[var(--card-border)] text-[var(--text-on-surface)] text-[11px] font-mono outline-none"
                         />
 
                         <div className="mt-2 flex items-center justify-end gap-2">
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
+                              "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                               "bg-transparent hover:bg-white/5 text-gray-200 transition",
                               (importing || shareWorking) &&
                                 "opacity-60 cursor-not-allowed",
@@ -2648,7 +2652,7 @@ const ModsModal: React.FC<{
                             className={cn(
                               "px-3 py-2 rounded-lg border border-blue-400/30",
                               "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
-                              "text-white text-sm font-bold",
+                              "text-[var(--text-on-surface)] text-sm font-bold",
                               "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                               (!importPromptText.trim() ||
                                 importing ||
@@ -2700,13 +2704,13 @@ const ModsModal: React.FC<{
                 </div>
               </div>
 
-              <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-3 flex flex-col min-h-0">
+              <div className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]/70 p-3 flex flex-col min-h-0">
                 <div className="flex items-center justify-between gap-3 mb-2">
                   <div>
-                    <div className="text-sm text-white font-semibold">
+                    <div className="text-sm text-[var(--text-on-surface)] font-semibold">
                       {t("modsModal.profileMods")}
                     </div>
-                    <div className="text-[11px] text-gray-400">
+                    <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                       {t("modsModal.profiles.selectedCount", {
                         count: profileSelectedMods.size,
                       })}
@@ -2717,8 +2721,8 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-2 rounded-lg border border-[#2a3146]",
-                        "bg-[#23293a] hover:bg-[#2f3650] text-white transition",
+                        "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+                        "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition",
                         installedLoading && "opacity-60 cursor-not-allowed",
                       )}
                       onClick={() =>
@@ -2733,7 +2737,7 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-2 rounded-lg border border-[#2a3146]",
+                        "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                         "bg-transparent hover:bg-white/5 text-gray-200 transition",
                         installedLoading && "opacity-60 cursor-not-allowed",
                       )}
@@ -2747,8 +2751,8 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-2 rounded-lg border border-[#2a3146]",
-                        "bg-[#23293a] hover:bg-[#2f3650] text-white transition flex items-center gap-2",
+                        "px-3 py-2 rounded-lg border border-[var(--card-border)]",
+                        "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition flex items-center gap-2",
                         installedLoading && "opacity-60 cursor-not-allowed",
                       )}
                       onClick={() => void loadInstalled()}
@@ -2762,7 +2766,7 @@ const ModsModal: React.FC<{
                     <button
                       type="button"
                       className={cn(
-                        "px-3 py-2 rounded-lg border border-[#2a3146]",
+                        "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                         "bg-transparent hover:bg-white/5 text-gray-200 transition flex items-center gap-2",
                       )}
                       onClick={() => void handleOpenModsFolder()}
@@ -2774,7 +2778,7 @@ const ModsModal: React.FC<{
                   </div>
                 </div>
 
-                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1 rounded-lg border border-[#2a3146] bg-[#141824]/60">
+                <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pr-1 rounded-lg border border-[var(--card-border)] bg-[#141824]/60">
                   {installedLoading ? (
                     <div className="p-3 text-xs text-gray-300">
                       {t("common.loading")}
@@ -2817,7 +2821,7 @@ const ModsModal: React.FC<{
                           className="flex items-center justify-between gap-3 px-3 py-2 border-b border-white/5 hover:bg-white/5 transition cursor-pointer"
                         >
                           <div className="min-w-0 flex-1">
-                            <div className="text-xs text-white truncate">
+                            <div className="text-xs text-[var(--text-on-surface)] truncate">
                               {name}
                             </div>
 
@@ -2827,7 +2831,7 @@ const ModsModal: React.FC<{
                                   "text-[10px]",
                                   info?.enabled
                                     ? "text-green-300"
-                                    : "text-gray-400",
+                                    : "text-[var(--text-on-surface-muted)]",
                                 )}
                               >
                                 {info?.enabled
@@ -2845,8 +2849,8 @@ const ModsModal: React.FC<{
                             <button
                               type="button"
                               className={cn(
-                                "px-2.5 py-1.5 rounded-lg border border-[#2a3146]",
-                                "bg-[#23293a] hover:bg-[#2f3650] text-white transition",
+                                "px-2.5 py-1.5 rounded-lg border border-[var(--card-border)]",
+                                "bg-[var(--card-bg)] hover:bg-[#2f3650] text-[var(--text-on-surface)] transition",
                                 (!canAutoInstall ||
                                   shareWorking ||
                                   importing ||
@@ -2930,14 +2934,14 @@ const ModsModal: React.FC<{
                 </div>
 
                 <div className="mt-3 flex items-center justify-between gap-2 relative">
-                  <div className="text-[11px] text-gray-400">
+                  <div className="text-[11px] text-[var(--text-on-surface-muted)]">
                     {t("modsModal.profiles.tip")}
                   </div>
 
                   <button
                     type="button"
                     className={cn(
-                      "px-2.5 py-1.5 rounded-lg border border-[#2a3146]",
+                      "px-2.5 py-1.5 rounded-lg border border-[var(--card-border)]",
                       "bg-transparent hover:bg-white/5 text-gray-200 transition",
                       (!selectedProfileName || shareWorking || importing) &&
                         "opacity-60 cursor-not-allowed",
@@ -3105,17 +3109,17 @@ const ModsModal: React.FC<{
                         className={cn(
                           "absolute right-0 bottom-full mb-2 z-[10000]",
                           "w-[560px] max-w-[92vw]",
-                          "rounded-lg border border-[#2a3146] bg-[#141824]/60 p-3",
+                          "rounded-lg border border-[var(--card-border)] bg-[#141824]/60 p-3",
                         )}
                         onMouseDown={(e) => e.stopPropagation()}
                       >
                         <div className="flex items-center justify-between gap-3 mb-2">
-                          <div className="text-xs text-white font-semibold">
+                          <div className="text-xs text-[var(--text-on-surface)] font-semibold">
                             {t("modsModal.profiles.share.title")}
                           </div>
                           <button
                             type="button"
-                            className="text-gray-300 hover:text-white transition-colors text-lg leading-none"
+                            className="text-gray-300 hover:text-[var(--text-on-surface)] transition-colors text-lg leading-none"
                             onClick={() => setExportOpen(false)}
                             title={t("common.close")}
                           >
@@ -3138,7 +3142,7 @@ const ModsModal: React.FC<{
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
+                              "px-3 py-2 rounded-lg border border-[var(--card-border)]",
                               "bg-transparent hover:bg-white/5 text-gray-200 transition",
                               (!exportCode || shareWorking) &&
                                 "opacity-60 cursor-not-allowed",
@@ -3168,7 +3172,7 @@ const ModsModal: React.FC<{
                           placeholder={t(
                             "modsModal.profiles.share.codePlaceholder",
                           )}
-                          className="w-full h-[74px] resize-none px-3 py-2 rounded-lg bg-[#0f1422]/70 border border-[#2a3146] text-white text-[11px] font-mono outline-none"
+                          className="w-full h-[74px] resize-none px-3 py-2 rounded-lg bg-[#0f1422]/70 border border-[var(--card-border)] text-[var(--text-on-surface)] text-[11px] font-mono outline-none"
                         />
                       </div>
                     </>
@@ -3198,7 +3202,7 @@ const ModsModal: React.FC<{
                 if (renameProfileError) setRenameProfileError("");
               }}
               placeholder={t("modsModal.profiles.rename.placeholder")}
-              className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+              className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[var(--card-border)] text-[var(--text-on-surface)] text-sm outline-none focus:border-blue-400/60"
               autoFocus
             />
 
@@ -3307,7 +3311,7 @@ const ModsModal: React.FC<{
                   count: names.length,
                 })}
               </div>
-              <div className="mt-2 max-h-[180px] overflow-y-auto pr-1 rounded-lg border border-[#2a3146] bg-[#141824]/60">
+              <div className="mt-2 max-h-[180px] overflow-y-auto pr-1 rounded-lg border border-[var(--card-border)] bg-[#141824]/60">
                 {names.length ? (
                   names.map((n, idx) => (
                     <div
@@ -3318,7 +3322,7 @@ const ModsModal: React.FC<{
                     </div>
                   ))
                 ) : (
-                  <div className="px-3 py-2 text-[11px] text-gray-400">
+                  <div className="px-3 py-2 text-[11px] text-[var(--text-on-surface-muted)]">
                     {t("modsModal.profiles.share.previewNoMods")}
                   </div>
                 )}
@@ -3576,7 +3580,7 @@ const ModsModal: React.FC<{
                 }
               }}
               placeholder={t("modsModal.installed.attachLinkPlaceholder")}
-              className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+              className="w-full px-3 py-2 rounded-lg bg-[#141824]/80 border border-[var(--card-border)] text-[var(--text-on-surface)] text-sm outline-none focus:border-blue-400/60"
             />
 
             {attachLinkError ? (
@@ -3585,7 +3589,7 @@ const ModsModal: React.FC<{
               </div>
             ) : null}
 
-            <div className="text-[11px] text-gray-400 mt-2">
+            <div className="text-[11px] text-[var(--text-on-surface-muted)] mt-2">
               {t("modsModal.installed.attachLinkExample")}: {ATTACH_LINK_EXAMPLE}
             </div>
           </div>
@@ -3697,7 +3701,7 @@ const ModsModal: React.FC<{
           <div
             className={cn(
               "fixed z-[10000] min-w-[180px]",
-              "rounded-lg border border-[#2a3146] bg-[#141824]/90",
+              "rounded-lg border border-[var(--card-border)] bg-[#141824]/90",
               "shadow-2xl",
             )}
             style={{ left: profileCtxMenu.x, top: profileCtxMenu.y }}

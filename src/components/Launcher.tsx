@@ -10,21 +10,18 @@ import WikiModal from "./WikiModal";
 import MatchaTermsModal from "./MatchaTermsModal";
 import FriendsMenu from "./FriendsMenu";
 import PatchNotesModal from "./PatchNotesModal";
-import settingsIcon from "../assets/settings.svg";
-import DiscordLogo from "../assets/discord.svg";
-import PatreonLogo from "../assets/patreon.png";
 import DragBar from "./DragBar";
 import ProgressBar from "./ProgressBar";
 import {
   IconChevronDown,
   IconX,
   IconTrash,
-  IconWorld,
-  IconBook,
   IconUsers,
-  IconPuzzle,
+  IconBook,
   IconServer,
-  IconServerCog,
+  IconCloud,
+  IconPuzzle,
+  IconWorld,
 } from "@tabler/icons-react";
 import cn from "../utils/cn";
 import { stripHtmlToText } from "../utils/sanitize";
@@ -211,6 +208,25 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
     hasBuild1Installed,
   } = useGameContext();
   const { username } = useUserContext();
+  const [isDark, setIsDark] = useState(() => {
+    try {
+      const stored = localStorage.getItem("arytale:theme");
+      if (stored === "dark") return true;
+      if (stored === "light") return false;
+    } catch {}
+    return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? true;
+  });
+
+  const toggleTheme = useCallback(() => {
+    setIsDark((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("arytale:theme", next ? "dark" : "light");
+      } catch {}
+      return next;
+    });
+  }, []);
+
   const [closeDownloadConfirmOpen, setCloseDownloadConfirmOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [modsOpen, setModsOpen] = useState(false);
@@ -1201,19 +1217,23 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
 
   return (
     <div
-      className="w-full h-full min-h-screen flex flex-col justify-between relative"
-      style={
-        hasCustomBg
+      className={`w-full h-full min-h-screen flex flex-col justify-between relative overflow-hidden ${isDark ? "theme-dark" : ""}`}
+      style={{
+        borderRadius: "12px 12px 0 0",
+        ...(hasCustomBg
           ? {}
           : {
               backgroundImage: `url(${arytaleBg})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-            }
-      }
+            }),
+      }}
     >
       <DragBar
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
+        onSettingsClick={() => setSettingsOpen(true)}
         left={
           offlineMode ? (
             <div className="no-drag flex items-center gap-2">
@@ -1223,9 +1243,10 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               <button
                 type="button"
                 className={cn(
-                  "no-drag text-xs px-2 py-1 rounded-md border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10 transition",
+                  "no-drag text-xs px-2 py-1 rounded-md border transition",
                   checkingUpdates && "opacity-60 cursor-not-allowed",
                 )}
+                style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                 onClick={() => reconnect()}
                 disabled={checkingUpdates}
                 title={t("common.retryConnection")}
@@ -1235,92 +1256,57 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             </div>
           ) : null
         }
-        onOpenMatchaGlobalChat={openMatchaGlobalChat}
       />
 
-      <div className="absolute top-10 left-3 z-30 w-64">
-        <button
-          type="button"
-          className="w-full bg-black/45 hover:bg-black/55 backdrop-blur-md rounded-xl shadow-xl border border-white/10 px-3 py-2 flex items-center justify-between transition"
-          onClick={() => setVersionsOpen((v) => !v)}
-          title={
-            versionsOpen ? t("launcher.version.hide") : t("launcher.version.show")
-          }
-        >
-          <div className="flex flex-col text-left">
-            <div className="text-sm font-semibold tracking-wide text-white">
-              {t("launcher.version.label")}:&nbsp;
-              {selected ? selectedLabel : t("launcher.version.select")}
-            </div>
-            <div className="text-[10px] text-gray-100 font-mono">
-              {versionType === "release"
-                ? t("launcher.version.release")
-                : t("launcher.version.preRelease")}
-              {selected &&
-                selected.build_index === latestVersion?.build_index &&
-                ` (${t("launcher.version.latest")})`}
+      {/* Version Selector Card */}
+      <div className="absolute top-8 left-0 z-40 w-[300px] entrance-anim" style={{ animationDelay: "0.05s" }}>
+        <div className="glass-panel p-6 rounded-2xl flex flex-col gap-5 relative">
+          {/* Header: version info + history */}
+          <div className="flex items-center gap-2">
+            <div className="relative group cursor-pointer rounded-xl pl-4 pr-10 py-2 transition-all flex-1 min-w-0" onClick={() => setVersionsOpen((v) => !v)}
+              style={{ background: isDark ? "rgba(0,0,0,0.4)" : "rgba(255,255,255,0.45)" }}
+            >
+              <div className="group-hover:opacity-80 transition-opacity">
+                <p className="text-lg font-bold truncate" style={{ color: "var(--text-on-surface)" }}>
+                  {selected ? selectedLabel : t("launcher.version.select")}
+                </p>
+              </div>
+              <IconChevronDown
+                size={16}
+                className={cn("absolute right-3 top-1/2 -translate-y-1/2 transition-transform duration-300", versionsOpen && "rotate-180")}
+                style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)" }}
+              />
+              <p className="text-[10px] font-medium" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.45)" }}>
+                {versionType === "release"
+                  ? t("launcher.version.release")
+                  : t("launcher.version.preRelease")}
+                {selected &&
+                  selected.build_index === latestVersion?.build_index &&
+                  ` • ${t("launcher.version.latest")}`}
+              </p>
             </div>
           </div>
-          <IconChevronDown
-            size={18}
+
+          {/* Version dropdown */}
+          <div
             className={cn(
-              "text-white/80 transition-transform duration-300",
-              versionsOpen && "rotate-180",
+              "absolute top-full left-5 mt-1 z-50 transition-all duration-300 origin-top rounded-xl",
+              isDark ? "w-[260px]" : "w-[240px]",
+              versionsOpen
+                ? "opacity-100 scale-y-100 pointer-events-auto"
+                : "opacity-0 scale-y-0 pointer-events-none",
             )}
-          />
-        </button>
-
-        <div
-          className={cn(
-            "mt-2 opacity-0 -translate-y-1 pointer-events-none rounded-xl border border-white/10 bg-black/45 backdrop-blur-md shadow-xl overflow-hidden transition-all",
-            versionsOpen && "pointer-events-auto opacity-100 translate-y-0",
-          )}
-        >
-          <div className="h-56 p-3 flex flex-col">
-            <div className="flex gap-1 mb-3 bg-white/5 rounded-lg p-1">
-              <button
-                type="button"
-                className={cn(
-                  "flex-1 text-xs px-2 py-1 rounded-md transition text-gray-200 hover:bg-white/10",
-                  versionType === "release" &&
-                    "bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white shadow",
-                )}
-                onClick={() => {
-                  setVersionType("release");
-                }}
-              >
-                {t("launcher.version.release")}
-              </button>
-              <button
-                type="button"
-                className={cn(
-                  "flex-1 text-xs px-2 py-1 rounded-md transition text-gray-200 hover:bg-white/10",
-                  versionType === "pre-release" &&
-                    "bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white shadow",
-                )}
-                onClick={() => {
-                  void (async () => {
-                    if (!isPremium) {
-                      const ok = await checkMatchaSupporterRank();
-                      if (!ok) {
-                        setSupporterGateOpen(true);
-                        return;
-                      }
-                    }
-                    setVersionType("pre-release");
-                  })();
-                }}
-              >
-                {t("launcher.version.preRelease")}
-              </button>
-            </div>
-
-            <label className="text-[11px] text-gray-200/80 mb-1">
-              {t("launcher.version.selectBuild")}
-            </label>
-            <div className="flex-1 overflow-y-auto pr-2">
+            style={{
+              background: isDark ? "rgba(0, 0, 0, 0.6)" : "rgba(255, 255, 255, 0.75)",
+              border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
+              color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)",
+            }}
+          >
+            <div className="p-2 max-h-56 overflow-y-auto">
               {availableVersions.length === 0 ? (
-                <div className="text-gray-400 text-xs p-2">
+                <div className="text-xs p-2" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)" }}>
                   {offlineMode
                     ? t("launcher.version.noInstalledBuilds")
                     : t("common.loading")}
@@ -1328,10 +1314,6 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               ) : (
                 availableVersions.map((v, idx) => {
                   const name = v.build_name?.trim() || `Build-${v.build_index}`;
-                  const suffix =
-                    v.isLatest
-                      ? ` • ${t("launcher.version.latest")}`
-                      : "";
                   const isSelected = selectedVersion === idx;
                   const isLocked = isVersionLocked(v);
                   const isRunningBuild =
@@ -1344,17 +1326,28 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     <div
                       key={`${v.type}:${v.build_index}`}
                       className={cn(
-                        "flex items-center justify-between p-2 rounded-md mb-1 cursor-pointer text-gray-200 hover:text-white hover:bg-white/10 transition",
-                        isSelected && "bg-blue-600/40 text-white",
-                        isLocked && "opacity-40 cursor-not-allowed hover:bg-transparent hover:text-gray-200",
+                        "flex items-center justify-between p-3 rounded-lg mb-0.5 cursor-pointer transition-all",
+                        isLocked && "opacity-40 cursor-not-allowed",
                       )}
+                      style={
+                        isSelected
+                          ? { background: "rgba(91, 155, 245, 0.2)", color: isDark ? "#fff" : "#111" }
+                          : { color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.8)" }
+                      }
+                      onMouseEnter={(e) => {
+                        if (isSelected) return;
+                        e.currentTarget.style.background = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)";
+                      }}
+                      onMouseLeave={(e) => {
+                        if (isSelected) return;
+                        e.currentTarget.style.background = "transparent";
+                      }}
                       onClick={() => {
                         void (async () => {
                           if (isLocked) {
                             alert(t("launcher.version.requiresBuild1"));
                             return;
                           }
-
                           if (isSupporterOnlyVersion(v)) {
                             const ok = await checkMatchaSupporterRank();
                             if (!ok) {
@@ -1362,34 +1355,28 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                               return;
                             }
                           }
-
                           setSelectedVersion(idx);
                           setVersionsOpen(false);
                         })();
                       }}
                     >
                       <div className="flex flex-col">
-                        <span className="text-xs">
-                          {name}
-                          {suffix ? (
-                            <span className="text-gray-300/70">{suffix}</span>
-                          ) : null}
+                        <span className="text-sm font-medium">{name}</span>
+                        <span className="text-[10px]" style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)" }}>
+                          {v.isLatest ? t("launcher.version.latest") : v.type === "pre-release" ? "Beta" : ""}
+                          {v.build_index === 1 && !v.installed && !isCustom
+                            ? ` • ${t("launcher.version.manualInstallRequired")}`
+                            : ""}
                         </span>
-
-                        {v.build_index === 1 && !v.installed && !isCustom ? (
-                          <span className="text-[10px] text-gray-300/70">
-                            {t("launcher.version.manualInstallRequired")}
-                          </span>
-                        ) : null}
                       </div>
-
                       {v.installed && (
                         <button
                           type="button"
                           className={cn(
-                            "ml-2 text-xs text-gray-200 hover:text-red-400 cursor-pointer",
+                            "ml-2 hover:text-red-400 cursor-pointer transition-colors",
                             isRunningBuild && "opacity-60 cursor-not-allowed hover:text-gray-200",
                           )}
+                          style={{ color: isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.35)" }}
                           onClick={(e) => {
                             e.stopPropagation();
                             if (isRunningBuild) return;
@@ -1410,101 +1397,247 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 })
               )}
             </div>
-
-            {updateAvailable &&
-            !updateDismissed &&
-            versionType === "release" ? (
-              <div className="mt-2 text-[11px] text-blue-200/90">
-                {t("launcher.updates.available")}
-              </div>
-            ) : null}
           </div>
+
+          {/* Release / Beta toggle */}
+          <div
+            className="flex rounded-xl gap-1 p-1"
+            style={{ background: isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.75)" }}
+          >
+            <button
+              type="button"
+              className={cn(
+                "flex-1 py-2 text-sm font-bold rounded-lg transition-all",
+              )}
+              style={
+                versionType === "release"
+                  ? { background: isDark ? "rgba(255,255,255,0.15)" : "white", color: "var(--btn-primary)", boxShadow: isDark ? "none" : "0 1px 3px rgba(0,0,0,0.1)" }
+                  : { color: isDark ? "#fff" : "rgba(0,0,0,0.6)" }
+              }
+              onClick={() => setVersionType("release")}
+            >
+              {t("launcher.version.release")}
+            </button>
+            <button
+              type="button"
+              className={cn(
+                "flex-1 py-2 text-sm font-semibold rounded-lg transition-all",
+              )}
+              style={
+                versionType === "pre-release"
+                  ? { background: isDark ? "rgba(255,255,255,0.15)" : "white", color: "var(--btn-primary)", boxShadow: isDark ? "none" : "0 1px 3px rgba(0,0,0,0.1)" }
+                  : { color: isDark ? "#fff" : "rgba(0,0,0,0.6)" }
+              }
+              onClick={() => {
+                void (async () => {
+                  if (!isPremium) {
+                    const ok = await checkMatchaSupporterRank();
+                    if (!ok) {
+                      setSupporterGateOpen(true);
+                      return;
+                    }
+                  }
+                  setVersionType("pre-release");
+                })();
+              }}
+            >
+              {t("launcher.version.preRelease")}
+            </button>
+          </div>
+
+          {updateAvailable && !updateDismissed && versionType === "release" ? (
+            <div className="text-[11px]" style={{ color: "var(--btn-primary)" }}>
+              {t("launcher.updates.available")}
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <div className="absolute top-11 right-3 z-30 flex flex-col items-end gap-2">
-        <div className="flex items-center justify-end gap-2">
-          {!offlineMode ? (
+      {/* Top-right: player profile */}
+      <div className="absolute top-20 right-6 z-30 entrance-anim" style={{ animationDelay: "0.2s" }}>
+        <div
+          className="glass-panel rounded-2xl p-6 min-w-[200px] flex flex-col items-center gap-4 cursor-pointer"
+          onClick={() => setFriendsMenuOpen((v) => !v)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setFriendsMenuOpen((v) => !v); }}
+        >
+          {/* Avatar */}
+          <div className="relative">
+            <div className="w-20 h-20 rounded-full overflow-hidden bg-white border-2 shadow-md"
+                 style={{ borderColor: "rgba(91, 155, 245, 0.10)" }}>
+              <img
+                src={arytaleLogo}
+                alt="Avatar"
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
+            </div>
+            <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full border-2 border-white"
+                  style={{ background: "var(--btn-primary)" }} />
+          </div>
+
+          {/* Name & Status */}
+          <div className="text-center">
+            <p className="font-bold text-lg leading-tight text-white">
+              {username || t("common.guest")}
+            </p>
+            <p className="mt-1 text-[10px] tracking-widest uppercase font-bold text-white/70"
+               style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+              {username ? "Online" : "Guest"}
+            </p>
+          </div>
+        </div>
+
+        {/* Icon button grid */}
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title="Wiki"
+            onClick={() => setWikiOpen(true)}
+          >
+            <IconBook size={20} />
+            <span className="text-[10px] font-semibold">Wiki</span>
+          </button>
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title="Servers"
+            onClick={() => setServersOpen(true)}
+          >
+            <IconServer size={20} />
+            <span className="text-[10px] font-semibold">Servers</span>
+          </button>
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title="Host a Server"
+            onClick={() => {
+              setHostServerStage("root");
+              setHostServerMenuOpen(true);
+            }}
+          >
+            <IconCloud size={20} />
+            <span className="text-[10px] font-semibold">Host</span>
+          </button>
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title="Mods"
+            onClick={() => setModsOpen(true)}
+          >
+            <IconPuzzle size={20} />
+            <span className="text-[10px] font-semibold">Mods</span>
+          </button>
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title={t("launcher.buttons.friends")}
+            onClick={(e) => { e.stopPropagation(); setFriendsMenuOpen((v) => !v); }}
+          >
+            <IconUsers size={20} />
+            <span className="text-[10px] font-semibold">Friends</span>
+          </button>
+          <button
+            type="button"
+            className="icon-grid-btn rounded-xl p-3 flex flex-col items-center gap-1.5 transition-all hover:scale-105"
+            title="Website"
+            onClick={() => void window.config.openExternal("https://aris-swift.com/")}
+          >
+            <IconWorld size={20} />
+            <span className="text-[10px] font-semibold">Website</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="flex items-start justify-between p-6">
+        <img
+          src={arytaleLogo}
+          alt="Arytale Logo"
+          className="w-auto h-full max-h-96 select-none entrance-anim"
+          draggable={false}
+          style={{ filter: isDark ? "drop-shadow(0 4px 20px rgba(0,0,0,0.4))" : "drop-shadow(0 4px 20px rgba(0,0,0,0.15))" }}
+        />
+      </div>
+      <SettingsModal
+        open={settingsOpen}
+        onClose={() => setSettingsOpen(false)}
+        onLogout={handleLogout}
+      />
+
+      <ModsModal
+        open={modsOpen}
+        onClose={() => setModsOpen(false)}
+      />
+
+      <ServersModal
+        open={serversOpen}
+        onClose={() => setServersOpen(false)}
+      />
+
+      <WikiModal
+        open={wikiOpen}
+        initialUrl={wikiLastUrl}
+        onClose={(lastUrl) => {
+          if (typeof lastUrl === "string" && lastUrl.trim()) {
+            setWikiLastUrl(lastUrl);
+          }
+          setWikiOpen(false);
+        }}
+      />
+
+      <MatchaTermsModal
+        open={matchaTermsOpen}
+        onClose={() => setMatchaTermsOpen(false)}
+      />
+
+      {/* Friends Menu Modal */}
+      {!offlineMode && friendsMenuOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center glass-backdrop animate-fade-in" onClick={() => setFriendsMenuOpen(false)}>
+          <div
+            ref={friendsMenuRef}
+            className="relative rounded-xl overflow-hidden animate-friendsMenuIn"
+            style={{ minWidth: "min(560px, calc(100vw - 48px))", maxWidth: "calc(100vw - 48px)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <FriendsMenu
+              open={friendsMenuOpen}
+              onClose={() => setFriendsMenuOpen(false)}
+              onOpenTerms={() => setMatchaTermsOpen(true)}
+              openTo={friendsMenuOpenTo}
+              openToNonce={friendsMenuOpenNonce}
+              launcherUsername={username}
+              gameDir={gameDir}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      {/* Host Server Modal */}
+      {hostServerMenuOpen ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center glass-backdrop animate-fade-in" onClick={() => setHostServerMenuOpen(false)}>
+          <div
+            ref={hostServerMenuRef}
+            className="relative rounded-xl shadow-2xl p-6 w-[560px] max-w-[90vw] max-h-[85vh] overflow-y-auto"
+            style={{ background: "var(--modal-bg)", border: "1px solid var(--modal-border)", backdropFilter: "blur(24px)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               type="button"
-              className={cn(
-                "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
-                "backdrop-blur-md text-white text-sm font-bold",
-                "flex items-center gap-2",
-                "transition duration-200",
-                "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35",
-                "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-              )}
-              title={t("launcher.buttons.wiki")}
-              onClick={() => {
-                setWikiOpen(true);
-              }}
+              className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition"
+              style={{ background: "var(--card-bg)", color: "var(--text-on-surface-muted)", border: "1px solid var(--card-border)" }}
+              onClick={() => setHostServerMenuOpen(false)}
             >
-              <IconBook size={18} className="text-white" />
-              {t("launcher.buttons.wiki")}
+              <IconX size={16} />
             </button>
-          ) : null}
-
-          {!offlineMode ? (
-            <button
-              type="button"
-              className={cn(
-                "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
-                "backdrop-blur-md text-white text-sm font-bold",
-                "flex items-center gap-2",
-                "transition duration-200",
-                "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35",
-                "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-              )}
-              title={t("launcher.buttons.servers")}
-              onClick={() => setServersOpen(true)}
-            >
-              <IconServer size={18} className="text-white" />
-              {t("launcher.buttons.servers")}
-            </button>
-          ) : null}
-
-          <div className="relative" ref={hostServerMenuRef}>
-            <button
-              type="button"
-              className={cn(
-                "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
-                "backdrop-blur-md text-white text-sm font-bold",
-                "flex items-center gap-2",
-                "transition duration-200",
-                "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35",
-                "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-                hostServerRunning &&
-                  "border-green-300/40 ring-2 ring-green-400/25 shadow-[0_0_18px_rgba(34,197,94,0.65)] animate-pulse",
-              )}
-              title={t("launcher.buttons.hostServer")}
-              onClick={() => {
-                setHostServerMenuOpen((v) => {
-                  const next = !v;
-                  if (next) {
-                    setHostServerStage((s) => (hostServerRunning ? s : "root"));
-                  } else {
-                    setHostServerStage((s) => (s === "local" && hostServerRunning ? "local" : "root"));
-                  }
-                  return next;
-                });
-              }}
-            >
-              <IconServerCog size={18} className="text-white" />
-              {t("launcher.buttons.hostServer")}
-            </button>
-
-            {hostServerMenuOpen ? (
-              <div className="absolute top-full right-0 mt-2 w-[420px] rounded-xl border border-white/10 bg-black/55 backdrop-blur-md shadow-2xl p-3">
                 {hostServerStage === "root" ? (
                   <>
-                    <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-3">
+                    <div className="rounded-lg p-4" style={{ border: "1px solid var(--card-border)", background: "var(--card-bg)" }}>
                       <button
                         type="button"
-                        className="mx-auto block px-4 py-2 rounded-lg font-semibold border border-[#2a3146] text-gray-200 hover:bg-white/5 transition"
+                        className="mx-auto block px-4 py-2 rounded-lg font-semibold transition"
+                        style={{ border: "1px solid var(--card-border)", color: "var(--text-on-surface)" }}
                         onClick={() => {
                           if (!hostServerWarningShownThisSession) {
                             setHostServerWarningShownThisSession(true);
@@ -1518,14 +1651,13 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                           }
 
                           setHostServerStage("local");
-                          setHostServerMenuOpen(true);
                         }}
                       >
                         {t("hostServerModal.localHost.button")}
                       </button>
                     </div>
 
-                    <div className="mt-3 relative overflow-hidden rounded-lg border border-blue-400/30 bg-[#1f2538]/70 p-3 animate-softGlowStrong">
+                    <div className="mt-3 relative overflow-hidden rounded-lg p-4 animate-softGlowStrong" style={{ border: "1px solid rgba(0,155,189,0.3)", background: "var(--card-bg)" }}>
                       <div
                         aria-hidden="true"
                         className="pointer-events-none absolute inset-0 bg-linear-to-r from-blue-500/18 via-blue-400/10 to-blue-500/18 bg-chroma-animated animate-chroma-shift animate-hue-slow"
@@ -1544,7 +1676,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
 
                         <button
                           type="button"
-                          className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
+                          className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white transition shadow-lg"
+                          style={{ background: "var(--btn-primary)" }}
                           onClick={() => {
                             void window.config.openExternal(
                               "https://www.hycloudhosting.com/gameservers/hytale?ref=butterlauncher",
@@ -1557,9 +1690,9 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     </div>
                   </>
                 ) : (
-                  <div className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 p-3">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between gap-3">
-                      <div className="text-xs font-semibold text-gray-200">
+                      <div className="text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                         {t("hostServerModal.panel.authMode.label")}
                       </div>
 
@@ -1570,7 +1703,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             e.target.value as "offline" | "authenticated" | "insecure",
                           )
                         }
-                        className="px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146] text-white text-sm outline-none focus:border-blue-400/60"
+                        className="px-3 py-2 rounded-lg text-sm outline-none"
+                        style={{ background: "var(--input-bg)", border: "1px solid var(--input-border)", color: "var(--text-on-surface)" }}
                       >
                         <option value="offline">{t("hostServerModal.panel.authMode.offline")}</option>
                         <option value="authenticated">{t("hostServerModal.panel.authMode.authenticated")}</option>
@@ -1581,25 +1715,25 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     <button
                       type="button"
                       className={cn(
-                        "mt-3 w-full px-3 py-2 rounded-lg border transition",
-                        hostServerAdvancedOpen
-                          ? "border-blue-400/60 bg-blue-500/15 text-blue-100 hover:bg-blue-500/20"
-                          : "border-[#2a3146] bg-[#23293a] hover:bg-[#2f3650] text-white",
-                        "text-sm font-semibold",
+                        "w-full px-3 py-2 rounded-lg border transition text-sm font-semibold",
                       )}
+                      style={hostServerAdvancedOpen
+                        ? { border: "1px solid rgba(0,155,189,0.3)", background: "rgba(0,155,189,0.15)", color: "var(--text-on-surface)" }
+                        : { border: "1px solid var(--card-border)", background: "var(--card-bg)", color: "var(--text-on-surface)" }
+                      }
                       onClick={() => setHostServerAdvancedOpen((v) => !v)}
                     >
                       {t("hostServerModal.panel.advanced.toggle")}
                     </button>
 
                     {hostServerAdvancedOpen ? (
-                      <div className="mt-3 space-y-2">
+                      <div className="space-y-2">
                         <button
                           type="button"
                           className={cn(
-                            "w-full px-3 py-2 rounded-lg border border-[#2a3146]",
-                            "bg-transparent hover:bg-white/5 text-gray-200 transition text-sm font-semibold",
+                            "w-full px-3 py-2 rounded-lg border transition text-sm font-semibold",
                           )}
+                          style={{ border: "1px solid var(--card-border)", background: "transparent", color: "var(--text-on-surface)" }}
                           onClick={async () => {
                             if (!isSelectedBuildInstalled()) {
                               showSelectedBuildNotInstalledError();
@@ -1630,7 +1764,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advRamEnabled}
                             onChange={(e) => setAdvRamEnabled(e.target.checked)}
                           />
-                          <div className="w-28 shrink-0 text-xs font-semibold text-gray-200">
+                          <div className="w-28 shrink-0 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.ram")}
                           </div>
 
@@ -1645,12 +1779,13 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                               placeholder={t("hostServerModal.panel.advanced.min")}
                               disabled={!advRamEnabled}
                               className={cn(
-                                "w-full min-w-0 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                                "text-white text-sm outline-none focus:border-blue-400/60",
+                                "w-full min-w-0 px-3 py-2 rounded-lg border",
+                                "text-sm outline-none focus:border-blue-400/60",
                                 !advRamEnabled && "opacity-60",
                               )}
+                              style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                             />
-                            <div className={cn("text-sm font-bold text-gray-200", !advRamEnabled && "opacity-60")}>G</div>
+                            <div className={cn("text-sm font-bold", !advRamEnabled && "opacity-60")} style={{ color: "var(--text-on-surface-muted)" }}>G</div>
                           </div>
 
                           <div className="flex-1 min-w-0 flex items-center gap-1">
@@ -1664,12 +1799,13 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                               placeholder={t("hostServerModal.panel.advanced.max")}
                               disabled={!advRamEnabled}
                               className={cn(
-                                "w-full min-w-0 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                                "text-white text-sm outline-none focus:border-blue-400/60",
+                                "w-full min-w-0 px-3 py-2 rounded-lg border",
+                                "text-sm outline-none focus:border-blue-400/60",
                                 !advRamEnabled && "opacity-60",
                               )}
+                              style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                             />
-                            <div className={cn("text-sm font-bold text-gray-200", !advRamEnabled && "opacity-60")}>G</div>
+                            <div className={cn("text-sm font-bold", !advRamEnabled && "opacity-60")} style={{ color: "var(--text-on-surface-muted)" }}>G</div>
                           </div>
                         </div>
 
@@ -1681,14 +1817,14 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advNoAotEnabled}
                             onChange={(e) => setAdvNoAotEnabled(e.target.checked)}
                           />
-                          <div className="text-xs font-semibold text-gray-200">
+                          <div className="text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.noAot")}
                           </div>
                         </div>
 
                         {/* Custom JVM Args */}
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-28 shrink-0 text-xs font-semibold text-gray-200">
+                          <div className="w-28 shrink-0 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.customJvmArgs")}
                           </div>
                           <input
@@ -1696,9 +1832,10 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             onChange={(e) => setAdvCustomJvmArgs(e.target.value)}
                             placeholder={t("hostServerModal.panel.advanced.customJvmArgsExample")}
                             className={cn(
-                              "flex-1 min-w-0 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                              "text-white text-sm outline-none focus:border-blue-400/60",
+                              "flex-1 min-w-0 px-3 py-2 rounded-lg border",
+                              "text-sm outline-none focus:border-blue-400/60",
                             )}
+                            style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                           />
                         </div>
 
@@ -1710,7 +1847,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advAssetsEnabled}
                             onChange={(e) => setAdvAssetsEnabled(e.target.checked)}
                           />
-                          <div className="w-28 text-xs font-semibold text-gray-200">
+                          <div className="w-28 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.customAssets")}
                           </div>
                           <input
@@ -1718,18 +1855,18 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             onChange={(e) => setAdvAssetsPath(e.target.value)}
                             disabled={!advAssetsEnabled}
                             className={cn(
-                              "flex-1 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                              "text-white text-sm outline-none focus:border-blue-400/60",
+                              "flex-1 px-3 py-2 rounded-lg border",
+                              "text-sm outline-none focus:border-blue-400/60",
                               !advAssetsEnabled && "opacity-60",
                             )}
+                            style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                           />
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
-                              "bg-transparent hover:bg-white/5 text-gray-200 transition text-sm",
-                              !advAssetsEnabled && "opacity-60 cursor-not-allowed",
+                              "px-3 py-2 rounded-lg border transition text-sm",
                             )}
+                            style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                             disabled={!advAssetsEnabled}
                             onClick={async () => {
                               if (!advAssetsEnabled) return;
@@ -1756,7 +1893,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advUniverseEnabled}
                             onChange={(e) => setAdvUniverseEnabled(e.target.checked)}
                           />
-                          <div className="w-28 text-xs font-semibold text-gray-200">
+                          <div className="w-28 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.universe")}
                           </div>
                           <input
@@ -1764,18 +1901,18 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             onChange={(e) => setAdvUniversePath(e.target.value)}
                             disabled={!advUniverseEnabled}
                             className={cn(
-                              "flex-1 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                              "text-white text-sm outline-none focus:border-blue-400/60",
+                              "flex-1 px-3 py-2 rounded-lg border",
+                              "text-sm outline-none focus:border-blue-400/60",
                               !advUniverseEnabled && "opacity-60",
                             )}
+                            style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                           />
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
-                              "bg-transparent hover:bg-white/5 text-gray-200 transition text-sm",
-                              !advUniverseEnabled && "opacity-60 cursor-not-allowed",
+                              "px-3 py-2 rounded-lg border transition text-sm",
                             )}
+                            style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                             disabled={!advUniverseEnabled}
                             onClick={async () => {
                               if (!advUniverseEnabled) return;
@@ -1803,7 +1940,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advModsEnabled}
                             onChange={(e) => setAdvModsEnabled(e.target.checked)}
                           />
-                          <div className="w-28 text-xs font-semibold text-gray-200">
+                          <div className="w-28 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.mods")}
                           </div>
                           <input
@@ -1811,18 +1948,18 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             onChange={(e) => setAdvModsPath(e.target.value)}
                             disabled={!advModsEnabled}
                             className={cn(
-                              "flex-1 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                              "text-white text-sm outline-none focus:border-blue-400/60",
+                              "flex-1 px-3 py-2 rounded-lg border",
+                              "text-sm outline-none focus:border-blue-400/60",
                               !advModsEnabled && "opacity-60",
                             )}
+                            style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                           />
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
-                              "bg-transparent hover:bg-white/5 text-gray-200 transition text-sm",
-                              !advModsEnabled && "opacity-60 cursor-not-allowed",
+                              "px-3 py-2 rounded-lg border transition text-sm",
                             )}
+                            style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                             disabled={!advModsEnabled}
                             onClick={async () => {
                               if (!advModsEnabled) return;
@@ -1850,7 +1987,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             checked={advEarlyPluginsEnabled}
                             onChange={(e) => setAdvEarlyPluginsEnabled(e.target.checked)}
                           />
-                          <div className="w-28 text-xs font-semibold text-gray-200">
+                          <div className="w-28 text-xs font-semibold" style={{ color: "var(--text-on-surface)" }}>
                             {t("hostServerModal.panel.advanced.earlyPlugins")}
                           </div>
                           <input
@@ -1858,18 +1995,18 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                             onChange={(e) => setAdvEarlyPluginsPath(e.target.value)}
                             disabled={!advEarlyPluginsEnabled}
                             className={cn(
-                              "flex-1 px-3 py-2 rounded-lg bg-[#141824]/80 border border-[#2a3146]",
-                              "text-white text-sm outline-none focus:border-blue-400/60",
+                              "flex-1 px-3 py-2 rounded-lg border",
+                              "text-sm outline-none focus:border-blue-400/60",
                               !advEarlyPluginsEnabled && "opacity-60",
                             )}
+                            style={{ background: "var(--input-bg)", borderColor: "var(--card-border)", color: "var(--text-on-surface)" }}
                           />
                           <button
                             type="button"
                             className={cn(
-                              "px-3 py-2 rounded-lg border border-[#2a3146]",
-                              "bg-transparent hover:bg-white/5 text-gray-200 transition text-sm",
-                              !advEarlyPluginsEnabled && "opacity-60 cursor-not-allowed",
+                              "px-3 py-2 rounded-lg border transition text-sm",
                             )}
+                            style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                             disabled={!advEarlyPluginsEnabled}
                             onClick={async () => {
                               if (!advEarlyPluginsEnabled) return;
@@ -1891,14 +2028,13 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                       </div>
                     ) : null}
 
-                    <div className="mt-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center justify-between gap-2 pt-2">
                       <button
                         type="button"
                         className={cn(
-                          "px-3 py-2 rounded-lg border border-[#2a3146]",
-                          "bg-transparent hover:bg-white/5 text-gray-200 transition",
-                          "text-sm font-semibold",
+                          "px-3 py-2 rounded-lg border transition text-sm font-semibold",
                         )}
+                        style={{ borderColor: "var(--card-border)", color: "var(--text-on-surface-muted)" }}
                         onClick={() => setHostServerConsoleOpen(true)}
                       >
                         {t("hostServerModal.panel.actions.showConsole")}
@@ -1975,7 +2111,6 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                               })
                               .then((res) => {
                                 if (res?.ok) {
-                                  // state/logs will also be reinforced by IPC events
                                   setHostServerRunning(true);
                                   return;
                                 }
@@ -2041,7 +2176,6 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                                 return;
                               }
                               pushHostLog(`[Launcher] Stopping server...`);
-                              // UI will flip to stopped when the process actually exits
                             });
                           }
                         }}
@@ -2053,233 +2187,9 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     </div>
                   </div>
                 )}
-              </div>
-            ) : null}
           </div>
-
-          <button
-            type="button"
-            className={cn(
-              "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-              "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
-              "backdrop-blur-md text-white text-sm font-bold",
-              "flex items-center gap-2",
-              "transition duration-200",
-              "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35",
-              "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-            )}
-            title={t("launcher.buttons.mods")}
-            onClick={() => setModsOpen(true)}
-          >
-            <IconPuzzle size={18} className="text-white" />
-            {t("launcher.buttons.mods")}
-          </button>
-
-          {!offlineMode ? (
-            <div className="relative" ref={friendsMenuRef}>
-              <button
-                type="button"
-                className={cn(
-                  "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                  "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
-                  "backdrop-blur-md text-white text-sm font-bold",
-                  "flex items-center gap-2",
-                  "transition duration-200",
-                  friendsHasUnread
-                    ? "hover:border-green-400/70 hover:ring-2 hover:ring-green-400/35"
-                    : "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35",
-                  friendsHasUnread
-                    ? "hover:shadow-[0_0_18px_rgba(34,197,94,0.65)]"
-                    : "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-                  friendsHasUnread && !friendsMenuOpen && "border-green-300/40 ring-2 ring-green-400/25 shadow-[0_0_18px_rgba(34,197,94,0.65)] animate-pulse",
-                )}
-                title={t("launcher.buttons.friends")}
-                onClick={() => setFriendsMenuOpen((v) => !v)}
-              >
-                <IconUsers size={18} className="text-white" />
-                {t("launcher.buttons.friends")}
-              </button>
-
-              <div
-                className={cn(
-                  "absolute top-full right-0 mt-2 w-[30vw] max-w-[560px]",
-                  friendsMenuOpen
-                    ? "pointer-events-auto visible animate-friendsMenuIn"
-                    : "pointer-events-none invisible",
-                )}
-                style={{ minWidth: "min(360px, calc(100vw - 24px))", maxWidth: "calc(100vw - 24px)" }}
-              >
-                <FriendsMenu
-                  open={friendsMenuOpen}
-                  onClose={() => setFriendsMenuOpen(false)}
-                  onOpenTerms={() => setMatchaTermsOpen(true)}
-                  openTo={friendsMenuOpenTo}
-                  openToNonce={friendsMenuOpenNonce}
-                  launcherUsername={username}
-                  gameDir={gameDir}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          <button
-            type="button"
-            className="bg-[#23293a]/80 hover:bg-[#3b82f6] transition p-2 rounded-full shadow-lg flex items-center justify-center"
-            title={t("launcher.buttons.settings")}
-            onClick={() => setSettingsOpen(true)}
-            style={{ width: 40, height: 40 }}
-          >
-            <img
-              src={settingsIcon}
-              alt="Settings"
-              width={22}
-              height={22}
-              style={{ filter: "invert(1)" }}
-            />
-          </button>
         </div>
-
-        <button
-          type="button"
-          className={cn(
-            "relative overflow-hidden group",
-            "p-2 rounded-full shadow-lg flex items-center justify-center",
-            "border border-white/10 bg-black/35 backdrop-blur-md",
-            "transition duration-200 ease-out",
-            "transform-gpu",
-            "shadow-[0_0_16px_rgba(88,101,242,0.35)]",
-            "animate-softGlowStrong",
-            "hover:border-white/20 hover:ring-2 hover:ring-[#5865F2]/55 hover:shadow-[0_0_26px_rgba(88,101,242,0.95)]",
-            "hover:-translate-y-0.5",
-            "hover:brightness-110 hover:saturate-150",
-            "active:translate-y-0 active:brightness-95 active:shadow-[0_0_14px_rgba(88,101,242,0.70)]",
-          )}
-          title="Discord"
-          onClick={() => {
-            void window.config.openExternal(
-              "https://discord.com/invite/fZgjHwv5pA",
-            );
-          }}
-          style={{ width: 40, height: 40 }}
-        >
-          <span
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute inset-0",
-              "bg-linear-to-r from-[#5865F2]/65 via-blue-500/40 to-[#5865F2]/65",
-              "bg-chroma-animated animate-chroma-shift animate-hue-slow",
-              "opacity-70 group-hover:opacity-100 transition-opacity duration-200",
-            )}
-          />
-          <img
-            src={DiscordLogo}
-            alt="Discord"
-            className="relative z-10 w-5 h-5 drop-shadow-[0_0_10px_rgba(88,101,242,0.75)]"
-          />
-        </button>
-
-        <button
-          type="button"
-          className={cn(
-            "relative overflow-hidden group",
-            "p-2 rounded-full shadow-lg flex items-center justify-center",
-            "border border-white/10 bg-black/35 backdrop-blur-md",
-            "transition duration-200",
-            "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35 hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
-            "shadow-[0_0_14px_rgba(2,212,212,0.22)]",
-            "animate-softGlowStrong",
-            "hover:shadow-[0_0_26px_rgba(59,130,246,0.90)] hover:ring-blue-400/35",
-          )}
-          title="Web"
-          onClick={() => {
-            void window.config.openExternal("https://butterlauncher.tech/");
-          }}
-          style={{ width: 40, height: 40 }}
-        >
-          <span
-            aria-hidden="true"
-            className={cn(
-              "pointer-events-none absolute inset-0",
-              "bg-linear-to-r from-blue-500/55 via-blue-400/45 to-blue-500/55",
-              "bg-chroma-animated animate-chroma-shift animate-hue-slow",
-              "opacity-75 group-hover:opacity-100 transition-opacity duration-200",
-            )}
-          />
-          <IconWorld size={20} className="relative z-10 text-white" />
-        </button>
-
-        <button
-          type="button"
-          className={cn(
-            "relative overflow-hidden group",
-            "rounded-full shadow-lg flex items-center justify-center",
-            "border border-transparent bg-black/35 backdrop-blur-md",
-            "transition duration-200 ease-out",
-            "transform-gpu",
-            "animate-softGlowStrong",
-            "hover:border-white/70 hover:ring-2 hover:ring-white/45",
-            "hover:shadow-xl",
-            "hover:-translate-y-0.5",
-            "hover:brightness-110",
-            "active:translate-y-0",
-            "active:brightness-95",
-          )}
-          aria-label="Support"
-          title={t("launcher.buttons.supportProject")}
-          onClick={() => {
-            void window.config.openExternal(
-              "https://aris-swift.com",
-            );
-          }}
-          style={{ width: 40, height: 40 }}
-        >
-          <img
-            src={PatreonLogo}
-            alt="Support"
-            className="relative z-10 w-full h-full object-cover"
-            draggable={false}
-          />
-        </button>
-      </div>
-      <div className="flex items-start justify-between p-6">
-        <img
-          src={arytaleLogo}
-          alt="Arytale Logo"
-          className="w-auto h-full max-h-96 drop-shadow-lg select-none"
-          draggable={false}
-        />
-      </div>
-      <SettingsModal
-        open={settingsOpen}
-        onClose={() => setSettingsOpen(false)}
-        onLogout={handleLogout}
-      />
-
-      <ModsModal
-        open={modsOpen}
-        onClose={() => setModsOpen(false)}
-      />
-
-      <ServersModal
-        open={serversOpen}
-        onClose={() => setServersOpen(false)}
-      />
-
-      <WikiModal
-        open={wikiOpen}
-        initialUrl={wikiLastUrl}
-        onClose={(lastUrl) => {
-          if (typeof lastUrl === "string" && lastUrl.trim()) {
-            setWikiLastUrl(lastUrl);
-          }
-          setWikiOpen(false);
-        }}
-      />
-
-      <MatchaTermsModal
-        open={matchaTermsOpen}
-        onClose={() => setMatchaTermsOpen(false)}
-      />
+      ) : null}
 
       <PatchNotesModal
         open={patchNotesOpen}
@@ -2446,9 +2356,9 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           });
         }}
       />
-      <div className="w-full px-6 py-4 bg-black/60 backdrop-blur-md flex flex-row items-center justify-between gap-6">
+      <div className="w-full px-6 py-4 flex flex-row items-center justify-between gap-6 entrance-anim" style={{ animationDelay: "0.2s", background: "var(--bottombar-bg)", borderTop: "1px solid var(--bottombar-border)" }}>
         {installing || patchingOnline ? (
-          <div className="w-52 h-16 p-4 bg-white/10 rounded-lg shadow-inner flex items-center gap-2">
+          <div className="w-52 h-16 p-4 rounded-lg shadow-inner flex items-center gap-2" style={{ background: "var(--input-bg)" }}>
             <ProgressBar progress={installing ? installProgress : patchProgress} />
 
             {installing &&
@@ -2472,7 +2382,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           <div className="flex flex-row items-center gap-2">
             {needsFixClient ? (
               <button
-                className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50"
+                className="min-w-52 text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50"
+                style={{ background: "var(--btn-primary)" }}
                 onClick={fixClient}
                 disabled={launching || gameLaunched}
                 title={t("launcher.updates.fixClientTooltip")}
@@ -2483,7 +2394,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               <>
                 {canSmartInstallLatest && isSelectedLatestRelease ? (
                   <button
-                    className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-8 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
+                    className="min-w-52 text-white text-xl font-bold px-8 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 play-pulse"
+                    style={{ background: "var(--btn-primary)" }}
                     onClick={() => {
                       const latestIdx = availableVersions.findIndex(
                         (v) =>
@@ -2512,7 +2424,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                   </button>
                 ) : (
                   <button
-                    className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
+                    className="min-w-52 text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 play-pulse"
+                    style={{ background: "var(--btn-primary)" }}
                     onClick={() => {
                       const latestIdx = availableVersions.findIndex(
                         (v) =>
@@ -2546,7 +2459,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 {canSmartInstallLatest && isSelectedLatestRelease ? (
                   <button
                     type="button"
-                    className="min-w-[160px] bg-white/10 hover:bg-white/20 text-white text-sm font-bold px-6 py-3 rounded-lg shadow-lg transition disabled:opacity-50"
+                    className="min-w-[160px] text-sm font-bold px-6 py-3 rounded-lg shadow-lg transition disabled:opacity-50"
+                    style={{ background: "var(--input-bg)", color: "var(--text-on-surface)" }}
                     onClick={() => {
                       const latestIdx = availableVersions.findIndex(
                         (v) =>
@@ -2572,10 +2486,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               !availableVersions[selectedVersion]?.installed ? (
                 isCustom ? (
                   <button
-                    className={cn(
-                      "min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
-                      "animate-tinyGlow",
-                    )}
+                    style={{ background: "var(--btn-primary)" }}
+                    className="min-w-52 text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50"
                     onClick={handleLaunch}
                     disabled={launching || gameLaunched}
                   >
@@ -2584,7 +2496,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 ) : (
                   <button
                     type="button"
-                    className="min-w-52 bg-white/10 hover:bg-white/20 text-white/90 text-sm font-semibold px-6 py-3 rounded-lg shadow-lg text-center transition"
+                    className="min-w-52 text-sm font-semibold px-6 py-3 rounded-lg shadow-lg text-center transition"
+                    style={{ background: "var(--input-bg)", color: "var(--text-on-surface)" }}
                     onClick={async () => {
                       try {
                         if (!gameDir) {
@@ -2634,10 +2547,11 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 <div className="relative inline-flex items-center justify-center">
                   <button
                     className={cn(
-                      "min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
+                      "min-w-52 text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
                       !availableVersions[selectedVersion]?.installed &&
-                        "animate-tinyGlow",
+                        "play-pulse",
                     )}
+                    style={{ background: "var(--btn-primary)" }}
                     onClick={handleLaunch}
                     disabled={launching || gameLaunched}
                   >
@@ -2651,7 +2565,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                   {selectedPatchNotesUrl ? (
                     <button
                       type="button"
-                      className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-10 text-[11px] font-semibold px-0 py-0 bg-transparent text-white/70 hover:text-blue-300 underline underline-offset-2 transition whitespace-nowrap"
+                      className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-10 text-[11px] font-semibold px-0 py-0 bg-transparent underline underline-offset-2 transition whitespace-nowrap"
+                      style={{ color: "var(--text-on-surface-muted)" }}
                       onClick={() => {
                         setPatchNotesUrl(selectedPatchNotesUrl);
                         setPatchNotesChannel(selected?.type ?? null);
@@ -2668,7 +2583,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             {showUpdatePrompt && (
               <button
                 type="button"
-                className="w-10 h-10 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                className="w-10 h-10 rounded-lg flex items-center justify-center transition"
+                style={{ background: "var(--input-bg)", color: "var(--text-on-surface)" }}
                 title={t("launcher.updates.dismissForNow")}
                 onClick={() => dismissUpdateForNow()}
               >
@@ -2680,10 +2596,12 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               <button
                 type="button"
                 className={cn(
-                  "min-w-[140px] h-[52px] rounded-lg px-4 text-sm font-bold shadow-lg transition disabled:opacity-50 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white hover:scale-105",
-                  onlinePatchEnabled &&
-                    "bg-white/10 hover:bg-white/20 text-white",
+                  "min-w-[140px] h-[52px] rounded-lg px-4 text-sm font-bold shadow-lg transition disabled:opacity-50",
+                  onlinePatchEnabled
+                    ? ""
+                    : "text-white",
                 )}
+                style={!onlinePatchEnabled ? { background: "var(--btn-primary)" } : { background: "var(--input-bg)", color: "var(--text-on-surface)" }}
                 disabled={launching || gameLaunched}
                 onClick={() => {
                   // If enabled but outdated, re-run enable to download/apply the new patch.
@@ -2719,40 +2637,43 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
         <div className="relative flex flex-col items-end gap-2">
           <div className="relative flex flex-row gap-4">
             {(newsItems.length
-      			  ? newsItems
-      			  : [{ title: t("launcher.news.loading"), content: "" }])
-      			  .slice(0, 3)
-      			  .map((item, idx) => {
-      				const hasContent = !!item.content?.trim();
-      				return (
-      				  <div
-      					key={`${idx}-${item.title}`}
-                tabIndex={hasContent ? 0 : -1}
-      					onClick={hasContent ? () => setOpenNews(item) : undefined}
-                onKeyDown={(e) => hasContent && (e.key === "Enter" || e.key === " ") && setOpenNews(item)}
-      					className={`
-      					  w-40 h-20 rounded-lg flex flex-col items-center text-center p-2
-      					  transition-all duration-200 ease-in-out select-none shadow-inner
-      					  ${hasContent 
-      						? "bg-white/10 group hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB] hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] hover:-translate-y-0.5" 
-      						: "bg-white/5"}
-      					`}
-      				  >
-      					<div className="flex-1 w-full flex items-center justify-center pointer-events-none">
-      					  <div className="text-xs text-white font-semibold leading-tight line-clamp-3">
-      						{item.title}
-      					  </div>
-      					</div>
-      					{hasContent ? (
-      					  <span className="text-[10px] text-blue-200 font-semibold group-hover:text-white transition-colors duration-200">
-      						{t("launcher.news.showMore")}
-      					  </span>
-      					) : (
-      					  <div className="h-[14px]" />
-      					)}
-      				  </div>
-      				);
-      			})}
+              ? newsItems
+              : [{ title: t("launcher.news.loading"), content: "" }])
+              .slice(0, 3)
+              .map((item, idx) => {
+                const hasContent = !!item.content?.trim();
+                return (
+                  <div
+                    key={`${idx}-${item.title}`}
+                    tabIndex={hasContent ? 0 : -1}
+                    onClick={hasContent ? () => setOpenNews(item) : undefined}
+                    onKeyDown={(e) => hasContent && (e.key === "Enter" || e.key === " ") && setOpenNews(item)}
+                    className={cn(
+                      "w-40 h-20 rounded-lg flex flex-col items-center text-center p-2",
+                      "transition-all duration-200 ease-in-out select-none",
+                      hasContent ? "cursor-pointer" : "",
+                    )}
+                    style={{
+                      background: hasContent ? "var(--card-bg)" : "var(--input-bg)",
+                      border: "1px solid var(--card-border)",
+                      color: "var(--text-on-surface)",
+                    }}
+                  >
+                    <div className="flex-1 w-full flex items-center justify-center pointer-events-none">
+                      <div className="text-xs font-semibold leading-tight line-clamp-3">
+                        {item.title}
+                      </div>
+                    </div>
+                    {hasContent ? (
+                      <span className="text-[10px] font-semibold transition-colors duration-200" style={{ color: "var(--btn-primary)" }}>
+                        {t("launcher.news.showMore")}
+                      </span>
+                    ) : (
+                      <div className="h-[14px]" />
+                    )}
+                  </div>
+                );
+            })}
 
             {/* Toggle button centered over the 3 news cards */}
             <button
@@ -2760,18 +2681,16 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               className={cn(
                 "absolute left-1/2 -translate-x-1/2 -top-15 z-20",
                 "w-9 h-9 rounded-full",
-                "border border-white/10",
-                "bg-linear-to-b from-black/60 to-black/40",
-                "backdrop-blur-xl",
-                "shadow-[0_10px_30px_rgba(0,0,0,0.35)]",
-                "text-white/90 hover:text-white",
                 "flex items-center justify-center",
                 "transition-all duration-300 ease-out",
                 "hover:-translate-y-0.5",
-                "hover:shadow-[0_15px_35px_rgba(0,0,0,0.5)]",
-                "transition",
-                "hover:border-blue-400/50 hover:ring-4 hover:ring-blue-400/10",
               )}
+              style={{
+                background: "var(--card-bg)",
+                border: "1px solid var(--card-border)",
+                color: "var(--text-on-surface)",
+                boxShadow: "var(--glass-shadow)",
+              }}
               title={
                 hytaleFeedOpen
                   ? t("launcher.hytaleFeed.toggleHide")
@@ -2790,25 +2709,27 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             </button>
           </div>
 
-          {/* Floating panel above the launcher news (darker for readability) */}
+          {/* Floating panel above the launcher news */}
           {hytaleFeedOpen ? (
             <div
               className={cn(
                 "absolute left-1/2 -translate-x-1/2 -top-[255px] z-10",
                 "w-[540px] max-w-[70vw]",
                 "rounded-2xl",
-                "border border-white/20",
-                "bg-linear-to-b from-black/70 to-black/45",
-                "backdrop-blur-xl",
-                "shadow-[0_20px_60px_rgba(0,0,0,0.45)]",
                 "p-3",
               )}
+              style={{
+                background: "var(--glass-bg)",
+                backdropFilter: "var(--glass-blur)",
+                border: "1px solid var(--glass-border)",
+                boxShadow: "var(--glass-shadow)",
+              }}
             >
               <div className="flex items-center justify-between gap-3 mb-2">
-                <div className="text-[11px] uppercase tracking-widest text-white/85">
+                <div className="text-[11px] uppercase tracking-widest" style={{ color: "var(--text-on-surface)" }}>
                   {t("launcher.hytaleFeed.title")}
                 </div>
-                <div className="text-[10px] text-white/65">
+                <div className="text-[10px]" style={{ color: "var(--text-on-surface-muted)" }}>
                   {hytaleFeedLoading
                     ? t("launcher.hytaleFeed.statusLoading")
                     : hytaleFeedError
@@ -2818,11 +2739,11 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               </div>
 
               {hytaleFeedLoading ? (
-                <div className="text-xs text-white/75">
+                <div className="text-xs" style={{ color: "var(--text-on-surface-muted)" }}>
                   {t("launcher.hytaleFeed.statusLoading")}
                 </div>
               ) : hytaleFeedError ? (
-                <div className="text-xs text-white/75">{hytaleFeedError}</div>
+                <div className="text-xs" style={{ color: "var(--text-on-surface-muted)" }}>{hytaleFeedError}</div>
               ) : (
                 <div
                   ref={hytaleFeedScrollRef}
@@ -2849,24 +2770,25 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                       className={cn(
                         "w-[260px] shrink-0",
                         "text-left p-2 rounded-xl",
-                        "border border-white/14",
-                        "bg-black/35 hover:bg-black/25",
-                        "shadow-[0_8px_24px_rgba(0,0,0,0.22)]",
                         "transition",
                         "flex gap-2",
-                        "hover:border-blue-300/45 hover:ring-1 hover:ring-blue-400/20",
                       )}
+                      style={{
+                        background: "var(--card-bg)",
+                        border: "1px solid var(--card-border)",
+                        color: "var(--text-on-surface)",
+                      }}
                       onClick={() => void window.config.openExternal(n.url)}
                       title={n.url}
                     >
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs text-white font-semibold leading-tight line-clamp-2">
+                        <div className="text-xs font-semibold leading-tight line-clamp-2">
                           {n.title}
                         </div>
-                        <div className="mt-1 text-[11px] text-white/75 line-clamp-3">
+                        <div className="mt-1 text-[11px] line-clamp-3" style={{ color: "var(--text-on-surface-muted)" }}>
                           {n.description}
                         </div>
-                        <div className="mt-1 text-[10px] text-blue-200 underline underline-offset-2">
+                        <div className="mt-1 text-[10px] underline underline-offset-2" style={{ color: "var(--btn-primary)" }}>
                           {t("launcher.hytaleFeed.open")}
                         </div>
                       </div>
@@ -2875,7 +2797,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                         <img
                           src={n.image}
                           alt={n.title}
-                          className="w-14 h-14 rounded-lg object-cover border border-white/15 bg-white/5 shrink-0"
+                          className="w-14 h-14 rounded-lg object-cover shrink-0"
+                          style={{ border: "1px solid var(--card-border)" }}
                           loading="lazy"
                           onError={(e) => {
                             (e.currentTarget as HTMLImageElement).style.display = "none";
@@ -2947,7 +2870,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           onClick={() => setOpenNews(null)}
         >
           <div
-            className="w-[520px] max-w-[90vw] max-h-[80vh] rounded-2xl shadow-2xl bg-[#181c24f2] border border-[#23293a] p-5 animate-slideUp"
+            className="w-[520px] max-w-[90vw] max-h-[80vh] rounded-2xl shadow-2xl p-5 animate-slideUp launcher-glass"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start gap-4">
@@ -2957,12 +2880,12 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             </div>
 
             {openNews.date && (
-              <div className="mt-1 text-[11px] text-gray-400 font-mono">
+              <div className="mt-1 text-[11px] font-mono" style={{ color: "var(--text-on-surface-muted)" }}>
                 {openNews.date}
               </div>
             )}
 
-            <div className="mt-4 text-sm text-gray-200 whitespace-pre-wrap overflow-auto max-h-[55vh]">
+            <div className="mt-4 text-sm whitespace-pre-wrap overflow-auto max-h-[55vh]" style={{ color: "var(--text-on-surface)" }}>
               {parseNewsContent(openNews.content).map((p, i) => {
                 if (p.type === "text") {
                   return <span key={`t-${i}`}>{p.value}</span>;
@@ -3016,7 +2939,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             <div className="mt-5 flex justify-end">
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg bg-[#23293a] text-white hover:bg-[#2b3347] transition"
+                className="px-4 py-2 rounded-lg transition"
+                style={{ background: "var(--card-bg)", color: "var(--text-on-surface)" }}
                 onClick={() => setOpenNews(null)}
               >
                 {t("common.close")}
@@ -3032,7 +2956,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           onClick={() => setPatchConfirmOpen(false)}
         >
           <div
-            className="w-[520px] max-w-[90vw] max-h-[80vh] rounded-2xl shadow-2xl bg-[#181c24f2] border border-[#23293a] p-5 animate-slideUp"
+            className="w-[520px] max-w-[90vw] max-h-[80vh] rounded-2xl shadow-2xl p-5 animate-slideUp launcher-glass"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">
@@ -3049,7 +2973,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               </button>
             </div>
 
-            <div className="mt-3 text-sm text-gray-200 whitespace-pre-wrap">
+            <div className="mt-3 text-sm whitespace-pre-wrap" style={{ color: "var(--text-on-surface)" }}>
               {selected.patch_note?.trim()
                 ? selected.patch_note
                 : t("launcher.onlinePatch.notesNone")}
@@ -3058,14 +2982,16 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             <div className="mt-5 flex justify-end gap-2">
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg bg-[#23293a] text-white hover:bg-[#2b3347] transition"
+                className="px-4 py-2 rounded-lg transition"
+                style={{ background: "var(--card-bg)", color: "var(--text-on-surface)" }}
                 onClick={() => setPatchConfirmOpen(false)}
               >
                 {t("launcher.onlinePatch.confirmCancel")}
               </button>
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-bold hover:scale-[1.02] transition"
+                className="px-4 py-2 rounded-lg text-white font-bold hover:scale-[1.02] transition"
+                style={{ background: "var(--btn-primary)" }}
                 onClick={() => {
                   setPatchConfirmOpen(false);
                   startOnlinePatch();

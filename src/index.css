@@ -668,3 +668,345 @@ body.arytale-closing-to-tray::after {
   position: relative;
   z-index: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Dark / Light theme system
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  --color-primary: #5B9BF5;
+  --color-primary-hover: #7DB3FF;
+  --color-tertiary: #93C5FD;
+
+  /* Light theme (default) */
+  --bg-body: #f8fafc;
+  --text-on-surface: #191c22;
+  --text-on-surface-muted: #44474e;
+
+  --glass-bg: rgba(255, 255, 255, 0.70);
+  --glass-border: rgba(255, 255, 255, 0.40);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  --glass-blur: blur(24px);
+
+  --card-bg: rgba(255, 255, 255, 0.60);
+  --card-border: rgba(0, 0, 0, 0.06);
+  --card-hover: rgba(0, 0, 0, 0.03);
+
+  --topbar-bg: rgba(255, 255, 255, 0.40);
+  --topbar-border: rgba(0, 0, 0, 0.05);
+
+  --bottombar-bg: rgba(255, 255, 255, 0.50);
+  --bottombar-border: rgba(0, 0, 0, 0.05);
+
+  --input-bg: rgba(0, 0, 0, 0.04);
+  --input-border: rgba(0, 0, 0, 0.06);
+
+  --nav-text: #44474e;
+  --nav-text-active: #5B9BF5;
+  --nav-hover-bg: rgba(0, 0, 0, 0.04);
+
+  --btn-primary: #5B9BF5;
+  --btn-primary-text: #ffffff;
+
+  --toggle-bg-off: rgba(0, 0, 0, 0.06);
+  --toggle-bg-on: rgba(91, 155, 245, 0.15);
+  --toggle-border-off: rgba(0, 0, 0, 0.10);
+  --toggle-border-on: rgba(91, 155, 245, 0.30);
+
+  --overlay-bg: rgba(255, 255, 255, 0.10);
+
+  --modal-bg: rgba(255, 255, 255, 0.90);
+  --modal-border: rgba(0, 0, 0, 0.06);
+  --modal-header-bg: rgba(255, 255, 255, 0.80);
+  --modal-footer-bg: rgba(255, 255, 255, 0.80);
+}
+
+.theme-dark {
+  --bg-body: #0f1219;
+  --text-on-surface: #e8eaed;
+  --text-on-surface-muted: #8b8f9a;
+
+  --glass-bg: rgba(30, 35, 50, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.30);
+  --glass-blur: blur(24px);
+
+  --card-bg: rgba(30, 35, 50, 0.55);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-hover: rgba(255, 255, 255, 0.05);
+
+  --topbar-bg: rgba(15, 18, 25, 0.70);
+  --topbar-border: rgba(255, 255, 255, 0.06);
+
+  --bottombar-bg: rgba(15, 18, 25, 0.70);
+  --bottombar-border: rgba(255, 255, 255, 0.06);
+
+  --input-bg: rgba(255, 255, 255, 0.06);
+  --input-border: rgba(255, 255, 255, 0.10);
+
+  --nav-text: rgba(255, 255, 255, 0.70);
+  --nav-text-active: #93C5FD;
+  --nav-hover-bg: rgba(255, 255, 255, 0.06);
+
+  --btn-primary: #5B9BF5;
+  --btn-primary-text: #ffffff;
+
+  --toggle-bg-off: rgba(255, 255, 255, 0.06);
+  --toggle-bg-on: rgba(91, 155, 245, 0.20);
+  --toggle-border-off: rgba(255, 255, 255, 0.10);
+  --toggle-border-on: rgba(91, 155, 245, 0.40);
+
+  --overlay-bg: rgba(0, 0, 0, 0.20);
+
+  --modal-bg: rgba(24, 28, 36, 0.92);
+  --modal-border: rgba(255, 255, 255, 0.06);
+  --modal-header-bg: rgba(30, 35, 50, 0.80);
+  --modal-footer-bg: rgba(30, 35, 50, 0.80);
+}
+
+/* Glass panel utility */
+.launcher-glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.launcher-card {
+  background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--glass-shadow);
+  transition: background 0.3s, border-color 0.3s, transform 0.2s;
+}
+
+.launcher-card:hover {
+  background: var(--card-hover);
+}
+
+.launcher-nav-text {
+  color: var(--nav-text);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.launcher-nav-text:hover {
+  color: var(--nav-text-active);
+  background-color: var(--nav-hover-bg);
+}
+
+/* Entrance animation from mockup */
+@keyframes entranceSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.entrance-anim {
+  opacity: 0;
+  animation: entranceSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Play button pulse */
+@keyframes playPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(91, 155, 245, 0.25);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(91, 155, 245, 0.40);
+    transform: scale(1.01);
+  }
+}
+
+.play-pulse {
+  animation: playPulse 3s infinite ease-in-out;
+}
+
+/* News card mask fade */
+.mask-fade-right {
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+/* Hide scrollbar utility */
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hide-scroll {
+  scrollbar-width: none;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Modal theme overrides — force CSS variables onto modals
+   ═══════════════════════════════════════════════════════════ */
+
+/* Settings modal */
+.fixed.z-50 > div:first-of-type,
+.fixed.inset-0.z-50 > div:first-of-type {
+  background: var(--modal-bg) !important;
+  border-color: var(--modal-border) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+.fixed.z-50 h2,
+.fixed.inset-0.z-50 h2 {
+  color: var(--text-on-surface) !important;
+}
+
+.fixed.z-50 label,
+.fixed.inset-0.z-50 label {
+  color: var(--text-on-surface-muted) !important;
+}
+
+.fixed.z-50 button.absolute,
+.fixed.inset-0.z-50 button.absolute {
+  background: var(--card-bg) !important;
+  color: var(--text-on-surface-muted) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* All button-based modals (ConfirmModal, etc.) */
+.glass-backdrop {
+  background: rgba(0, 0, 0, 0.20) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* General modal content theming */
+.rounded-2xl.shadow-2xl {
+  background: var(--modal-bg) !important;
+  border-color: var(--modal-border) !important;
+}
+
+/* Inputs and selects inside modals */
+.fixed select,
+.fixed input[type="text"],
+.fixed input:not([type]) {
+  background: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--text-on-surface) !important;
+}
+
+/* Modal text colors */
+.fixed .text-gray-400,
+.fixed .text-gray-300,
+.fixed .text-gray-200 {
+  color: var(--text-on-surface-muted) !important;
+}
+
+.fixed .text-white {
+  color: var(--text-on-surface) !important;
+}
+
+/* Modal section backgrounds */
+.fixed .bg-\[\#1f2538\],
+.fixed .bg-\[\#23293a\],
+.fixed .bg-\[\#141824\] {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+}
+
+/* Modal borders */
+.fixed .border-\[\#2a3146\] {
+  border-color: var(--card-border) !important;
+}
+
+/* Modal buttons */
+.fixed .bg-\[\#23293a\]:hover,
+.fixed .bg-\[\#2f3650\] {
+  background: var(--card-hover) !important;
+}
+
+/* Modal footer buttons */
+.fixed button.rounded-lg.bg-blue-600,
+.fixed button.rounded-lg[class*="from-blue"] {
+  background: var(--btn-primary) !important;
+}
+
+/* Matcha popup / FriendsMenu theming */
+.w-\[30vw\] > div,
+[class*="FriendsMenu"] {
+  background: var(--modal-bg) !important;
+  border-color: var(--modal-border) !important;
+}
+
+/* Icon grid button shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.icon-grid-btn {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--btn-primary);
+  transition: all 0.3s ease;
+}
+
+.icon-grid-btn svg {
+  color: white;
+}
+
+.icon-grid-btn span {
+  color: var(--btn-primary);
+}
+
+.icon-grid-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-position: -200% center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.icon-grid-btn:hover {
+  background: var(--btn-primary);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.icon-grid-btn:hover svg {
+  color: white;
+}
+
+.icon-grid-btn:hover span {
+  color: white;
+}
+
+.icon-grid-btn:hover::after {
+  opacity: 1;
+  animation: shimmer 0.8s ease forwards;
+}
+
+.theme-dark .icon-grid-btn {
+  background: rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.theme-dark .icon-grid-btn span {
+  color: rgba(255, 255, 255, 0.7);
+}
