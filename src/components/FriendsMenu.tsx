@@ -280,7 +280,7 @@ const openExternalSafe = async (url: string) => {
   }
 };
 
-const API_BASE = "https://butter.lat";
+const API_BASE = "https://api.aris-swift.com";
 const WS_BASE = API_BASE.replace(/^http/, "ws");
 const WS_URL = `${WS_BASE}/api/matcha/ws`;
 const SUPPORTER_PATREON_URL = "https://aris-swift.com";

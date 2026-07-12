@@ -69,7 +69,7 @@ const SUPPORT_TICKET_EASTER_KEY = "supportticket";
 const FORCEPATCH_EASTER_KEY = "forcepatch";
 const SUPPORT_TICKET_POLL_MS = 2500;
 const SUPPORT_TICKET_API_BASE =
-  (import.meta as any).env?.VITE_SUPPORT_TICKET_API_BASE || "https://butter.lat";
+  (import.meta as any).env?.VITE_SUPPORT_TICKET_API_BASE || "https://api.aris-swift.com";
 
 const SUPPORT_TICKET_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 

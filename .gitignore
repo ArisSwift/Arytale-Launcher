@@ -39,3 +39,4 @@ dynamic_modules/
 
 # Local build notes
 BUILD_COMMANDS.txt
+/arytale-server

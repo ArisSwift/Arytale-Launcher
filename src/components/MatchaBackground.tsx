@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const API_BASE = "https://butter.lat";
+const API_BASE = "https://api.aris-swift.com";
 const LS_TOKEN = "matcha:token";
 
 const readToken = (): string | null => {

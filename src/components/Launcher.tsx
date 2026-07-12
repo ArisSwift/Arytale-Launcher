@@ -58,7 +58,7 @@ type HytaleFeedItem = {
 const HYTALE_FEED_URL =
   "https://launcher.hytale.com/launcher-feed/release/feed.json";
 
-const MATCHA_API_BASE = "https://butter.lat";
+const MATCHA_API_BASE = "https://api.aris-swift.com";
 const SUPPORTER_PATREON_URL = "https://aris-swift.com";
 
 const HYTALE_FEED_IMAGE_BASE =

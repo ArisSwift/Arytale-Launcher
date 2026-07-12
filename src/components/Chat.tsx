@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const WS_URL = "wss://butter.lat/api/matcha/ws";
+const WS_URL = "wss://api.aris-swift.com/api/matcha/ws";
 const EMOJIS = ["😀", "😂", "🔥", "❤️", "👍", "😎", "😭", "👀"];
 
 // Badges must be server-driven (admin/dev panel), not hardcoded client-side.

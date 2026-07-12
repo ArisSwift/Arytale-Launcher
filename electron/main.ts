@@ -1020,7 +1020,7 @@ const shutdownMatchaOffline = async () => {
   const timeoutMs = 1200;
   const t = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    await fetch("https://butter.lat/api/matcha/heartbeat", {
+    await fetch("https://api.aris-swift.com/api/matcha/heartbeat", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -2330,7 +2330,7 @@ ipcMain.handle(
         };
       }
 
-      const apiBase = "https://butter.lat";
+      const apiBase = "https://api.aris-swift.com";
       const uploadUrl = new URL("/api/matcha/avatar", apiBase).toString();
 
       const uploadCtrl = new AbortController();
@@ -2419,7 +2419,7 @@ ipcMain.handle(
 
       const hash = crypto.createHash("sha256").update(png).digest("hex");
 
-      const apiBase = "https://butter.lat";
+      const apiBase = "https://api.aris-swift.com";
       const uploadUrl = new URL("/api/matcha/avatar/custom", apiBase).toString();
 
       const uploadCtrl = new AbortController();
