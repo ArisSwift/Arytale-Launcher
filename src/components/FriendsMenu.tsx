@@ -2849,9 +2849,37 @@ export default function FriendsMenu({
 
     const ws = wsRef.current;
     if (ws && ws.readyState === WebSocket.OPEN && wsAuthedRef.current) {
+      let wsSent = false;
       try {
         ws.send(JSON.stringify({ type: "send", to, body }));
+        wsSent = true;
       } catch {
+        // WS send failed — fall through to HTTP.
+      }
+
+      if (!wsSent) {
+        try {
+          const resp = await apiJson("/api/matcha/messages/send", {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify({ to, body }),
+          });
+          if (!resp?.ok) {
+            if (String((resp as any)?.error || "") === "Banned" || (resp as any)?.bannedUntil) {
+              kickForBan(resp);
+              return;
+            }
+            setError(String(resp?.error || "Failed"));
+            return;
+          }
+          await loadMessages(token, withId);
+        } catch (e) {
+          setError(String(e instanceof Error ? e.message : "Failed to send message"));
+          return;
+        }
+      }
+    } else {
+      try {
         const resp = await apiJson("/api/matcha/messages/send", {
           method: "POST",
           headers: authHeaders(token),
@@ -2866,22 +2894,10 @@ export default function FriendsMenu({
           return;
         }
         await loadMessages(token, withId);
-      }
-    } else {
-      const resp = await apiJson("/api/matcha/messages/send", {
-        method: "POST",
-        headers: authHeaders(token),
-        body: JSON.stringify({ to, body }),
-      });
-      if (!resp?.ok) {
-        if (String((resp as any)?.error || "") === "Banned" || (resp as any)?.bannedUntil) {
-          kickForBan(resp);
-          return;
-        }
-        setError(String(resp?.error || "Failed"));
+      } catch (e) {
+        setError(String(e instanceof Error ? e.message : "Failed to send message"));
         return;
       }
-      await loadMessages(token, withId);
     }
 
     setTimeout(() => {
@@ -2952,26 +2968,54 @@ export default function FriendsMenu({
       }));
     }
 
-    setMsgText("");
-    setReplyDraft(null);
+    const sendPayload = replyTo ? { to, body, replyTo } : { to, body };
 
     // Prefer WebSocket for low latency.
     const ws = wsRef.current;
     if (ws && ws.readyState === WebSocket.OPEN && wsAuthedRef.current) {
+      let wsSent = false;
       try {
-        ws.send(
-          JSON.stringify(
-            replyTo
-              ? { type: "send", to, body, replyTo }
-              : { type: "send", to, body },
-          ),
-        );
+        ws.send(JSON.stringify({ type: "send", ...sendPayload }));
+        wsSent = true;
       } catch {
-        // fallback to HTTP
+        // WS send failed — fall through to HTTP.
+      }
+
+      if (wsSent) {
+        // WS is fire-and-forget; message will arrive via broadcast.
+        setMsgText("");
+        setReplyDraft(null);
+      } else {
+        // WS failed — try HTTP fallback.
+        try {
+          const resp = await apiJson("/api/matcha/messages/send", {
+            method: "POST",
+            headers: authHeaders(token),
+            body: JSON.stringify(sendPayload),
+          });
+          if (!resp?.ok) {
+            if (String((resp as any)?.error || "") === "Banned" || (resp as any)?.bannedUntil) {
+              kickForBan(resp);
+              return;
+            }
+            setError(String(resp?.error || "Failed"));
+            return;
+          }
+          setMsgText("");
+          setReplyDraft(null);
+          await loadMessages(token, withId);
+        } catch (e) {
+          setError(String(e instanceof Error ? e.message : "Failed to send message"));
+          return;
+        }
+      }
+    } else {
+      // No WebSocket — use HTTP.
+      try {
         const resp = await apiJson("/api/matcha/messages/send", {
           method: "POST",
           headers: authHeaders(token),
-          body: JSON.stringify(replyTo ? { to, body, replyTo } : { to, body }),
+          body: JSON.stringify(sendPayload),
         });
         if (!resp?.ok) {
           if (String((resp as any)?.error || "") === "Banned" || (resp as any)?.bannedUntil) {
@@ -2981,23 +3025,13 @@ export default function FriendsMenu({
           setError(String(resp?.error || "Failed"));
           return;
         }
+        setMsgText("");
+        setReplyDraft(null);
         await loadMessages(token, withId);
-      }
-    } else {
-      const resp = await apiJson("/api/matcha/messages/send", {
-        method: "POST",
-        headers: authHeaders(token),
-        body: JSON.stringify(replyTo ? { to, body, replyTo } : { to, body }),
-      });
-      if (!resp?.ok) {
-        if (String((resp as any)?.error || "") === "Banned" || (resp as any)?.bannedUntil) {
-          kickForBan(resp);
-          return;
-        }
-        setError(String(resp?.error || "Failed"));
+      } catch (e) {
+        setError(String(e instanceof Error ? e.message : "Failed to send message"));
         return;
       }
-      await loadMessages(token, withId);
     }
 
     setTimeout(() => {

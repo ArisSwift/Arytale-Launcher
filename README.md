@@ -1,8 +1,8 @@
 <p align="center">
-  <img alt="Butter Launcher Logo" src="src/assets/butter-logo.png" width="200">
+  <img alt="Butter Launcher Logo" src="src/assets/arytale-logo.png" width="200">
 </p>
 
-<h1 align="center">Butter Launcher</h1>
+<h1 align="center">Arytale Launcher</h1>
 
 <p align="center">
   <b>The Ultimate Hytale Experience.</b> <br>
