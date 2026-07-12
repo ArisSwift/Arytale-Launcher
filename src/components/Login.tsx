@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
-import butterLoginBg from "../assets/butter-login.jpeg";
-import butterLogo from "../assets/butter-logo.png";
+import arytaleLoginBg from "../assets/arytale-bg.png";
+import arytaleLogo from "../assets/arytale-logo.png";
 import DragBar from "./DragBar";
 import { useTranslation } from "react-i18next";
 import { customAlternativeLoginProvider } from "../utils/dynamicModules/customAlternativeLoginProvider";
@@ -296,7 +296,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
 
       <div className={`w-[380px] h-full ${hasCustomBg ? "bg-[#0f131a]/80 backdrop-blur-md" : "bg-[#0f131a]"} flex flex-col justify-center px-10 relative`}>
         <img
-          src={butterLogo}
+          src={arytaleLogo}
           alt="Logo"
           draggable={false}
           className="
@@ -444,7 +444,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
 
       <div
         className="flex-1 h-full bg-cover bg-center"
-        style={hasCustomBg ? {} : { backgroundImage: `url(${butterLoginBg})` }}
+        style={hasCustomBg ? {} : { backgroundImage: `url(${arytaleLoginBg})` }}
       />
     </div>
   );

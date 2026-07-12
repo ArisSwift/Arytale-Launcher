@@ -18,12 +18,12 @@ const RECONNECT_DELAY_MAX_MS = 30_000;
 let rpcActivity: SetActivity = {
   startTimestamp: dateElapsed,
   details: "Choosing Version",
-  largeImageKey: "butterlauncher",
-  largeImageText: "Butter Launcher",
+  largeImageKey: "arytalelauncher",
+  largeImageText: "Arytale Launcher",
   buttons: [
     {
       label: "Play Hytale the right way",
-      url: "https://butterlauncher.tech",
+      url: "https://aris-swift.com",
     },
   ],
 };

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arytale Launcher - Light Aesthetic</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;800&amp;family=JetBrains+Mono:wght@500&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e1e2eb",
+                "surface-bright": "#fcfcff",
+                "surface-container": "#f1f1f5",
+                "outline-variant": "#c4c7cf",
+                "on-secondary-container": "#2c0051",
+                "inverse-primary": "#00dbe7",
+                "secondary-fixed-dim": "#ddb7ff",
+                "primary": "#009bbd",
+                "tertiary-fixed-dim": "#00d1ff",
+                "inverse-on-surface": "#f1f1f5",
+                "tertiary-fixed": "#007ea7",
+                "surface-container-low": "#f7f7f9",
+                "secondary-container": "#f0dbff",
+                "on-background": "#191c22",
+                "on-primary-fixed-variant": "#004f54",
+                "on-tertiary": "#ffffff",
+                "on-error": "#ffffff",
+                "secondary": "#6f00be",
+                "surface-dim": "#dedee3",
+                "primary-fixed-dim": "#00dbe7",
+                "on-tertiary-container": "#002b36",
+                "on-secondary-fixed-variant": "#6900b3",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-fixed": "#002b36",
+                "surface": "#fcfcff",
+                "on-tertiary-fixed-variant": "#005a70",
+                "on-secondary-fixed": "#2c0051",
+                "on-surface-variant": "#44474e",
+                "on-error-container": "#410002",
+                "inverse-surface": "#2e3037",
+                "on-primary-fixed": "#002022",
+                "on-primary-container": "#002022",
+                "on-primary": "#ffffff",
+                "outline": "#74777f",
+                "surface-tint": "#009bbd",
+                "primary-container": "#74f5ff",
+                "tertiary-container": "#c4f4ff",
+                "primary-fixed": "#74f5ff",
+                "secondary-fixed": "#f0dbff",
+                "surface-container-high": "#ebebed",
+                "error-container": "#ffdad6",
+                "tertiary": "#00d1ff",
+                "on-secondary": "#ffffff",
+                "error": "#ba1a1a",
+                "on-surface": "#191c22",
+                "background": "#fcfcff",
+                "surface-variant": "#e1e2eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "0.75rem",
+                    "xl": "1rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding": "40px",
+                    "play-bar-height": "120px",
+                    "sidebar-width": "280px",
+                    "section-margin": "32px",
+                    "element-gap": "16px"
+            },
+            "fontFamily": {
+                    "technical-label": ["JetBrains Mono"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Lexend"],
+                    "display-lg": ["Lexend"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            @apply bg-[#f8fafc] text-on-surface overflow-hidden h-screen font-body-lg selection:bg-primary/10 selection:text-primary relative;
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBNaFyGw6vOLNVd2wQ6EAzxtxUY7DZynoZe2nciP7QIrPgD_-ZwPLEQm9JYf_9e4kyqLiRaqzYeBtM9tzX0lWD3QQ_9eGQktxvK0RFa6GUEM3JdIzlXDHsHCoGekCoUDfiwr2GEkBU6heBbIIK32loMgcnYk41Ha3R03h2N_jmLBFBvIHN3aDJMGDcuKXyPVKXSJC2DR6lC8RS9RJLfywH-Zcvq7bAkuejKt5bBziJxaeG0ZHLcnmDA');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Ambient overlay to ensure legibility while keeping the background vibrant */
+        body::before {
+            content: '';
+            @apply absolute inset-0 bg-white/10 pointer-events-none;
+        }
+
+        .glass-panel {
+            @apply backdrop-blur-[24px] bg-white/70 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.06)] transition-all duration-300;
+        }
+
+        .action-button {
+            @apply transition-all duration-200 active:scale-[0.98];
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .entrance-anim {
+            opacity: 0;
+            transform: translateY(12px);
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .play-pulse {
+            animation: softPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes softPulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(0, 209, 255, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 8px 30px rgba(0, 209, 255, 0.3); transform: scale(1.01); }
+        }
+
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        
+        .mask-fade-right {
+            mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        }
+
+        .dropdown-animate {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: top;
+        }
+        
+        .modal-animate {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hidden-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+            visibility: hidden;
+        }
+
+        .visible-scale {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="light">
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full h-16 z-[60] flex justify-between items-center px-container-padding backdrop-blur-md bg-white/40 border-b border-black/5">
+<div class="flex items-center gap-6">
+<span class="text-2xl font-bold text-primary tracking-tight font-display-lg">Arytale</span>
+</div>
+<div class="flex items-center gap-10">
+<nav class="hidden md:flex gap-8 items-center">
+<a class="text-primary font-semibold border-b-2 border-primary pb-1 text-sm" href="#">Wiki</a>
+<a class="text-on-surface-variant/80 hover:text-primary transition-colors text-sm font-medium" href="#">Servers</a>
+<a class="text-on-surface-variant/80 hover:text-primary transition-colors text-sm font-medium" href="#">Host a Server</a>
+<a class="text-on-surface-variant/80 hover:text-primary transition-colors text-sm font-medium" href="#">Mods</a>
+<a class="text-on-surface-variant/80 hover:text-primary transition-colors text-sm font-medium" href="#">Discord</a>
+</nav>
+<div class="flex items-center gap-3 ml-4">
+<div class="flex gap-2 mr-3 pr-3 border-r border-black/5">
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-black/5 action-button rounded-lg material-symbols-outlined" id="settings-trigger">settings</button>
+</div>
+<div class="flex gap-1">
+<button class="p-2 text-on-surface-variant hover:bg-black/5 action-button rounded-lg material-symbols-outlined">remove</button>
+<button class="p-2 text-on-surface-variant hover:bg-black/5 action-button rounded-lg material-symbols-outlined">check_box_outline_blank</button>
+<button class="p-2 text-on-surface-variant hover:bg-error/10 hover:text-error action-button rounded-lg material-symbols-outlined">close</button>
+</div>
+</div>
+</div>
+</header>
+<main class="relative h-screen pt-16 px-container-padding overflow-hidden">
+<!-- Version Selector Card -->
+<div class="absolute top-24 left-container-padding w-[280px] z-40 entrance-anim" style="animation-delay: 0.1s">
+<div class="glass-panel p-6 rounded-2xl flex flex-col gap-5 relative">
+<div class="flex justify-between items-start">
+<div class="relative group cursor-pointer" onclick="toggleVersionDropdown(event)">
+<h3 class="text-[10px] text-primary uppercase tracking-[0.2em] font-bold mb-1">Current Instance</h3>
+<div class="flex items-center gap-2 group-hover:text-primary transition-colors">
+<p class="text-2xl font-bold text-on-surface" id="current-version-text">Build-16</p>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+<p class="text-xs font-medium opacity-50">v0.5.3 Stable</p>
+<!-- Version Dropdown (Hidden by default) -->
+<div class="absolute top-full left-0 mt-2 w-64 glass-panel rounded-xl py-2 z-50 dropdown-animate hidden-scale border border-black/5 shadow-xl" id="version-dropdown">
+<button class="w-full text-left px-4 py-3 hover:bg-primary/5 text-sm font-medium transition-colors border-b border-black/5" onclick="selectVersion('Build-16')">
+<span class="block text-on-surface">Build-16</span>
+<span class="text-[10px] opacity-60">Latest Stable Release</span>
+</button>
+<button class="w-full text-left px-4 py-3 hover:bg-primary/5 text-sm font-medium transition-colors border-b border-black/5" onclick="selectVersion('Build-15')">
+<span class="block text-on-surface">Build-15</span>
+<span class="text-[10px] opacity-60">Legacy Stable</span>
+</button>
+<button class="w-full text-left px-4 py-3 hover:bg-primary/5 text-sm font-medium transition-colors" onclick="selectVersion('Nightly-82')">
+<span class="block text-tertiary-fixed-dim">Nightly-82</span>
+<span class="text-[10px] opacity-60 text-on-surface">Experimental Beta</span>
+</button>
+</div>
+</div>
+<button class="p-2 rounded-full hover:bg-black/5 transition-all material-symbols-outlined text-primary">history</button>
+</div>
+<div class="flex bg-black/5 p-1 rounded-xl gap-1">
+<button class="flex-1 py-2 text-sm font-bold rounded-lg transition-all bg-white shadow-sm text-primary" id="release-btn" onclick="toggleRelease('release')">Release</button>
+<button class="flex-1 py-2 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:text-on-surface" id="pre-release-btn" onclick="toggleRelease('pre')">Beta</button>
+</div>
+<button class="w-full py-3.5 border border-black/5 rounded-xl hover:bg-black/5 transition-all flex justify-between items-center px-4 action-button">
+<span class="text-sm font-semibold text-on-surface">Instance Settings</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Player Profile -->
+<div class="absolute top-24 right-container-padding z-40 entrance-anim" style="animation-delay: 0.2s">
+<div class="flex flex-col items-center gap-4 glass-panel p-6 rounded-2xl min-w-[200px]">
+<div class="relative">
+<div class="w-20 h-20 rounded-full border-2 border-primary/10 shadow-md overflow-hidden bg-white">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZbM74Ta_cW8s_cW5WxqD6cAmnayu7ZGt8B0Mu16pxlYE-xbaHcd19X42JUz8XYO2OQb-kQSvQcmQ19iUgwTmW8sZPu69gYUDgpucdfFzUZOpZpekBnb4MIUj5aKzqzkaLjwuXBUcZcSYf8sI0crpKGij_e-sf12rESE3OVdPEWDVHlYhwBojF6sL2ZjkYe6Zeyb3qMHEksTf5preirnnbZkexuKne6KaLQwV5jjA5QpKJyRH0lXoC"/>
+</div>
+<span class="absolute bottom-1 right-1 w-4 h-4 bg-tertiary-fixed-dim border-2 border-white rounded-full"></span>
+</div>
+<div class="text-center">
+<p class="text-on-surface font-bold text-lg leading-tight">Player One</p>
+<p class="text-primary font-technical-label text-[10px] tracking-widest uppercase font-bold mt-1">Online</p>
+</div>
+<div class="flex gap-2 w-full mt-2">
+<button class="flex-1 p-2 hover:bg-primary/5 rounded-lg text-primary transition-all material-symbols-outlined">group</button>
+<button class="flex-1 p-2 hover:bg-primary/5 rounded-lg text-primary transition-all material-symbols-outlined">chat</button>
+</div>
+</div>
+</div>
+<!-- Center Content -->
+<div class="h-full flex flex-col justify-center items-center text-center max-w-3xl mx-auto pointer-events-none entrance-anim" style="animation-delay: 0.3s">
+<div class="glass-panel p-8 rounded-3xl bg-white/40 border-none backdrop-blur-md">
+<h1 class="text-7xl font-black text-on-surface tracking-tighter uppercase font-display-lg drop-shadow-sm">ARYTALE</h1>
+<p class="text-on-surface mt-6 text-xl font-medium leading-relaxed max-w-xl mx-auto">
+            Experience a clean, modern approach to the heart of the Void. A limitless sandbox universe where technology meets the ethereal light of the Aurora.
+        </p>
+</div>
+</div>
+<!-- Bottom Left: Controls -->
+<div class="absolute bottom-12 left-container-padding z-50 flex items-center gap-6 entrance-anim" style="animation-delay: 0.4s">
+<button class="bg-primary text-white font-black px-16 py-7 rounded-2xl shadow-xl play-pulse hover:brightness-110 transition-all flex items-center gap-4 text-3xl tracking-tight group action-button">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+            LAUNCH
+        </button>
+<div class="flex flex-col gap-1.5 p-4 glass-panel rounded-2xl bg-white/60">
+<div class="flex items-center gap-2 text-[11px] font-bold text-on-surface">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span>Update 2.1.1 Live: Regional Patch</span>
+</div>
+<div class="flex items-center gap-2 text-[11px] font-medium text-on-surface-variant/80">
+<span class="w-2 h-2 rounded-full bg-black/5"></span>
+<span>Sub-millisecond latency achieved</span>
+</div>
+<button class="text-[11px] font-bold text-primary flex items-center gap-1 hover:underline mt-1 action-button">
+                CHECK INTEGRITY <span class="material-symbols-outlined text-[14px]">settings_backup_restore</span>
+</button>
+</div>
+</div>
+<!-- Bottom Right: News Feed -->
+<div class="absolute bottom-12 right-0 w-[55%] z-40 entrance-anim" style="animation-delay: 0.5s">
+<div class="flex justify-between items-end mb-4 px-8">
+<h2 class="text-sm font-bold text-white tracking-widest uppercase drop-shadow-md">Global Updates</h2>
+<button class="text-xs font-bold text-white flex items-center gap-1 hover:underline drop-shadow-md">
+                Explore All <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+<div class="flex overflow-x-auto gap-6 pb-6 px-8 hide-scroll mask-fade-right">
+<!-- Card 1 -->
+<div class="group glass-panel rounded-2xl overflow-hidden cursor-pointer action-button min-w-[280px] flex-shrink-0">
+<div class="h-32 bg-black/5 overflow-hidden">
+<img alt="Game Landscape" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCU0BHxmNiwHjWHWvV2hTZ1mKFYqJFYOJLdUwEVoPMEgZvPAzrwvPjahRrJ3SU5VaVYsy4ndSNuc4_aUrBfoVwz4fFOFEobwlj8MN2kdVOd7AgA0y-41xFEGNMmMw83fnb-pKXDZ8-CkuEzhjZyXY2GXPTm7BoggWmxq-Lu-clKeRiFBoG1ePAbshI4Bs--Revu1GoDJNvV5x8zbzojSr5CbC2mJjWhs7nsFdQxIyfoY69JJqRhFXX"/>
+</div>
+<div class="p-4 bg-white/50">
+<span class="text-[9px] text-tertiary-fixed-dim uppercase font-black tracking-widest bg-primary/10 px-2 py-1 rounded">Feature</span>
+<h4 class="mt-2 text-sm font-bold leading-tight group-hover:text-primary transition-colors text-on-surface">Magic Reborn: The Arcane Update</h4>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group glass-panel rounded-2xl overflow-hidden cursor-pointer action-button min-w-[280px] flex-shrink-0">
+<div class="h-32 bg-black/5 overflow-hidden">
+<img alt="UI Interface" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj0PgHTUkfDK-0azsAEM2QdZNO6xSWLYagmzlbcR99pMLXiM3NnWof1nmlqgXqC97jpxYpxa9Qxh8op6LHajLhKlNyVPVgi9YPJy85FV_GWW8ZIHTytknz1tturzg0QK_aSep0IfPdBajokPiVnoRzlbPbkfBgbGXHEPg3KaalieZBXDyDLV0mg4--8lZ9AnH3bWFKy7IX036QwB6iFousC47ywzkOV_IaTMhd-dCrOA8rAPUxWMe3"/>
+</div>
+<div class="p-4 bg-white/50">
+<span class="text-[9px] text-on-surface-variant uppercase font-black tracking-widest bg-black/5 px-2 py-1 rounded">Technical</span>
+<h4 class="mt-2 text-sm font-bold leading-tight group-hover:text-primary transition-colors text-on-surface">Performance Tuning: Patch 0.5.3</h4>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Settings Modal Overlay (Hidden by default) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-black/20 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300" id="settings-modal">
+<div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-[2rem] overflow-hidden modal-animate hidden-scale flex flex-col border border-white/50">
+<!-- Modal Header -->
+<div class="p-8 border-b border-black/5 flex justify-between items-center bg-white/80">
+<h2 class="text-2xl font-black font-display-lg tracking-wider text-on-surface flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">settings</span>
+                SYSTEM SETTINGS
+            </h2>
+<button class="p-2 hover:bg-black/5 rounded-full transition-colors material-symbols-outlined text-on-surface-variant" onclick="closeSettings()">close</button>
+</div>
+<!-- Modal Content -->
+<div class="flex-1 overflow-y-auto p-10 hide-scroll bg-white/60">
+<div class="grid grid-cols-2 gap-10">
+<!-- Column 1 -->
+<div class="space-y-8">
+<div>
+<label class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 block">Game Directory</label>
+<div class="flex gap-3">
+<div class="flex-1 bg-black/5 border border-black/5 rounded-xl px-4 py-3 text-sm text-on-surface/70 font-medium">C:\Games\Arytale\Client</div>
+<button class="px-4 bg-white hover:bg-black/5 border border-black/5 rounded-xl material-symbols-outlined transition-colors text-on-surface">folder_open</button>
+</div>
+</div>
+<div>
+<label class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 block">Custom UUID</label>
+<input class="w-full bg-black/5 border border-black/5 rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none transition-all placeholder:text-on-surface/40 text-on-surface" placeholder="Auto generated if empty" type="text"/>
+<span class="text-[10px] text-on-surface/50 mt-2 block">Uses automatic unique identifier generation</span>
+</div>
+<div class="pt-4 space-y-6">
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Discord RPC</span>
+<button class="w-12 h-6 rounded-full bg-primary/10 border border-primary/20 relative transition-all cursor-pointer" id="rpc-toggle" onclick="toggleSwitch(this)">
+<div class="absolute right-1 top-1 w-4 h-4 bg-primary rounded-full transition-all"></div>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-semibold text-on-surface">Startup Sound</span>
+<button class="w-12 h-6 rounded-full bg-black/5 border border-black/10 relative transition-all cursor-pointer" id="sound-toggle" onclick="toggleSwitch(this)">
+<div class="absolute left-1 top-1 w-4 h-4 bg-black/20 rounded-full transition-all"></div>
+</button>
+</div>
+</div>
+</div>
+<!-- Column 2 -->
+<div class="space-y-8">
+<div>
+<label class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 block">Download Directory</label>
+<div class="flex gap-3">
+<div class="flex-1 bg-black/5 border border-black/5 rounded-xl px-4 py-3 text-sm text-on-surface/70 font-medium">C:\Users\User\Downloads</div>
+<button class="px-4 bg-white hover:bg-black/5 border border-black/5 rounded-xl material-symbols-outlined transition-colors text-on-surface">edit</button>
+</div>
+</div>
+<div class="pt-4 space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-sm font-semibold block text-on-surface">SteamDeck Mode</span>
+<span class="text-[10px] text-on-surface/50">Optimizes UI for handheld controllers</span>
+</div>
+<button class="w-12 h-6 rounded-full bg-black/5 border border-black/10 relative transition-all cursor-pointer" onclick="toggleSwitch(this)">
+<div class="absolute left-1 top-1 w-4 h-4 bg-black/20 rounded-full transition-all"></div>
+</button>
+</div>
+<div>
+<label class="text-[10px] font-black uppercase tracking-widest text-primary mb-3 block">Language Selection</label>
+<select class="w-full bg-black/5 border border-black/5 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-primary text-on-surface">
+<option>English (United States)</option>
+<option>German (Deutsch)</option>
+<option>French (Français)</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer -->
+<div class="p-8 border-t border-black/5 flex justify-between items-center bg-white/80">
+<div class="flex items-center gap-8">
+<button class="text-xs font-bold text-on-surface/50 hover:text-primary transition-colors">CREDITS</button>
+<button class="text-xs font-bold text-primary hover:underline">CHECK FOR UPDATES</button>
+</div>
+<div class="flex gap-4">
+<button class="px-8 py-3 rounded-xl border border-black/10 text-sm font-bold hover:bg-black/5 transition-all text-on-surface" onclick="closeSettings()">CANCEL</button>
+<button class="px-10 py-3 rounded-xl bg-primary text-white text-sm font-black hover:brightness-110 transition-all shadow-lg shadow-primary/20">SAVE CHANGES</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Stats -->
+<div class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6 px-6 py-2 glass-panel rounded-full text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">
+<div class="flex items-center gap-2">
+<span>Data Transfer:</span>
+<span class="text-primary">12.4 MB/s</span>
+</div>
+<div class="w-24 h-1 bg-black/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[70%]"></div>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span>Client Authenticated</span>
+</div>
+</div>
+<script>
+    // Version Dropdown
+    function toggleVersionDropdown(event) {
+        if (event) event.stopPropagation();
+        const dropdown = document.getElementById('version-dropdown');
+        dropdown.classList.toggle('hidden-scale');
+        dropdown.classList.toggle('visible-scale');
+    }
+
+    function selectVersion(version) {
+        document.getElementById('current-version-text').innerText = version;
+        const dropdown = document.getElementById('version-dropdown');
+        dropdown.classList.add('hidden-scale');
+        dropdown.classList.remove('visible-scale');
+    }
+
+    // Settings Modal
+    const settingsTrigger = document.getElementById('settings-trigger');
+    const settingsModal = document.getElementById('settings-modal');
+    const modalContent = settingsModal.querySelector('.modal-animate');
+
+    settingsTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        settingsModal.classList.remove('pointer-events-none', 'opacity-0');
+        settingsModal.classList.add('opacity-100');
+        modalContent.classList.remove('hidden-scale');
+        modalContent.classList.add('visible-scale');
+    });
+
+    function closeSettings() {
+        settingsModal.classList.add('opacity-0');
+        modalContent.classList.add('hidden-scale');
+        modalContent.classList.remove('visible-scale');
+        setTimeout(() => {
+            settingsModal.classList.add('pointer-events-none', 'opacity-0');
+            settingsModal.classList.remove('opacity-100');
+        }, 300);
+    }
+
+    // Switch Toggle Logic
+    function toggleSwitch(btn) {
+        const circle = btn.querySelector('div');
+        const isActive = btn.classList.contains('bg-primary/10');
+        
+        if (isActive) {
+            btn.classList.remove('bg-primary/10', 'border-primary/20');
+            btn.classList.add('bg-black/5', 'border-black/10');
+            circle.style.left = '4px';
+            circle.style.right = 'auto';
+            circle.classList.remove('bg-primary');
+            circle.classList.add('bg-black/20');
+            circle.classList.remove('right-1');
+            circle.classList.add('left-1');
+        } else {
+            btn.classList.add('bg-primary/10', 'border-primary/20');
+            btn.classList.remove('bg-black/5', 'border-black/10');
+            circle.style.left = 'auto';
+            circle.style.right = '4px';
+            circle.classList.add('bg-primary');
+            circle.classList.remove('bg-black/20');
+            circle.classList.add('right-1');
+            circle.classList.remove('left-1');
+        }
+    }
+
+    // Release/Beta Toggle
+    function toggleRelease(type) {
+        const relBtn = document.getElementById('release-btn');
+        const preBtn = document.getElementById('pre-release-btn');
+        
+        if (type === 'release') {
+            relBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
+            relBtn.classList.remove('text-on-surface-variant');
+            preBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+            preBtn.classList.add('text-on-surface-variant');
+        } else {
+            preBtn.classList.add('bg-white', 'shadow-sm', 'text-primary');
+            preBtn.classList.remove('text-on-surface-variant');
+            relBtn.classList.remove('bg-white', 'shadow-sm', 'text-primary');
+            relBtn.classList.add('text-on-surface-variant');
+        }
+    }
+
+    // Global click listener to close elements when clicking outside
+    window.addEventListener('click', (e) => {
+        const versionDropdown = document.getElementById('version-dropdown');
+        if (!e.target.closest('#version-dropdown') && !e.target.closest('[onclick^="toggleVersionDropdown"]')) {
+            versionDropdown.classList.add('hidden-scale');
+            versionDropdown.classList.remove('visible-scale');
+        }
+        if (e.target === settingsModal) {
+            closeSettings();
+        }
+    });
+
+    // Suble Parallax Effect for immersive feel
+    document.addEventListener('mousemove', (e) => {
+        const panels = document.querySelectorAll('.glass-panel');
+        const mouseX = (e.clientX / window.innerWidth - 0.5) * 6;
+        const mouseY = (e.clientY / window.innerHeight - 0.5) * 6;
+
+        panels.forEach(panel => {
+            if(!panel.closest('#settings-modal') && !panel.closest('header')) {
+                panel.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+            }
+        });
+    });
+</script>
+</body></html>

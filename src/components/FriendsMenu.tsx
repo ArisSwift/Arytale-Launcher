@@ -283,7 +283,7 @@ const openExternalSafe = async (url: string) => {
 const API_BASE = "https://butter.lat";
 const WS_BASE = API_BASE.replace(/^http/, "ws");
 const WS_URL = `${WS_BASE}/api/matcha/ws`;
-const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
+const SUPPORTER_PATREON_URL = "https://aris-swift.com";
 const LS_TOKEN = "matcha:token";
 const LS_UNREAD_PREFIX = "matcha:unread:";
 const LS_DND_PREFIX = "matcha:dnd:";

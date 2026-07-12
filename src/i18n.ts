@@ -10,7 +10,7 @@ import ar from "./locales/ar.json";
 import ru from "./locales/ru.json";
 import de from "./locales/de.json";
 
-const STORAGE_KEY = "butter:language";
+const STORAGE_KEY = "arytale:language";
 
 const normalizeLang = (lang: string | null | undefined) => {
   const raw = (lang || "").trim();

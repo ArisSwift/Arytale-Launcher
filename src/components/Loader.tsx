@@ -1,5 +1,5 @@
-import butterLogo from "../assets/butter-logo.png";
-import butterBg from "../assets/butter-bg.png";
+import arytaleLogo from "../assets/arytale-logo.png";
+import arytaleBg from "../assets/arytale-bg.png";
 import butterLauncherOgg from "../assets/butterlauncher.ogg";
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -11,10 +11,10 @@ type GlobalStartupSoundState = {
 
 const getGlobalStartupSoundState = (): GlobalStartupSoundState => {
   const w = window as any;
-  if (!w.__butter_global_startup_sound) {
-    w.__butter_global_startup_sound = { audio: null, stop: null } as GlobalStartupSoundState;
+  if (!w.__arytale_global_startup_sound) {
+    w.__arytale_global_startup_sound = { audio: null, stop: null } as GlobalStartupSoundState;
   }
-  return w.__butter_global_startup_sound as GlobalStartupSoundState;
+  return w.__arytale_global_startup_sound as GlobalStartupSoundState;
 };
 
 const stopGlobalStartupSound = () => {
@@ -293,7 +293,7 @@ const Loader: React.FC = () => {
         <div
           className="absolute inset-0 opacity-35"
           style={{
-            backgroundImage: `url(${butterBg})`,
+            backgroundImage: `url(${arytaleBg})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             filter: "blur(1px)",
@@ -311,7 +311,7 @@ const Loader: React.FC = () => {
 
           <div className="splash-logo absolute inset-0 flex items-center justify-center">
             <img
-              src={butterLogo}
+              src={arytaleLogo}
               alt={t("splash.logoAlt")}
               draggable={false}
               className="w-[220px] select-none pointer-events-none"

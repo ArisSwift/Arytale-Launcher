@@ -13,7 +13,7 @@ const formatBuildDate = (d = new Date()) => {
   return `${mm}-${dd}-${yyyy}`;
 };
 
-packageJson.build_date = "ButterLauncher_" + formatBuildDate();
+packageJson.build_date = "ArytaleLauncher_" + formatBuildDate();
 
 console.log("Setting build date to: " + packageJson.build_date);
 

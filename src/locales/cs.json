@@ -223,7 +223,7 @@
   },
   "launcherUpdate": {
     "title": "Aktualizace dostupná",
-    "description": "Nová verze Butter Launcheru je dostupná.",
+    "description": "Nová verze Arytale Launcher je dostupná.",
     "subtitleCurrent": "Aktuální: v{{version}}",
     "subtitleLatest": "Nejnovější: v{{version}}",
     "released": "Vydaná: {{date}}",

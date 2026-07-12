@@ -71,8 +71,8 @@
     "logoutBlocked": "You can't log out while the game is open.\n\nActive account type: {{accountType}}\nOpen games: {{count}}"
   },
   "splash": {
-    "title": "Butter Launcher",
-    "logoAlt": "Butter Launcher",
+    "title": "Arytale Launcher",
+    "logoAlt": "Arytale Launcher",
     "initializing": "Initializing",
     "preparing": "Preparing your session"
   },
@@ -217,7 +217,7 @@
     },
     "intro": {
       "headline": "Matcha!",
-      "subtitle": "More than just a messenger—Matcha! is the social engine powering your entire Butter Launcher experience.",
+      "subtitle": "More than just a messenger—Matcha! is the social engine powering your entire Arytale Launcher experience.",
       "feature1": "Instant Chat & DMs",
       "feature2": "Friendships & Parties",
       "feature3": "Seamless Lobby Invites",
@@ -267,7 +267,7 @@
     "terms": {
       "title": "Matcha! System — Terms of Service",
       "lastUpdated": "Last Updated: 02-24-2026",
-      "body": "Preamble\nWelcome to Matcha!, the social infrastructure powering your Butter Launcher experience. By registering an account, accessing the platform, or utilizing our communication services, you acknowledge that you have read, understood, and unconditionally agree to be bound by the following Terms of Service (\"Terms\").\n\n1. Account Security & Registration\n1.1. Account Identity\nYour user profile is distinctively identified by a username combined with a numeric discriminator (e.g., User#0000). You acknowledge that you are the sole authorized user of your account and are fully responsible for all activities, actions, and communications that occur under your credentials.\n\n1.2. Credential Protection\nWhile Matcha! employs industry-standard encryption protocols to protect your data, you are responsible for maintaining the confidentiality of your login credentials. Matcha! assumes no liability for any loss or damage arising from unauthorized access attributable to your failure to secure your password.\n\n1.3. Registration Constraints\nTo ensure service integrity and prevent abuse, account creation is strictly limited to five (5) new accounts per IP address within a 24-hour period. Any attempt to circumvent this restriction—including but not limited to the use of VPNs, proxies, or IP spoofing— constitutes a violation of these Terms and may result in a permanent ban.\n\n2. User Conduct & Acceptable Use\n2.1. Automated Content Filtering\nThe platform utilizes automated filtering systems to maintain community standards. Any deliberate attempt to bypass these filters (e.g., through the use of \"leet speak,\" special characters, or misspelling) is strictly prohibited and will result in immediate administrative action.\n\n2.2. Anti-Spam & Automation\nTo prevent service disruption, we enforce strict rate limits on message transmission. The use of bots, macros, scripts, or any third-party software to automate interactions or \"flood\" the chat service is prohibited.\n\n2.3. Prohibited Content\nWe maintain a zero-tolerance policy regarding:\n\nHate speech and discriminatory language.\n\nThreats of violence or harm.\n\nDoxing (the unauthorized publication of private or identifying information).\n\nHarassment or bullying in any form.\n\n3. Data Privacy & Processing\n3.1. Message Retention\nBy using the service, you consent to the processing and storage of your communications (including Global Chat and Direct Messages) on our servers. This data retention is necessary to facilitate message history synchronization across user sessions.\n\n3.2. Connection Logging\nFor the purposes of security, auditing, and moderation, you acknowledge that we log specific connection data, including the IP address utilized at the time of registration and the IP address associated with your most recent connection.\n\n4. Limitation of Liability & Disclaimer\nPLEASE READ THIS SECTION CAREFULLY.\n\n4.1. User Interactions\nMatcha! and its administrators act solely as a conduit for communication. We are not responsible for, nor do we arbitrate, disputes, conflicts, or agreements between users. You assume full responsibility for your interactions with other account holders.\n\n4.2. Third-Party Content\nWe disclaim all liability regarding external links, files, or media shared by users within Global Chat or Direct Messages. Accessing third-party content is done entirely at your own risk.\n\n4.3. Limitation of Damages\nTo the fullest extent permitted by law, the creators, operators, and affiliates of Matcha! shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from your use of the service. This includes, without limitation, damages for emotional distress, loss of data, or damages resulting from fraudulent actions by other users.\n\n4.4. \"As Is\" Service\nThe platform is provided on an \"AS IS\" and \"AS AVAILABLE\" basis without warranties of any kind. We do not guarantee uninterrupted service and are not liable for data loss or message delivery failures caused by technical malfunctions, maintenance, or server restarts.\n\n5. Moderation & Termination\nThe System Administrators reserve the exclusive right, at their sole discretion and without prior notice, to:\n\nRemove or obscure content deemed inappropriate or in violation of these Terms.\n\nUnilaterally modify usernames that are offensive or violate community standards.\n\nSuspend, restrict, or permanently terminate any account found to be in violation of these Terms or that poses a threat to the security or safety of the community."
+      "body": "Preamble\nWelcome to Matcha!, the social infrastructure powering your Arytale Launcher experience. By registering an account, accessing the platform, or utilizing our communication services, you acknowledge that you have read, understood, and unconditionally agree to be bound by the following Terms of Service (\"Terms\").\n\n1. Account Security & Registration\n1.1. Account Identity\nYour user profile is distinctively identified by a username combined with a numeric discriminator (e.g., User#0000). You acknowledge that you are the sole authorized user of your account and are fully responsible for all activities, actions, and communications that occur under your credentials.\n\n1.2. Credential Protection\nWhile Matcha! employs industry-standard encryption protocols to protect your data, you are responsible for maintaining the confidentiality of your login credentials. Matcha! assumes no liability for any loss or damage arising from unauthorized access attributable to your failure to secure your password.\n\n1.3. Registration Constraints\nTo ensure service integrity and prevent abuse, account creation is strictly limited to five (5) new accounts per IP address within a 24-hour period. Any attempt to circumvent this restriction—including but not limited to the use of VPNs, proxies, or IP spoofing— constitutes a violation of these Terms and may result in a permanent ban.\n\n2. User Conduct & Acceptable Use\n2.1. Automated Content Filtering\nThe platform utilizes automated filtering systems to maintain community standards. Any deliberate attempt to bypass these filters (e.g., through the use of \"leet speak,\" special characters, or misspelling) is strictly prohibited and will result in immediate administrative action.\n\n2.2. Anti-Spam & Automation\nTo prevent service disruption, we enforce strict rate limits on message transmission. The use of bots, macros, scripts, or any third-party software to automate interactions or \"flood\" the chat service is prohibited.\n\n2.3. Prohibited Content\nWe maintain a zero-tolerance policy regarding:\n\nHate speech and discriminatory language.\n\nThreats of violence or harm.\n\nDoxing (the unauthorized publication of private or identifying information).\n\nHarassment or bullying in any form.\n\n3. Data Privacy & Processing\n3.1. Message Retention\nBy using the service, you consent to the processing and storage of your communications (including Global Chat and Direct Messages) on our servers. This data retention is necessary to facilitate message history synchronization across user sessions.\n\n3.2. Connection Logging\nFor the purposes of security, auditing, and moderation, you acknowledge that we log specific connection data, including the IP address utilized at the time of registration and the IP address associated with your most recent connection.\n\n4. Limitation of Liability & Disclaimer\nPLEASE READ THIS SECTION CAREFULLY.\n\n4.1. User Interactions\nMatcha! and its administrators act solely as a conduit for communication. We are not responsible for, nor do we arbitrate, disputes, conflicts, or agreements between users. You assume full responsibility for your interactions with other account holders.\n\n4.2. Third-Party Content\nWe disclaim all liability regarding external links, files, or media shared by users within Global Chat or Direct Messages. Accessing third-party content is done entirely at your own risk.\n\n4.3. Limitation of Damages\nTo the fullest extent permitted by law, the creators, operators, and affiliates of Matcha! shall not be liable for any direct, indirect, incidental, special, or consequential damages resulting from your use of the service. This includes, without limitation, damages for emotional distress, loss of data, or damages resulting from fraudulent actions by other users.\n\n4.4. \"As Is\" Service\nThe platform is provided on an \"AS IS\" and \"AS AVAILABLE\" basis without warranties of any kind. We do not guarantee uninterrupted service and are not liable for data loss or message delivery failures caused by technical malfunctions, maintenance, or server restarts.\n\n5. Moderation & Termination\nThe System Administrators reserve the exclusive right, at their sole discretion and without prior notice, to:\n\nRemove or obscure content deemed inappropriate or in violation of these Terms.\n\nUnilaterally modify usernames that are offensive or violate community standards.\n\nSuspend, restrict, or permanently terminate any account found to be in violation of these Terms or that poses a threat to the security or safety of the community."
     },
     "friendsHeader": "FRIENDS ({{online}}/{{total}} Online)",
     "friends": "Friends",
@@ -288,7 +288,7 @@
     "supporterBenefits": {
       "open": "Supporter Rank",
       "title": "SUPPORTER RANK",
-      "body": "Supporters help keep Butter Launcher alive and improve Matcha. If you enjoy the launcher, consider supporting on Patreon.",
+      "body": "Supporters help keep Arytale Launcher alive and improve Matcha. If you enjoy the launcher, consider supporting on Patreon.",
       "benefitsTitle": "BENEFITS",
       "benefit1": "Supporter crown in Matcha.",
       "benefit2": "Custom supporter color (used on your crown, profile accents, and chat bubbles).",
@@ -339,7 +339,7 @@
       "dontLoseIt": "DON'T LOSE IT.",
       "yourHandle": "Your handle",
       "saveHandleHint": "Save this for future sign-in.",
-      "uniqueIdHint": "Copy and save this B-Matcha Secure Key (starts with BM:). It is shown only once and is required to prove account ownership for support requests (delete account, rename, or password reset). Do not share it with anyone except official Butter/Matcha support.",
+      "uniqueIdHint": "Copy and save this B-Matcha Secure Key (starts with BM:). It is shown only once and is required to prove account ownership for support requests (delete account, rename, or password reset). Do not share it with anyone except official Arytale/Matcha support.",
       "finalCheckTitle": "One last check",
       "finalCheckBody": "To confirm you read the above and understand the importance of not losing your B-Matcha Secure Key, enter it here:",
       "finalCheckPlaceholder": "BM:...",
@@ -864,7 +864,7 @@
   },
   "launcherUpdate": {
     "title": "Update available",
-    "description": "A new version of Butter Launcher is available.",
+    "description": "A new version of Arytale Launcher is available.",
     "subtitleCurrent": "Current: v{{version}}",
     "subtitleLatest": "Latest: v{{version}}",
     "released": "Released: {{date}}",
@@ -876,7 +876,7 @@
   },
   "settings": {
     "title": "SYSTEM SETTINGS",
-    "teamName": "Butter Launcher Team",
+    "teamName": "Arytale Launcher Team",
     "madeBy": "Made by",
     "language": {
       "label": "Language",
@@ -953,7 +953,7 @@
     },
     "supporters": {
       "label": "Supporters",
-      "description": "Supporters help keep Butter Launcher running. Supporter Rank also unlocks pre-releases and older versions, plus Matcha perks like the Supporter crown and a custom profile color.",
+      "description": "Supporters help keep Arytale Launcher running. Supporter Rank also unlocks pre-releases and older versions, plus Matcha perks like the Supporter crown and a custom profile color.",
       "donate": "Donate on Patreon",
       "loadFailed": "Failed to load supporters list.",
       "hint": "Set VITE_SUPPORTERS_URL to a public supporters.json.",

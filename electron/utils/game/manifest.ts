@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export const INSTALLED_MANIFEST_FILENAME = ".butter-installed.json";
+export const INSTALLED_MANIFEST_FILENAME = ".arytale-installed.json";
 
 export type InstalledManifest = {
   build_index: number;

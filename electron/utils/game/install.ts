@@ -37,7 +37,7 @@ import {
   resolveServerPath,
 } from "./paths";
 
-const ONLINE_PATCH_ROOT_DIRNAME = ".butter-online-patch";
+const ONLINE_PATCH_ROOT_DIRNAME = ".arytale-online-patch";
 
 const pipeline = promisify(stream.pipeline);
 
@@ -444,7 +444,7 @@ const buildUpstreamPwrUrl = (opts: {
   return `https://game-patches.hytale.com/patches/${os}/${arch}/${branch}/${from}/${to}.pwr`;
 };
 
-const tryParseButterTunnelTokenPayload = (downloadUrl: string): any | null => {
+const tryParseArytaleTunnelTokenPayload = (downloadUrl: string): any | null => {
   try {
     const u = new URL(downloadUrl);
     // Expected: /api/patches/dl/<base64url(json)>.<hmac>
@@ -499,14 +499,14 @@ const describePwrDownloadForLogs = (version: GameVersion): {
       to: toMaybe,
     });
     return {
-      startLogLine: `Using a ButterAPI tunnel to download ${localOs}/${localArch}/${branch} patch ${fromMaybe} -> ${toMaybe}: ${upstream}`,
+      startLogLine: `Using an ArytaleAPI tunnel to download ${localOs}/${localArch}/${branch} patch ${fromMaybe} -> ${toMaybe}: ${upstream}`,
       safeUrlForMeta: upstream,
     };
   }
 
-  // Best-effort: decode ButterAPI tunnel token payload to recover upstream details.
+  // Best-effort: decode ArytaleAPI tunnel token payload to recover upstream details.
   if (isTunnelLike) {
-    const payload = rawUrl ? tryParseButterTunnelTokenPayload(rawUrl) : null;
+    const payload = rawUrl ? tryParseArytaleTunnelTokenPayload(rawUrl) : null;
     const from = Number(payload?.from ?? payload?.from_version ?? payload?.fromVersion);
     const to = Number(payload?.to ?? payload?.to_version ?? payload?.toVersion);
     const os = typeof payload?.os === "string" ? payload.os : localOs;
@@ -515,15 +515,15 @@ const describePwrDownloadForLogs = (version: GameVersion): {
     if (Number.isFinite(from) && Number.isFinite(to)) {
       const upstream = buildUpstreamPwrUrl({ os, arch, branch: pBranch, from, to });
       return {
-        startLogLine: `Using a ButterAPI tunnel to download ${os}/${arch}/${pBranch} patch ${from} -> ${to}: ${upstream}`,
+        startLogLine: `Using an ArytaleAPI tunnel to download ${os}/${arch}/${pBranch} patch ${from} -> ${to}: ${upstream}`,
         safeUrlForMeta: upstream,
       };
     }
 
     // Fail closed: never print tunnel URL.
     return {
-      startLogLine: `Using a ButterAPI tunnel to download PWR patch for ${buildName}.`,
-      safeUrlForMeta: "(ButterAPI tunnel hidden)",
+      startLogLine: `Using an ArytaleAPI tunnel to download PWR patch for ${buildName}.`,
+      safeUrlForMeta: "(ArytaleAPI tunnel hidden)",
     };
   }
 
@@ -2450,7 +2450,7 @@ const findOnlinePatchOriginalBackupPath = (targetPath: string): string | null =>
   const direct = path.join(base, "original", exeName);
   if (fs.existsSync(direct)) return direct;
 
-  // macOS bundle mode stores under: .butter-online-patch/<exeName>/original/<exeName>
+  // macOS bundle mode stores under: .arytale-online-patch/<exeName>/original/<exeName>
   const nested = path.join(path.dirname(base), exeName, "original", exeName);
   if (fs.existsSync(nested)) return nested;
 
@@ -2460,7 +2460,7 @@ const findOnlinePatchOriginalBackupPath = (targetPath: string): string | null =>
 const removeOnlinePatchArtifactsForTargetPath = (targetPath: string) => {
   const base = getOnlinePatchBaseDirForTargetPath(targetPath);
 
-  // In bundle-mode the base is .../.butter-online-patch/<exeName>; remove the whole folder.
+  // In bundle-mode the base is .../.arytale-online-patch/<exeName>; remove the whole folder.
   const baseToRemove =
     process.platform === "darwin" ? path.dirname(base) : base;
 
@@ -2500,7 +2500,7 @@ const sanitizeSeededInstallDirForSmartPatch = (installDir: string) => {
 
   // If the source build had online patch enabled, Smart Install would copy:
   // - patched client/server binaries
-  // - `.butter-online-patch` storage
+  // - `.arytale-online-patch` storage
   // Differential PWR patches are typically generated against a pristine tree,
   // so we restore originals (when available) and drop online-patch artifacts.
 

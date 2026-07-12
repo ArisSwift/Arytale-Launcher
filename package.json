@@ -1,11 +1,11 @@
 {
-  "name": "butter-launcher",
-  "description": "The best Hytale Launcher",
-  "author": "Butter Labs <butterlauncher@gmail.com>",
-  "private": false,
+  "name": "arytale-launcher",
+  "description": "My Personal Hytale Launcher",
+  "author": "ArisXyn",
+  "private": true,
   "license": "MIT",
   "version": "2.2.0",
-  "build_date": "ButterLauncher_05-26-2026",
+  "build_date": "ArytaleLauncher_07-12-2026",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {

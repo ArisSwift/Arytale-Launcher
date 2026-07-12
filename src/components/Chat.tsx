@@ -30,7 +30,7 @@ export default function Chat({
   const bottomRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-    const storageKey = `butter-chat-${user}-${currentChat}`;
+    const storageKey = `arytale-chat-${user}-${currentChat}`;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       setMessages(JSON.parse(saved));
@@ -41,7 +41,7 @@ export default function Chat({
 
   useEffect(() => {
     if (messages.length > 0) {
-      const storageKey = `butter-chat-${user}-${currentChat}`;
+      const storageKey = `arytale-chat-${user}-${currentChat}`;
       localStorage.setItem(storageKey, JSON.stringify(messages));
     }
   }, [messages, currentChat, user]);
@@ -69,7 +69,7 @@ export default function Chat({
         if (isGlobal || isTargetedDM) {
           setMessages((p) => [...p, data]);
         } else {
-          const backgroundKey = `butter-chat-${user}-${data.to === "global" ? "global" : data.from}`;
+          const backgroundKey = `arytale-chat-${user}-${data.to === "global" ? "global" : data.from}`;
           const existing = JSON.parse(localStorage.getItem(backgroundKey) || "[]");
           localStorage.setItem(backgroundKey, JSON.stringify([...existing, data]));
         }

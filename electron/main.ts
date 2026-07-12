@@ -864,7 +864,7 @@ const computeDefaultGameDirectory = (): string => {
         path.isAbsolute(process.env["XDG_DATA_HOME"]!)
           ? process.env["XDG_DATA_HOME"]!
           : path.join(os.homedir(), ".local", "share");
-      const newPath = path.join(xdgBase, "butter-launcher", "Hytale");
+      const newPath = path.join(xdgBase, "arytale-launcher", "Hytale");
       const legacyPath = path.join(META_DIRECTORY, "Hytale");
       if (fs.existsSync(legacyPath) && !fs.existsSync(newPath)) return legacyPath;
       return newPath;
@@ -952,7 +952,7 @@ const applySteamDeckModeAcrossInstalled = (
 // Register custom protocol scheme before app is ready (Electron requirement).
 protocol.registerSchemesAsPrivileged([
   {
-    scheme: "butter-bg",
+    scheme: "arytale-bg",
     privileges: {
       standard: true,
       secure: true,
@@ -964,7 +964,7 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.on("ready", () => {
-  app.setAppUserModelId("com.butter.launcher");
+  app.setAppUserModelId("com.arytale.launcher");
 
   try {
     const gameDir = getEffectiveDownloadDirectory();
@@ -978,7 +978,7 @@ app.on("ready", () => {
   }
   // Launcher updates are handled via version.json (renderer UI prompt).
 
-  logger.info(`Butter Launcher is starting...
+  logger.info(`Arytale Launcher is starting...
     App Version: ${app.getVersion()}
     Platform: ${os.type()} ${os.release()}
     Memory: ${(os.freemem() / 1024 / 1024 / 1024).toFixed(2)} GB / ${(os.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB
@@ -1080,7 +1080,7 @@ app.on("will-quit", () => {
     // ignore
   }
   stopClientLogTail = null;
-  logger.info("Closing Butter Launcher");
+  logger.info("Closing Arytale Launcher");
 });
 
 export const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -1280,7 +1280,7 @@ const ensureTray = () => {
 
   try {
     tray = new Tray(trayIcon);
-    tray.setToolTip("Butter Launcher");
+    tray.setToolTip("Arytale Launcher");
   } catch (e) {
     trayUnavailable = true;
     tray = null;
@@ -1290,7 +1290,7 @@ const ensureTray = () => {
 
   const menu = Menu.buildFromTemplate([
     {
-      label: "Show Butter Launcher",
+      label: "Show Arytale Launcher",
       click: () => restoreFromBackground(),
     },
     { type: "separator" },
@@ -1616,9 +1616,9 @@ function createWindow() {
 app.whenReady().then(() => {
   // Register custom protocol to serve local background files securely.
   const { protocol: proto } = session.defaultSession;
-  proto.handle("butter-bg", (req) => {
+  proto.handle("arytale-bg", (req) => {
     try {
-      // URL format: butter-bg:///bg?path=<encoded-path>
+      // URL format: arytale-bg:///bg?path=<encoded-path>
       const url = new URL(req.url);
       const rawPath = url.searchParams.get("path");
       if (!rawPath) {
@@ -2712,7 +2712,7 @@ ipcMain.handle("premium:oauth:start", async () => {
   <body>
     <div class="card">
       <div class="top">
-        <div class="brand">Butter Launcher</div>
+        <div class="brand">Arytale Launcher</div>
         <div class="badge">${badgeText}</div>
       </div>
       <h1>${safeTitle}</h1>
@@ -3389,7 +3389,7 @@ const toModsErrorKey = (e: unknown): { errorKey: string; errorArgs?: Record<stri
   if (
     lower.includes("mods are unavailable") ||
     lower.includes("curseforge api key") ||
-    lower.includes("butter_mods_config_url") ||
+    lower.includes("arytale_mods_config_url") ||
     lower.includes("x-api-key")
   ) {
     return { errorKey: "modsModal.errors.unavailable" };

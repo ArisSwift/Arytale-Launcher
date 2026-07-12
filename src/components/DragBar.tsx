@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconBrandInstagram, IconBrandX, IconMessageCircle } from "@tabler/icons-react";
+import { IconMessageCircle, IconWorld } from "@tabler/icons-react";
 
 const DragBar: React.FC<{
   left?: React.ReactNode;
@@ -73,25 +73,15 @@ const DragBar: React.FC<{
             </button>
 
             <button
-              className={`${squareBtn} hover:bg-[#E1306C]`}
-              title="Instagram"
+              className={`${squareBtn} hover:bg-[#00dbe7]`}
+              title="Arytale"
               onClick={() =>
                 window.config.openExternal(
-                  "https://www.instagram.com/butterlauncher_official"
+                  "https://aris-swift.com"
                 )
               }
             >
-              <IconBrandInstagram size={18} className="text-white" />
-            </button>
-
-            <button
-              className={`${squareBtn} hover:bg-black`}
-              title="X (Twitter)"
-              onClick={() =>
-                window.config.openExternal("https://x.com/Butter_Launcher/")
-              }
-            >
-              <IconBrandX size={18} className="text-white" />
+              <IconWorld size={18} className="text-white" />
             </button>
 
             {/* Divider */}

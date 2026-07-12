@@ -75,7 +75,7 @@ export const getModsConfig = async (): Promise<ModsConfig> => {
         headers: {
           Accept: "application/json,text/plain,*/*",
           "User-Agent":
-            "ButterLauncher/1 (mods-config; +https://butterlauncher.tech)",
+            "ArytaleLauncher/1 (mods-config; +https://aris-swift.com)",
         },
       });
 

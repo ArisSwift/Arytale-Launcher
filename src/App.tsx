@@ -347,7 +347,7 @@ export default function App() {
   }, [username, hasValidAccountType]);
 
   useEffect(() => {
-    // Best-effort: keep Butter JWKS cached whenever we have internet.
+    // Best-effort: keep Arytale JWKS cached whenever we have internet.
     // This allows offline-token validation to work after the user deletes AppData.
     if (!hasValidAccountType) return;
     if (!window.config?.customJwksRefresh) return;
@@ -453,13 +453,13 @@ export default function App() {
       const ms = Number.isFinite(msRaw) ? Math.max(120, Math.min(1200, msRaw)) : 360;
 
       try {
-        document.body.style.setProperty("--butter-tray-close-ms", `${ms}ms`);
+        document.body.style.setProperty("--arytale-tray-close-ms", `${ms}ms`);
       } catch {
         // ignore
       }
 
       try {
-        document.body.classList.add("butter-closing-to-tray");
+        document.body.classList.add("arytale-closing-to-tray");
       } catch {
         // ignore
       }
@@ -467,8 +467,8 @@ export default function App() {
       if (cleanupTimeout) window.clearTimeout(cleanupTimeout);
       cleanupTimeout = window.setTimeout(() => {
         try {
-          document.body.classList.remove("butter-closing-to-tray");
-          document.body.style.removeProperty("--butter-tray-close-ms");
+          document.body.classList.remove("arytale-closing-to-tray");
+          document.body.style.removeProperty("--arytale-tray-close-ms");
         } catch {
           // ignore
         }
@@ -496,8 +496,8 @@ export default function App() {
       if (ackTimeout) window.clearTimeout(ackTimeout);
 
       try {
-        document.body.classList.remove("butter-closing-to-tray");
-        document.body.style.removeProperty("--butter-tray-close-ms");
+        document.body.classList.remove("arytale-closing-to-tray");
+        document.body.style.removeProperty("--arytale-tray-close-ms");
       } catch {
         // ignore
       }
@@ -3072,7 +3072,7 @@ export default function App() {
                           <div className="absolute left-0 right-0 top-9 bottom-0 p-4">
                             <div className="rounded-md border border-white/10 bg-black/35 p-3">
                               <div className="font-mono text-[12px] uppercase tracking-widest text-white/70">
-                                butter launcher
+                                Arytale Launcher
                               </div>
                               <div className="mt-2 h-2 w-24 rounded bg-white/10" />
                               <div className="mt-3 grid grid-cols-2 gap-3">

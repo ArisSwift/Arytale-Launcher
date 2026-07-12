@@ -1,11 +1,11 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "com.butter.launcher",
+  "appId": "com.arytale.launcher",
   "icon": "build/icon",
   "asar": true,
-  "productName": "Butter Launcher",
-  "copyright": "Copyright © 2026 Butter Labs",
+  "productName": "Arytale Launcher",
+  "copyright": "Copyright © 2026 ArisXyn",
   "directories": {
     "output": "release/${version}"
   },
@@ -48,7 +48,7 @@
   },
   "linux": {
     "icon": "build/icon",
-    "executableName": "butter-launcher",
+    "executableName": "arytale-launcher",
     "target": [
       "AppImage",
       "deb",
@@ -60,11 +60,11 @@
     "category": "Game",
     "desktop": {
       // ignore not allowed properties, docs says another way to set them but it doesn't work
-      "Name": "Butter Launcher",
+      "Name": "Arytale Launcher",
       "Comment": "The best Hytale Launcher",
       "Terminal": "false",
       "Categories": "Game;",
-      "StartupWMClass": "Butter Launcher"
+      "StartupWMClass": "Arytale Launcher"
     }
   },
   "flatpak": {

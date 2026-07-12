@@ -10,7 +10,7 @@ type BackgroundType = "none" | "image" | "video";
 
 const SUPPORTERS_URL =
   (import.meta as any).env?.VITE_SUPPORTERS_URL || "/supporters.json";
-const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
+const SUPPORTER_PATREON_URL = "https://aris-swift.com";
 
 const LANGUAGES = {
   en: { name: "English", flag: "🇺🇸" },
@@ -1116,7 +1116,7 @@ const SettingsModal: React.FC<{
               <div className="mt-2 text-sm text-gray-200">
                 {t("settings.supporters.description", {
                   defaultValue:
-                    "Supporters help keep Butter Launcher running. Supporter Rank also unlocks pre-releases and older versions.",
+                    "Supporters help keep Arytale Launcher running. Supporter Rank also unlocks pre-releases and older versions.",
                 })}
               </div>
 

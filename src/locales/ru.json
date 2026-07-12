@@ -43,8 +43,8 @@
     }
   },
   "splash": {
-    "title": "Butter Launcher",
-    "logoAlt": "Butter Launcher",
+    "title": "Arytale Launcher",
+    "logoAlt": "Arytale Launcher",
     "initializing": "Инициализация",
     "preparing": "Подготовка вашей сессии"
   },
@@ -305,7 +305,7 @@
   },
   "launcherUpdate": {
     "title": "Доступно обновление",
-    "description": "Доступна новая версия Butter Launcher.",
+    "description": "Доступна новая версия Arytale Launcher.",
     "subtitleCurrent": "Текущая: v{{version}}",
     "subtitleLatest": "Последняя: v{{version}}",
     "released": "Релиз: {{date}}",
@@ -322,7 +322,7 @@
       "english": "Английский",
       "spanish": "Испанский"
     },
-    "teamName": "Butter Launcher Team",
+    "teamName": "Arytale Launcher Team",
     "madeBy": "Автор:",
     "gameDirectory": {
       "label": "Игровая директория",

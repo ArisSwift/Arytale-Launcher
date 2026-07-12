@@ -43,8 +43,8 @@
     }
   },
   "splash": {
-    "title": "Butter Launcher",
-    "logoAlt": "Butter Launcher",
+    "title": "Arytale Launcher",
+    "logoAlt": "Arytale Launcher",
     "initializing": "Iniciando",
     "preparing": "Preparando tu sesión"
   },
@@ -55,7 +55,7 @@
     "supporterBenefits": {
       "open": "Supporter Rank",
       "title": "SUPPORTER RANK",
-      "body": "Los supporters ayudan a mantener Butter Launcher con vida y a mejorar Matcha. Si te gusta el launcher, considera apoyarnos en Patreon.",
+      "body": "Los supporters ayudan a mantener Arytale Launcher con vida y a mejorar Matcha. Si te gusta el launcher, considera apoyarnos en Patreon.",
       "benefitsTitle": "BENEFICIOS",
       "benefit1": "Corona de Supporter en Matcha.",
       "benefit2": "Color custom de Supporter (se usa en tu corona, acentos del perfil y burbujas de chat).",
@@ -367,7 +367,7 @@
   },
   "launcherUpdate": {
     "title": "Actualización disponible",
-    "description": "Hay una nueva versión de Butter Launcher disponible.",
+    "description": "Hay una nueva versión de Arytale Launcher disponible.",
     "subtitleCurrent": "Actual: v{{version}}",
     "subtitleLatest": "Última: v{{version}}",
     "released": "Lanzado: {{date}}",
@@ -384,7 +384,7 @@
       "english": "Inglés",
       "spanish": "Español"
     },
-    "teamName": "Butter Launcher Team",
+    "teamName": "Arytale Launcher Team",
     "madeBy": "Hecho por",
     "gameDirectory": {
       "label": "Carpeta del juego",
@@ -440,7 +440,7 @@
     },
     "supporters": {
       "label": "Supporters",
-      "description": "Los Supporters ayudan a mantener Butter Launcher. El Supporter Rank también desbloquea pre-lanzamientos y versiones anteriores, y beneficios en Matcha como la corona de Supporter y un color de perfil personalizado.",
+      "description": "Los Supporters ayudan a mantener Arytale Launcher. El Supporter Rank también desbloquea pre-lanzamientos y versiones anteriores, y beneficios en Matcha como la corona de Supporter y un color de perfil personalizado.",
       "donate": "Donar en Patreon",
       "loadFailed": "No se pudo cargar la lista de supporters.",
       "hint": "Configura VITE_SUPPORTERS_URL con un supporters.json público.",

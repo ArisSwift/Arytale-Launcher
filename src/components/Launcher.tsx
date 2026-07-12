@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useGameContext } from "../hooks/gameContext";
 import { useUserContext } from "../hooks/userContext";
-import butterBg from "../assets/butter-bg.png";
-import butterLogo from "../assets/butter-logo.png";
+import arytaleBg from "../assets/arytale-bg.png";
+import arytaleLogo from "../assets/arytale-logo.png";
 import SettingsModal from "./SettingsModal";
 import ModsModal from "./ModsModal";
 import ServersModal from "./ServersModal";
@@ -59,7 +59,7 @@ const HYTALE_FEED_URL =
   "https://launcher.hytale.com/launcher-feed/release/feed.json";
 
 const MATCHA_API_BASE = "https://butter.lat";
-const SUPPORTER_PATREON_URL = "https://www.patreon.com/c/ButterLauncher";
+const SUPPORTER_PATREON_URL = "https://aris-swift.com";
 
 const HYTALE_FEED_IMAGE_BASE =
   "https://launcher.hytale.com/launcher-feed/release/";
@@ -1216,7 +1216,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
         hasCustomBg
           ? {}
           : {
-              backgroundImage: `url(${butterBg})`,
+              backgroundImage: `url(${arytaleBg})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
@@ -2238,7 +2238,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           title={t("launcher.buttons.supportProject")}
           onClick={() => {
             void window.config.openExternal(
-              "https://www.patreon.com/c/ButterLauncher",
+              "https://aris-swift.com",
             );
           }}
           style={{ width: 40, height: 40 }}
@@ -2253,8 +2253,8 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
       </div>
       <div className="flex items-start justify-between p-6">
         <img
-          src={butterLogo}
-          alt="butter Logo"
+          src={arytaleLogo}
+          alt="Arytale Logo"
           className="w-auto h-full max-h-96 drop-shadow-lg select-none"
           draggable={false}
         />

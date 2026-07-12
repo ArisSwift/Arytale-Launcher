@@ -81,7 +81,7 @@ export const migrateLegacyChannelInstallIfNeeded = (baseDir: string, versionType
     if (!fs.existsSync(channelDir)) return;
     if (!isLegacyChannelInstall(channelDir)) return;
 
-    // Old manifest lived at game/<type>/.butter-installed.json
+    // Old manifest lived at game/<type>/.arytale-installed.json
     const legacyManifestPath = path.join(channelDir, INSTALLED_MANIFEST_FILENAME);
     if (!fs.existsSync(legacyManifestPath)) return;
 

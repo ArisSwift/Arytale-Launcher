@@ -17,7 +17,7 @@ const DEFAULT_SETTINGS: LauncherSettings = {
 };
 
 const getSettingsDir = () => {
-  return path.join(app.getPath("userData"), "butter-launcher");
+  return path.join(app.getPath("userData"), "arytale-launcher");
 };
 
 const getSettingsPath = () => {

@@ -11,7 +11,7 @@ import {
   resolveServerPath,
 } from "./paths";
 
-const ONLINE_PATCH_ROOT_DIRNAME = ".butter-online-patch";
+const ONLINE_PATCH_ROOT_DIRNAME = ".arytale-online-patch";
 
 const unlinkIfExists = (p: string) => {
   try {
