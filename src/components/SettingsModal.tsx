@@ -877,7 +877,7 @@ const SettingsModal: React.FC<{
           <div className="text-left">
             <div className="text-xs text-gray-400">
               {t("settings.madeBy")}:{" "}
-              <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
+              <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
                 {t("settings.teamName")}
               </span>
             </div>
@@ -944,7 +944,7 @@ const SettingsModal: React.FC<{
 
             {onLogout && (
               <button
-                className="px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg"
+                className="px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
                 onClick={onLogout}
               >
                 {t("settings.logout")}
@@ -1123,7 +1123,7 @@ const SettingsModal: React.FC<{
               <div className="mt-4 flex items-center gap-3">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-lg bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white font-bold hover:scale-[1.02] transition"
+                  className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-bold hover:scale-[1.02] transition"
                   onClick={() => {
                     try {
                       void window.config.openExternal(SUPPORTER_PATREON_URL);
@@ -1133,7 +1133,7 @@ const SettingsModal: React.FC<{
                   }}
                 >
                   {t("settings.supporters.donate", {
-                    defaultValue: "Donate on Patreon",
+                    defaultValue: "Support Us",
                   })}
                 </button>
                 <button
@@ -1175,7 +1175,7 @@ const SettingsModal: React.FC<{
                       key={name}
                       className="rounded-lg border border-[#2a3146] bg-[#1f2538]/70 px-4 py-3 text-gray-200"
                     >
-                      <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
+                      <span className="font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
                         {name}
                       </span>
                     </div>

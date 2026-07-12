@@ -73,7 +73,7 @@ const DragBar: React.FC<{
             </button>
 
             <button
-              className={`${squareBtn} hover:bg-[#00dbe7]`}
+              className={`${squareBtn} hover:bg-[#3B82F6]`}
               title="Arytale"
               onClick={() =>
                 window.config.openExternal(

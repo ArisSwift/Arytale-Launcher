@@ -2613,7 +2613,7 @@ ipcMain.handle("premium:oauth:start", async () => {
             const safeSubtitle = String(opts.subtitle ?? "");
             const safeDetails = String(opts.details ?? "");
 
-            const accent = opts.variant === "ok" ? "#02D4D4" : "#F87171";
+            const accent = opts.variant === "ok" ? "#3B82F6" : "#F87171";
             const badgeBg = opts.variant === "ok" ? "rgba(2, 212, 212, 0.12)" : "rgba(248, 113, 113, 0.12)";
             const badgeText = opts.variant === "ok" ? "Success" : "Error";
 

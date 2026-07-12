@@ -317,7 +317,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
             <button
               type="button"
               onClick={() => persistAccountType("premium")}
-              className="h-11 w-full bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white font-semibold rounded hover:from-[#025bb8] hover:to-[#02baba] transition"
+              className="h-11 w-full bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-semibold rounded hover:from-[#2563EB] hover:to-[#1D4ED8] transition"
             >
               {t("login.premium")}
             </button>
@@ -344,7 +344,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
                 "h-11 w-full text-white font-semibold rounded transition " +
                 (premiumWorking
                   ? "bg-[#1a1f2e] cursor-not-allowed opacity-80"
-                  : "bg-linear-to-r from-[#0268D4] to-[#02D4D4] hover:from-[#025bb8] hover:to-[#02baba]")
+                  : "bg-linear-to-r from-[#3B82F6] to-[#2563EB] hover:from-[#2563EB] hover:to-[#1D4ED8]")
               }
             >
               {premiumWorking ? t("common.working") : t("login.premiumLogin")}
@@ -399,7 +399,7 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
                   placeholder-gray-500
                   rounded
                   focus:outline-none
-                  focus:ring-2 focus:ring-[#4a90e2]
+                  focus:ring-2 focus:ring-[#3B82F6]
                 "
               />
               {error ? (
@@ -417,10 +417,10 @@ const Login: React.FC<{ onLogin: (username: string) => void; hasCustomBg?: boole
                 type="submit"
                 className="
                   mt-2 h-11 w-full
-                  bg-linear-to-r from-[#0268D4] to-[#02D4D4]
+                  bg-linear-to-r from-[#3B82F6] to-[#2563EB]
                   text-white font-semibold
                   rounded
-                  hover:from-[#025bb8] hover:to-[#02baba]
+                  hover:from-[#2563EB] hover:to-[#1D4ED8]
                   transition
                 "
               >

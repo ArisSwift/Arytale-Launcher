@@ -2356,7 +2356,7 @@ export default function App() {
             position: "absolute",
             inset: 0,
             zIndex: 0,
-            backgroundImage: `url("butter-bg:///bg?path=${encodeURIComponent(bgPath)}&v=${bgKey}")`,
+            backgroundImage: `url("arytale-bg:///bg?path=${encodeURIComponent(bgPath)}&v=${bgKey}")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
@@ -2384,7 +2384,7 @@ export default function App() {
               objectFit: "cover",
             }}
           >
-            <source src={`butter-bg:///bg?path=${encodeURIComponent(bgPath)}`} />
+            <source src={`arytale-bg:///bg?path=${encodeURIComponent(bgPath)}`} />
           </video>
           <div style={{ position: "absolute", inset: 0, background: "rgba(11, 15, 22, 0.45)" }} />
         </div>
@@ -3196,7 +3196,7 @@ export default function App() {
               <div className="mt-3 flex items-center gap-2">
                 <button
                   type="button"
-                  className="px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition"
+                  className="px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition"
                   onClick={async () => {
                     try {
                       await navigator.clipboard.writeText(supportTicketCode);

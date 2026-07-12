@@ -165,7 +165,7 @@
       "required": {
         "title": "Supporters only",
         "message": "Supporter Rank is required to use the version manager.",
-        "donate": "Donate on Patreon"
+        "donate": "Support Us"
       }
     }
   },
@@ -283,18 +283,18 @@
     "you": "You",
     "devs": "DEV",
     "supporter": "Supporter",
-    "supporterCta": "Want a special role, version manager, custom color, and many more benefits? Get Supporter Rank by donating on Patreon.",
-    "supporterCtaButton": "Donate on Patreon",
+    "supporterCta": "Want a special role, version manager, custom color, and many more benefits? Get Supporter Rank by supporting us.",
+    "supporterCtaButton": "Support Us",
     "supporterBenefits": {
       "open": "Supporter Rank",
       "title": "SUPPORTER RANK",
-      "body": "Supporters help keep Arytale Launcher alive and improve Matcha. If you enjoy the launcher, consider supporting on Patreon.",
+      "body": "Supporters help keep Arytale Launcher alive and improve Matcha. If you enjoy the launcher, consider supporting us.",
       "benefitsTitle": "BENEFITS",
       "benefit1": "Supporter crown in Matcha.",
       "benefit2": "Custom supporter color (used on your crown, profile accents, and chat bubbles).",
       "benefit3": "Unlocks pre-releases and older versions.",
       "benefit4": "Your name appears highlighted in the Supporters list.",
-      "patreonButton": "Open Patreon"
+      "patreonButton": "Open Support Page"
     },
     "deleted": "Message deleted.",
     "deletedByAdmin": "Message deleted by an administrator.",
@@ -954,7 +954,7 @@
     "supporters": {
       "label": "Supporters",
       "description": "Supporters help keep Arytale Launcher running. Supporter Rank also unlocks pre-releases and older versions, plus Matcha perks like the Supporter crown and a custom profile color.",
-      "donate": "Donate on Patreon",
+      "donate": "Support Us",
       "loadFailed": "Failed to load supporters list.",
       "hint": "Set VITE_SUPPORTERS_URL to a public supporters.json.",
       "empty": "No supporters listed yet."

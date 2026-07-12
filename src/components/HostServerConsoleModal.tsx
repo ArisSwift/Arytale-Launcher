@@ -36,7 +36,7 @@ const HostServerConsoleModal: React.FC<{
         case 35:
           return "text-purple-400";
         case 36:
-          return "text-cyan-400";
+          return "text-blue-400";
         case 37:
           return "text-gray-100";
         // Bright
@@ -305,7 +305,7 @@ const HostServerConsoleModal: React.FC<{
             type="submit"
             className={cn(
               "px-4 py-2 rounded-lg border border-white/10 text-white font-bold",
-              "bg-linear-to-r from-[#0268D4] to-[#02D4D4]",
+              "bg-linear-to-r from-[#3B82F6] to-[#2563EB]",
               "hover:scale-[1.02] transition",
             )}
           >

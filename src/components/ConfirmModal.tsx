@@ -87,7 +87,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           </button>
           <button
             type="button"
-            className="px-4 py-2 rounded-lg bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white font-bold hover:scale-[1.02] transition"
+            className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-bold hover:scale-[1.02] transition"
             onClick={onConfirm}
           >
             {resolvedConfirmText}

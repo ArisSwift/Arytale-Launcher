@@ -1293,7 +1293,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 className={cn(
                   "flex-1 text-xs px-2 py-1 rounded-md transition text-gray-200 hover:bg-white/10",
                   versionType === "release" &&
-                    "bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white shadow",
+                    "bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white shadow",
                 )}
                 onClick={() => {
                   setVersionType("release");
@@ -1306,7 +1306,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 className={cn(
                   "flex-1 text-xs px-2 py-1 rounded-md transition text-gray-200 hover:bg-white/10",
                   versionType === "pre-release" &&
-                    "bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white shadow",
+                    "bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white shadow",
                 )}
                 onClick={() => {
                   void (async () => {
@@ -1439,7 +1439,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               type="button"
               className={cn(
                 "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4]",
+                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
                 "backdrop-blur-md text-white text-sm font-bold",
                 "flex items-center gap-2",
                 "transition duration-200",
@@ -1461,7 +1461,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               type="button"
               className={cn(
                 "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4]",
+                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
                 "backdrop-blur-md text-white text-sm font-bold",
                 "flex items-center gap-2",
                 "transition duration-200",
@@ -1481,7 +1481,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               type="button"
               className={cn(
                 "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                "bg-black/35 hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4]",
+                "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
                 "backdrop-blur-md text-white text-sm font-bold",
                 "flex items-center gap-2",
                 "transition duration-200",
@@ -1538,14 +1538,14 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                     <div className="mt-3 relative overflow-hidden rounded-lg border border-blue-400/30 bg-[#1f2538]/70 p-3 animate-softGlowStrong">
                       <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 bg-linear-to-r from-blue-500/18 via-cyan-400/10 to-blue-500/18 bg-chroma-animated animate-chroma-shift animate-hue-slow"
+                        className="pointer-events-none absolute inset-0 bg-linear-to-r from-blue-500/18 via-blue-400/10 to-blue-500/18 bg-chroma-animated animate-chroma-shift animate-hue-slow"
                       />
 
                       <div className="relative z-10">
                         <div
                           className={cn(
                             "text-sm font-extrabold tracking-wider uppercase text-center",
-                            "bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent",
+                            "bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent",
                             "bg-chroma-animated animate-chroma-shift",
                           )}
                         >
@@ -1554,7 +1554,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
 
                         <button
                           type="button"
-                          className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg"
+                          className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
                           onClick={() => {
                             void window.config.openExternal(
                               "https://www.hycloudhosting.com/gameservers/hytale?ref=butterlauncher",
@@ -2071,7 +2071,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             type="button"
             className={cn(
               "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-              "bg-black/35 hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4]",
+              "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
               "backdrop-blur-md text-white text-sm font-bold",
               "flex items-center gap-2",
               "transition duration-200",
@@ -2091,7 +2091,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 type="button"
                 className={cn(
                   "px-4 py-2 rounded-lg shadow-lg border border-white/10",
-                  "bg-black/35 hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4]",
+                  "bg-black/35 hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB]",
                   "backdrop-blur-md text-white text-sm font-bold",
                   "flex items-center gap-2",
                   "transition duration-200",
@@ -2198,7 +2198,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             "hover:border-blue-400/70 hover:ring-2 hover:ring-blue-400/35 hover:shadow-[0_0_18px_rgba(2,104,212,0.85)]",
             "shadow-[0_0_14px_rgba(2,212,212,0.22)]",
             "animate-softGlowStrong",
-            "hover:shadow-[0_0_26px_rgba(2,212,212,0.90)] hover:ring-cyan-400/35",
+            "hover:shadow-[0_0_26px_rgba(59,130,246,0.90)] hover:ring-blue-400/35",
           )}
           title="Web"
           onClick={() => {
@@ -2210,7 +2210,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             aria-hidden="true"
             className={cn(
               "pointer-events-none absolute inset-0",
-              "bg-linear-to-r from-blue-500/55 via-cyan-400/45 to-blue-500/55",
+              "bg-linear-to-r from-blue-500/55 via-blue-400/45 to-blue-500/55",
               "bg-chroma-animated animate-chroma-shift animate-hue-slow",
               "opacity-75 group-hover:opacity-100 transition-opacity duration-200",
             )}
@@ -2234,7 +2234,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             "active:translate-y-0",
             "active:brightness-95",
           )}
-          aria-label="Patreon"
+          aria-label="Support"
           title={t("launcher.buttons.supportProject")}
           onClick={() => {
             void window.config.openExternal(
@@ -2245,7 +2245,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
         >
           <img
             src={PatreonLogo}
-            alt="Patreon"
+            alt="Support"
             className="relative z-10 w-full h-full object-cover"
             draggable={false}
           />
@@ -2309,7 +2309,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
         })}
         cancelText={t("common.back")}
         confirmText={t("launcher.supporters.required.donate", {
-          defaultValue: "Donate on Patreon",
+          defaultValue: "Support Us",
         })}
         onCancel={() => setSupporterGateOpen(false)}
         onConfirm={() => {
@@ -2482,7 +2482,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
           <div className="flex flex-row items-center gap-2">
             {needsFixClient ? (
               <button
-                className="min-w-52 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50"
+                className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50"
                 onClick={fixClient}
                 disabled={launching || gameLaunched}
                 title={t("launcher.updates.fixClientTooltip")}
@@ -2493,7 +2493,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               <>
                 {canSmartInstallLatest && isSelectedLatestRelease ? (
                   <button
-                    className="min-w-52 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white text-xl font-bold px-8 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
+                    className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-8 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
                     onClick={() => {
                       const latestIdx = availableVersions.findIndex(
                         (v) =>
@@ -2522,7 +2522,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                   </button>
                 ) : (
                   <button
-                    className="min-w-52 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
+                    className="min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50 animate-tinyGlow"
                     onClick={() => {
                       const latestIdx = availableVersions.findIndex(
                         (v) =>
@@ -2583,7 +2583,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 isCustom ? (
                   <button
                     className={cn(
-                      "min-w-52 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
+                      "min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
                       "animate-tinyGlow",
                     )}
                     onClick={handleLaunch}
@@ -2644,7 +2644,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                 <div className="relative inline-flex items-center justify-center">
                   <button
                     className={cn(
-                      "min-w-52 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
+                      "min-w-52 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white text-xl font-bold px-12 py-3 rounded-lg shadow-lg hover:scale-105 transition disabled:opacity-50",
                       !availableVersions[selectedVersion]?.installed &&
                         "animate-tinyGlow",
                     )}
@@ -2661,7 +2661,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
                   {selectedPatchNotesUrl ? (
                     <button
                       type="button"
-                      className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-10 text-[11px] font-semibold px-0 py-0 bg-transparent text-white/70 hover:text-cyan-300 underline underline-offset-2 transition whitespace-nowrap"
+                      className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-10 text-[11px] font-semibold px-0 py-0 bg-transparent text-white/70 hover:text-blue-300 underline underline-offset-2 transition whitespace-nowrap"
                       onClick={() => {
                         setPatchNotesUrl(selectedPatchNotesUrl);
                         setPatchNotesChannel(selected?.type ?? null);
@@ -2690,7 +2690,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               <button
                 type="button"
                 className={cn(
-                  "min-w-[140px] h-[52px] rounded-lg px-4 text-sm font-bold shadow-lg transition disabled:opacity-50 bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white hover:scale-105",
+                  "min-w-[140px] h-[52px] rounded-lg px-4 text-sm font-bold shadow-lg transition disabled:opacity-50 bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white hover:scale-105",
                   onlinePatchEnabled &&
                     "bg-white/10 hover:bg-white/20 text-white",
                 )}
@@ -2744,7 +2744,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
       					  w-40 h-20 rounded-lg flex flex-col items-center text-center p-2
       					  transition-all duration-200 ease-in-out select-none shadow-inner
       					  ${hasContent 
-      						? "bg-white/10 group hover:bg-linear-to-r hover:from-[#0268D4] hover:to-[#02D4D4] hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] hover:-translate-y-0.5" 
+      						? "bg-white/10 group hover:bg-linear-to-r hover:from-[#3B82F6] hover:to-[#2563EB] hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] hover:-translate-y-0.5" 
       						: "bg-white/5"}
       					`}
       				  >
@@ -3075,7 +3075,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
               </button>
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg bg-linear-to-r from-[#0268D4] to-[#02D4D4] text-white font-bold hover:scale-[1.02] transition"
+                className="px-4 py-2 rounded-lg bg-linear-to-r from-[#3B82F6] to-[#2563EB] text-white font-bold hover:scale-[1.02] transition"
                 onClick={() => {
                   setPatchConfirmOpen(false);
                   startOnlinePatch();

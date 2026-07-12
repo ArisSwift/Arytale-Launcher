@@ -74,7 +74,7 @@ const HostServerModal: React.FC<{
               <div
                 className={cn(
                   "text-sm font-extrabold tracking-wider uppercase",
-                  "bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent",
+                  "bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent",
                   "bg-chroma-animated animate-chroma-shift",
                 )}
               >
@@ -83,7 +83,7 @@ const HostServerModal: React.FC<{
 
               <button
                 type="button"
-                className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg"
+                className="mt-3 mx-auto block px-5 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
                 onClick={() => {
                   void window.config.openExternal(
                     "https://www.hycloudhosting.com/gameservers/hytale?ref=butterlauncher",

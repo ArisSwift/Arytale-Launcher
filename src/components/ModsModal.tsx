@@ -874,8 +874,8 @@ const ModsModal: React.FC<{
       "px-3 py-1.5 rounded-lg border text-xs font-semibold transition",
       "border-[#2a3146]",
       active
-        ? "bg-[#0ea5ff]/20 text-[#b8f1ff] border-[#35c9ff]/60 shadow-[0_0_16px_rgba(14,165,255,0.55)]"
-        : "bg-transparent text-gray-200 hover:bg-[#0ea5ff]/10 hover:text-white",
+        ? "bg-[#3B82F6]/20 text-[#BFDBFE] border-[#60A5FA]/60 shadow-[0_0_16px_rgba(59,130,246,0.55)]"
+        : "bg-transparent text-gray-200 hover:bg-[#3B82F6]/10 hover:text-white",
     );
 
   const formatNumber = (n?: number) => {
@@ -1267,7 +1267,7 @@ const ModsModal: React.FC<{
                                 type="button"
                                 className={cn(
                                   "px-3 py-2 rounded-lg border border-blue-400/30",
-                                  "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                                  "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                                   "text-white text-sm font-bold",
                                   "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                   (installingId === detailsMod.id ||
@@ -1489,7 +1489,7 @@ const ModsModal: React.FC<{
                                         type="button"
                                         className={cn(
                                           "px-3 py-1.5 rounded-lg border border-blue-400/30",
-                                          "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                                          "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                                           "text-white text-xs font-bold",
                                           "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                           (installingId === detailsMod.id ||
@@ -1583,7 +1583,7 @@ const ModsModal: React.FC<{
                               type="button"
                               className={cn(
                                 "text-left rounded-xl border border-[#2a3146] bg-[#141824]/60",
-                                "hover:bg-[#141824]/80 hover:border-[#35c9ff]/30 transition",
+                                "hover:bg-[#141824]/80 hover:border-[#60A5FA]/30 transition",
                                 "p-3 flex flex-col gap-2",
                               )}
                               onClick={() => {
@@ -1645,7 +1645,7 @@ const ModsModal: React.FC<{
                                   type="button"
                                   className={cn(
                                     "px-3 py-1.5 rounded-lg border border-blue-400/30",
-                                    "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                                    "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                                     "text-white text-xs font-bold",
                                     "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                                     (installing || status === "installed") &&
@@ -2221,7 +2221,7 @@ const ModsModal: React.FC<{
                     type="button"
                     className={cn(
                       "px-3 py-2 rounded-lg border border-blue-400/30",
-                      "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                      "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                       "text-white text-sm font-bold",
                       "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                     )}
@@ -2330,7 +2330,7 @@ const ModsModal: React.FC<{
                           className={cn(
                             "w-full text-left px-3 py-2 border-b border-white/5",
                             "hover:bg-white/5 transition",
-                            active && "bg-[#0ea5ff]/15",
+                            active && "bg-[#3B82F6]/15",
                           )}
                           onClick={() => {
                             // Load the profile mods immediately so the UI doesn't gaslight you with "0 mods".
@@ -2517,7 +2517,7 @@ const ModsModal: React.FC<{
                     type="button"
                     className={cn(
                       "px-3 py-2 rounded-lg border border-blue-400/30",
-                      "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                      "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                       "text-white text-sm font-bold",
                       "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                       (importing || shareWorking) &&
@@ -2647,7 +2647,7 @@ const ModsModal: React.FC<{
                             type="button"
                             className={cn(
                               "px-3 py-2 rounded-lg border border-blue-400/30",
-                              "bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
+                              "bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left",
                               "text-white text-sm font-bold",
                               "hover:shadow-[0_0_18px_rgba(2,104,212,0.85)] transition",
                               (!importPromptText.trim() ||
@@ -2917,7 +2917,7 @@ const ModsModal: React.FC<{
                               else next.delete(name);
                               setProfileSelectedMods(next);
                             }}
-                            className="w-4 h-4 accent-[#0ea5ff]"
+                            className="w-4 h-4 accent-[#3B82F6]"
                           />
                         </label>
                       );

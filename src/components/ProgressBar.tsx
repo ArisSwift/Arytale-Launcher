@@ -66,7 +66,7 @@ export default function ProgressBar({ progress, className }: Props) {
         <div className="absolute inset-0 bg-white/20 rounded-full"></div>
         <div
           className={cn(
-            "h-1 bg-linear-to-r from-[#0268D4] to-[#02D4D4] rounded-full",
+            "h-1 bg-linear-to-r from-[#3B82F6] to-[#2563EB] rounded-full",
             progress.percent === -1 && "animate-loading-horiz",
           )}
           style={{

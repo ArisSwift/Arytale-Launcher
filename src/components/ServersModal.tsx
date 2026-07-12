@@ -360,7 +360,7 @@ const getRecommendedNameChroma = (s: ServerListItem): { className: string; style
     const hueRotate = normalizeHueRotate(s.nameHueRotate);
     return {
       className:
-        "font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift",
+        "font-extrabold tracking-wide bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift",
       style: { filter: `hue-rotate(${hueRotate}deg)` },
     };
   }
@@ -775,7 +775,7 @@ const ServersModal: React.FC<{
                       const glow = "rgba(2, 104, 212, 0.35)";
                       return {
                         borderColor: "rgba(96, 165, 250, 0.30)",
-                        backgroundImage: "linear-gradient(90deg, #0268D4 0%, #02D4D4 100%)",
+                        backgroundImage: "linear-gradient(90deg, #3B82F6 0%, #2563EB 100%)",
                         backgroundSize: "100% 100%",
                         backgroundRepeat: "no-repeat",
                         backgroundPosition: "left",
@@ -871,11 +871,11 @@ const ServersModal: React.FC<{
                   {activeTab === "recommended" ? (
                     <span
                       aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 bg-linear-to-r from-blue-500/12 via-cyan-400/6 to-blue-500/12 bg-chroma-animated animate-chroma-shift animate-hue-slow"
+                      className="pointer-events-none absolute inset-0 bg-linear-to-r from-blue-500/12 via-blue-400/6 to-blue-500/12 bg-chroma-animated animate-chroma-shift animate-hue-slow"
                     />
                   ) : null}
 
-                  <span className="relative z-10 bg-linear-to-r from-blue-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
+                  <span className="relative z-10 bg-linear-to-r from-blue-500 via-blue-400 to-blue-500 bg-clip-text text-transparent bg-chroma-animated animate-chroma-shift">
                     {t("serversModal.sections.recommended")}
                   </span>
                 </button>
@@ -884,7 +884,7 @@ const ServersModal: React.FC<{
                   className={cn(
                     "flex-1 text-xs px-3 py-1.5 rounded-lg border transition",
                     activeTab === "servers"
-                      ? "border-blue-400/30 bg-[linear-gradient(90deg,#0268D4_0%,#02D4D4_100%)] bg-[length:100%_100%] bg-no-repeat bg-left text-white font-bold"
+                      ? "border-blue-400/30 bg-[linear-gradient(90deg,#3B82F6_0%,#2563EB_100%)] bg-[length:100%_100%] bg-no-repeat bg-left text-white font-bold"
                       : "border-[#2a3146] bg-[#1f2538]/70 text-gray-200 hover:bg-[#23293a]",
                   )}
                   onClick={() => setActiveTab("servers")}

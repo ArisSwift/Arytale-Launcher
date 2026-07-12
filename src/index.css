@@ -344,13 +344,13 @@ body.arytale-closing-to-tray::after {
 .splash-vignette {
   background:
     radial-gradient(900px 520px at 50% 35%, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0) 58%),
-    radial-gradient(900px 520px at 50% 70%, rgba(34, 211, 238, 0.10) 0%, rgba(34, 211, 238, 0) 55%),
+    radial-gradient(900px 520px at 50% 70%, rgba(37, 99, 235, 0.10) 0%, rgba(37, 99, 235, 0) 55%),
     radial-gradient(1200px 700px at 50% 50%, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.75) 100%);
 }
 
 .splash-aurora {
   background:
-    linear-gradient(120deg, rgba(59, 130, 246, 0.18), rgba(34, 211, 238, 0.12), rgba(59, 130, 246, 0.18));
+    linear-gradient(120deg, rgba(59, 130, 246, 0.18), rgba(37, 99, 235, 0.12), rgba(59, 130, 246, 0.18));
   background-size: 220% 220%;
   animation: splash-aurora 6.5s ease-in-out infinite;
   mix-blend-mode: screen;
@@ -358,7 +358,7 @@ body.arytale-closing-to-tray::after {
 }
 
 .splash-title {
-  background: linear-gradient(90deg, rgba(59, 130, 246, 1), rgba(34, 211, 238, 1), rgba(59, 130, 246, 1));
+  background: linear-gradient(90deg, rgba(59, 130, 246, 1), rgba(37, 99, 235, 1), rgba(59, 130, 246, 1));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -378,9 +378,9 @@ body.arytale-closing-to-tray::after {
       from 180deg,
       rgba(59, 130, 246, 0.0) 0deg,
       rgba(59, 130, 246, 0.55) 55deg,
-      rgba(34, 211, 238, 0.30) 130deg,
+      rgba(37, 99, 235, 0.30) 130deg,
       rgba(59, 130, 246, 0.0) 220deg,
-      rgba(34, 211, 238, 0.45) 280deg,
+      rgba(37, 99, 235, 0.45) 280deg,
       rgba(59, 130, 246, 0.0) 360deg
     );
   filter: blur(0.2px);
@@ -394,7 +394,7 @@ body.arytale-closing-to-tray::after {
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow:
     0 0 0 1px rgba(59, 130, 246, 0.12),
-    0 0 28px rgba(34, 211, 238, 0.10);
+    0 0 28px rgba(37, 99, 235, 0.10);
   opacity: 0.85;
   animation: splash-ring-spin 5.6s linear infinite reverse;
   transform: scale(calc(1 + (var(--splash-beat, 0) * 0.04)));
@@ -403,11 +403,11 @@ body.arytale-closing-to-tray::after {
 .splash-glow {
   inset: 22px;
   background:
-    radial-gradient(circle at 40% 35%, rgba(34, 211, 238, 0.20), rgba(34, 211, 238, 0.0) 60%),
+    radial-gradient(circle at 40% 35%, rgba(37, 99, 235, 0.20), rgba(37, 99, 235, 0.0) 60%),
     radial-gradient(circle at 60% 70%, rgba(59, 130, 246, 0.18), rgba(59, 130, 246, 0.0) 62%);
   opacity: 0.85;
   filter:
-    drop-shadow(0 0 18px rgba(34, 211, 238, 0.14))
+    drop-shadow(0 0 18px rgba(37, 99, 235, 0.14))
     drop-shadow(0 0 26px rgba(59, 130, 246, 0.12));
   transform: scale(calc(1 + (var(--splash-beat, 0) * 0.06)));
 }
@@ -415,7 +415,7 @@ body.arytale-closing-to-tray::after {
 .splash-bar {
   width: 100%;
   background:
-    linear-gradient(90deg, rgba(59, 130, 246, 0.0), rgba(59, 130, 246, 0.95), rgba(34, 211, 238, 0.95), rgba(59, 130, 246, 0.0));
+    linear-gradient(90deg, rgba(59, 130, 246, 0.0), rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.95), rgba(59, 130, 246, 0.0));
   background-size: 200% 100%;
   animation:
     splash-scan 1.25s ease-in-out infinite;
@@ -579,7 +579,7 @@ body.arytale-closing-to-tray::after {
   border-radius: 999px;
   pointer-events: none;
   background:
-    radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(34, 211, 238, 0.20) 35%, rgba(255, 255, 255, 0) 70%);
+    radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(37, 99, 235, 0.20) 35%, rgba(255, 255, 255, 0) 70%);
   animation: matcha-intro-spark 420ms ease-out both;
   mix-blend-mode: screen;
   will-change: transform, opacity, filter;

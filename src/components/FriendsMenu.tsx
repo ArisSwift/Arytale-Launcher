@@ -3536,7 +3536,7 @@ export default function FriendsMenu({
                   <div className="mt-4 flex gap-2">
                     <button
                       type="button"
-                      className="flex-1 px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg flex items-center justify-center gap-2"
+                      className="flex-1 px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg flex items-center justify-center gap-2"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -4522,7 +4522,7 @@ export default function FriendsMenu({
                                     "px-2.5 py-1 rounded-xl text-[12px] font-black leading-none",
                                     hasC
                                       ? "text-white shadow-lg border border-white/15 ring-1 ring-white/10"
-                                      : "border border-blue-300/35 ring-1 ring-white/10 shadow-lg shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-cyan-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
+                                      : "border border-blue-300/35 ring-1 ring-white/10 shadow-lg shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-purple-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
                                   )}
                                   style={
                                     hasC
@@ -5061,7 +5061,7 @@ export default function FriendsMenu({
                 type="button"
                 className={cn(
                   "w-full px-5 py-2 rounded-lg font-bold text-white",
-                  "bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg",
+                  "bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg",
                 )}
                 onClick={() => setMode("login")}
               >
@@ -6077,7 +6077,7 @@ export default function FriendsMenu({
                                                   "px-1.5 py-0.5 rounded-full text-[9px] font-black leading-none",
                                                   hasC
                                                     ? "text-white shadow-sm border border-white/15 ring-1 ring-white/10"
-                                                    : "border border-blue-300/35 ring-1 ring-white/10 shadow-md shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-cyan-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
+                                                    : "border border-blue-300/35 ring-1 ring-white/10 shadow-md shadow-blue-500/20 bg-linear-to-r from-blue-500/20 via-purple-400/15 to-blue-500/20 bg-chroma-animated animate-chroma-shift text-white",
                                                 )}
                                                 style={
                                                   hasC
@@ -7303,7 +7303,7 @@ export default function FriendsMenu({
                 </div>
                 <button
                   type="button"
-                  className="mt-3 w-full px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-cyan-400 hover:from-blue-600 hover:to-cyan-500 transition shadow-lg"
+                  className="mt-3 w-full px-4 py-2 rounded-lg font-bold text-white bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition shadow-lg"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
