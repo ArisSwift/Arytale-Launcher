@@ -298,17 +298,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
       return true;
     }
 
-    // Old release builds are supporters-only.
-    if (v.type === "release") {
-      if (v.isLatest) return false;
-      const maxBuildIndex = availableVersions.reduce((acc, x) => {
-        if (!x || x.type !== "release") return acc;
-        const n = typeof x.build_index === "number" ? x.build_index : Number(x.build_index);
-        return Number.isFinite(n) ? Math.max(acc, n) : acc;
-      }, -Infinity);
-      if (Number.isFinite(maxBuildIndex) && v.build_index === maxBuildIndex) return false;
-      return true;
-    }
+    // Release builds: no gating — all accessible.
 
     return false;
   }, [availableVersions, isPremium]);
