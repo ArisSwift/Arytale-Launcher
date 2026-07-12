@@ -849,7 +849,6 @@ body.arytale-closing-to-tray::after {
    ═══════════════════════════════════════════════════════════ */
 
 /* Settings modal */
-.fixed.z-50 > div:first-of-type,
 .fixed.inset-0.z-50 > div:first-of-type {
   background: var(--modal-bg) !important;
   border-color: var(--modal-border) !important;
@@ -857,17 +856,14 @@ body.arytale-closing-to-tray::after {
   -webkit-backdrop-filter: blur(24px) !important;
 }
 
-.fixed.z-50 h2,
 .fixed.inset-0.z-50 h2 {
   color: var(--text-on-surface) !important;
 }
 
-.fixed.z-50 label,
 .fixed.inset-0.z-50 label {
   color: var(--text-on-surface-muted) !important;
 }
 
-.fixed.z-50 button.absolute,
 .fixed.inset-0.z-50 button.absolute {
   background: var(--card-bg) !important;
   color: var(--text-on-surface-muted) !important;
