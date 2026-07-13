@@ -870,8 +870,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
   const patchAvailable =
     !!selected &&
     !!selected.installed &&
-    !!selected.patch_url &&
-    !!selected.patch_hash;
+    !isPremium;
 
   // async state updates are fun until they are not
   // we only trust the most recent health check because time is not a deterministic function
