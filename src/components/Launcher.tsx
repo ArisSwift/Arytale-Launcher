@@ -2973,9 +2973,7 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
             </div>
 
             <div className="mt-3 text-sm whitespace-pre-wrap" style={{ color: "var(--text-on-surface)" }}>
-              {selected.patch_note?.trim()
-                ? selected.patch_note
-                : t("launcher.onlinePatch.notesNone")}
+              {t("launcher.onlinePatch.confirmDescription")}
             </div>
 
             <div className="mt-5 flex justify-end gap-2">

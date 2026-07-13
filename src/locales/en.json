@@ -130,9 +130,10 @@
       "btnDisable": "Disable Patch",
       "btnUpdate": "Update Patch",
       "notesNone": "No patch notes available for this build.",
-      "confirmTitle": "Online Patch",
-      "confirmCancel": "Do not patch",
-      "confirmApply": "Patch"
+      "confirmTitle": "Enable Online Patch?",
+      "confirmDescription": "This will patch the game client before each launch to connect to custom servers. The original file is automatically restored when you close the game.",
+      "confirmCancel": "Cancel",
+      "confirmApply": "Enable Patch"
     },
     "hytaleFeed": {
       "title": "Hytale News",
