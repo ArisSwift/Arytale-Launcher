@@ -20,6 +20,11 @@ import {
 } from "./auth";
 import { resolveExistingInstallDir } from "./paths";
 import { mapErrorToCode } from "../errorCodes";
+import {
+  patchClientBinary,
+  restoreClientBinary,
+  isClientPatched,
+} from "./clientPatcher";
 
 const ensureExecutable = (filePath: string) => {
   if (process.platform === "win32") return;
@@ -198,6 +203,25 @@ export const launchGame = async (
     );
   } catch {
     // ignore (best-effort)
+  }
+
+  // Patch the client binary if online patch is enabled
+  let clientPatched = false;
+  if (patchEnabled && accountType !== "premium") {
+    try {
+      logger.info("Patching client binary for online patch...");
+      const patchResult = patchClientBinary(client);
+      if (patchResult.patched) {
+        clientPatched = true;
+        logger.info("Client binary patched successfully");
+      } else {
+        logger.info("Client binary already patched or no changes needed");
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      logger.error("Failed to patch client binary:", msg);
+      // Continue with launch even if patching fails
+    }
   }
 
   if (useAuthenticated) {
@@ -386,6 +410,18 @@ export const launchGame = async (
           logger.info(
             `Game exited smoothly (code ${code}${signal ? `, signal ${signal}` : ""})`,
           );
+        }
+
+        // Restore the original client binary if it was patched
+        if (clientPatched) {
+          try {
+            logger.info("Restoring original client binary...");
+            restoreClientBinary(client);
+            logger.info("Original client binary restored");
+          } catch (e) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logger.error("Failed to restore client binary:", msg);
+          }
         }
 
         callbacks?.onGameExited?.({ pid: child.pid ?? 0, code, signal });
