@@ -254,29 +254,39 @@ export const launchGame = async (
             ? null
             : "https://sessions.hytale.com";
 
-      // Critical for custom auth: pre-seed the game's JWKS cache with the custom provider's key.
-      // Without this, unpatched clients will fetch the official JWKS and reject our signatures.
-      if (accountType !== "premium") {
+      // Pre-seed the game's JWKS cache with BOTH custom and official keys.
+      // The game needs the custom key to verify our tokens, and the official key
+      // as a fallback. Butter Launcher seeds both into .jwks.json.
+      try {
+        const combinedKeys: any[] = [];
+
+        if (accountType !== "premium") {
+          const customJwks = await ensureCustomJwks({ forceRefresh: false });
+          if (customJwks && Array.isArray((customJwks as any).keys)) {
+            combinedKeys.push(...(customJwks as any).keys);
+          }
+        }
+
+        // Always include official JWKS so the game can verify official tokens too.
         try {
-          const jwks = await ensureCustomJwks({ forceRefresh: false });
-          if (jwks && Array.isArray((jwks as any).keys) && (jwks as any).keys.length) {
-            const jwksPath = join(userDir, ".jwks.json");
-            fs.writeFileSync(jwksPath, JSON.stringify(jwks), "utf8");
+          const officialJwks = await ensureOfficialJwks({ forceRefresh: false });
+          if (officialJwks && Array.isArray((officialJwks as any).keys)) {
+            for (const key of (officialJwks as any).keys) {
+              if (!combinedKeys.some((k) => k.kid === key.kid)) {
+                combinedKeys.push(key);
+              }
+            }
           }
         } catch {
           // ignore (best-effort)
         }
-      } else {
-        // Premium best-effort: seed official JWKS cache so offline can work without network.
-        try {
-          const jwks = await ensureOfficialJwks({ forceRefresh: false });
-          if (jwks && Array.isArray((jwks as any).keys) && (jwks as any).keys.length) {
-            const jwksPath = join(userDir, ".jwks.json");
-            fs.writeFileSync(jwksPath, JSON.stringify(jwks), "utf8");
-          }
-        } catch {
-          // ignore
+
+        if (combinedKeys.length > 0) {
+          const jwksPath = join(userDir, ".jwks.json");
+          fs.writeFileSync(jwksPath, JSON.stringify({ keys: combinedKeys }), "utf8");
         }
+      } catch {
+        // ignore (best-effort)
       }
 
       // Ensure we have an offline token cached; this allows true offline launches.
