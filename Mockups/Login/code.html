@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Arytale Launcher - Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&amp;family=JetBrains+Mono:wght@700&amp;family=Lexend:wght@800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "on-background": "#e1e2eb",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "on-secondary-fixed": "#2c0051",
+                        "on-primary-fixed-variant": "#004f54",
+                        "secondary-fixed": "#f0dbff",
+                        "surface-dim": "#10131a",
+                        "tertiary-fixed": "#6bff8f",
+                        "tertiary-container": "#63f789",
+                        "on-tertiary-fixed": "#002109",
+                        "on-tertiary-container": "#006f30",
+                        "surface-container-highest": "#32353c",
+                        "surface-container-high": "#272a31",
+                        "surface-container-lowest": "#0b0e14",
+                        "on-error": "#690005",
+                        "on-primary-container": "#006a71",
+                        "on-tertiary": "#003915",
+                        "on-secondary": "#490080",
+                        "surface-container-low": "#191c22",
+                        "nebula-glow": "hsla(280, 100%, 5%, 1)",
+                        "surface-container": "#1d2026",
+                        "surface": "#10131a",
+                        "void-bg": "#10131a",
+                        "on-secondary-container": "#d6a9ff",
+                        "primary-fixed": "#74f5ff",
+                        "error": "#ffb4ab",
+                        "primary-fixed-dim": "#00dbe7",
+                        "aurora-glow": "hsla(185, 100%, 10%, 1)",
+                        "tertiary-fixed-dim": "#4ae176",
+                        "on-surface-variant": "#b9cacb",
+                        "tertiary": "#e4ffe2",
+                        "background": "#10131a",
+                        "outline-variant": "#3a494b",
+                        "on-primary": "#00363a",
+                        "glass-surface": "rgba(29, 32, 38, 0.6)",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#363940",
+                        "secondary-container": "#6f00be",
+                        "error-container": "#93000a",
+                        "surface-tint": "#00dbe7",
+                        "primary-container": "#00f2ff",
+                        "surface-variant": "#32353c",
+                        "outline": "#849495",
+                        "on-tertiary-fixed-variant": "#005321",
+                        "on-primary-fixed": "#002022",
+                        "primary": "#e1fdff",
+                        "on-surface": "#e1e2eb",
+                        "secondary": "#ddb7ff",
+                        "inverse-on-surface": "#2e3037",
+                        "inverse-surface": "#e1e2eb",
+                        "inverse-primary": "#00696f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-margin": "32px",
+                        "container-padding": "40px",
+                        "sidebar-width": "280px",
+                        "element-gap": "16px",
+                        "play-bar-height": "120px"
+                    },
+                    "fontFamily": {
+                        "technical-label": [
+                            "JetBrains Mono"
+                        ],
+                        "display-hero": [
+                            "Lexend"
+                        ],
+                        "headline-lg": [
+                            "Lexend"
+                        ],
+                        "body-sm": [
+                            "Inter"
+                        ],
+                        "headline-md": [
+                            "Lexend"
+                        ],
+                        "body-lg": [
+                            "Inter"
+                        ]
+                    },
+                    "fontSize": {
+                        "technical-label": [
+                            "10px",
+                            {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.2em",
+                                "fontWeight": "700"
+                            }
+                        ],
+                        "display-hero": [
+                            "20vw",
+                            {
+                                "lineHeight": "1",
+                                "letterSpacing": "-0.05em",
+                                "fontWeight": "900"
+                            }
+                        ],
+                        "headline-lg": [
+                            "72px",
+                            {
+                                "lineHeight": "1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "900"
+                            }
+                        ],
+                        "body-sm": [
+                            "14px",
+                            {
+                                "lineHeight": "1.5",
+                                "fontWeight": "500"
+                            }
+                        ],
+                        "headline-md": [
+                            "24px",
+                            {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "800"
+                            }
+                        ],
+                        "body-lg": [
+                            "18px",
+                            {
+                                "lineHeight": "1.6",
+                                "fontWeight": "500"
+                            }
+                        ]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background-color: theme('colors.glass-surface');
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+            border-color: theme('colors.primary-container');
+        }
+        .btn-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 242, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 242, 255, 0); }
+        }
+        
+        /* Subtle holographic grid overlay for the void */
+        .holographic-grid {
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+        }
+
+        /* Subtle animated scanline */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to bottom, rgba(0, 242, 255, 0), rgba(0, 242, 255, 0.05) 50%, rgba(0, 242, 255, 0));
+            position: absolute;
+            top: -100px;
+            left: 0;
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes scan {
+            0% { top: -100px; }
+            100% { top: 100%; }
+        }
+
+        /* Simulating the character interaction light */
+        .interaction-glow {
+            position: absolute;
+            right: 35%; /* Adjust based on exact character hand position */
+            top: 50%;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.15) 0%, rgba(0, 242, 255, 0) 70%);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+            animation: breathe 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes breathe {
+            0% { transform: translate(50%, -50%) scale(0.8); opacity: 0.5; }
+            100% { transform: translate(50%, -50%) scale(1.2); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-sm h-screen w-screen overflow-hidden flex items-center justify-center relative select-none">
+<!-- Background Wrapper -->
+<div class="absolute inset-0 z-0">
+<!-- Background Image (The Void + Character) -->
+<div class="absolute inset-0 bg-cover bg-center bg-no-repeat" data-alt="A minimalist vast white void space with a stylized voxel or low-poly anime character standing on the right side, looking towards the left, evoking a virtual reality login environment similar to Sword Art Online." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAyYpCuL8z69JhgwNWmRqHjDI8H7ZsKr8XC70scEIiPDm8wmyzEI0SFJKlDEo0WgTs9tfdhfRk2xyqqMOaahGvR5ZvPK3nkPfLRc9uBoiSNF1DyHh7CsIe1ZMpyzRQ0fVpnJfD6WMkXDhR5ahfY0PNWNi7nLlPMggMrqVGi44FBWgb4dBw0RDEtd7NyRK2UtTiaNekqMxG7zwBzKTCX5OlEHBNUT77xm5YkNQZfhbSOCqKI3vslSPiy');"></div>
+<!-- Dark Mode Overlay for Contrast (Since design system is dark, we need to dim the white void slightly to make UI readable while keeping the aesthetic) -->
+<div class="absolute inset-0 bg-background/60"></div>
+<!-- Holographic Grid -->
+<div class="absolute inset-0 holographic-grid pointer-events-none"></div>
+<!-- Decorative Aurora Glow -->
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-aurora-glow/30 via-transparent to-nebula-glow/20 pointer-events-none mix-blend-screen"></div>
+<!-- Simulated Interaction Glow near character's hand -->
+<div class="interaction-glow"></div>
+<!-- Scanline Effect -->
+<div class="scanline"></div>
+</div>
+<!-- UI Container (Anchored left) -->
+<div class="relative z-20 w-full max-w-[1440px] px-container-padding flex items-center h-full justify-center">
+<!-- Login Panel -->
+<div class="w-full max-w-md glass-panel rounded-xl p-10 relative overflow-hidden group bg-background/60">
+<!-- Tech Accents -->
+<div class="absolute top-0 left-0 w-2 h-16 bg-primary-container"></div>
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary-container/50 to-transparent"></div>
+<div class="absolute bottom-0 right-0 w-16 h-[1px] bg-primary-container/30"></div>
+<div class="absolute bottom-0 right-0 w-[1px] h-16 bg-primary-container/30"></div>
+<!-- Corner Crosshairs -->
+<span class="absolute top-3 right-3 material-symbols-outlined text-[10px] text-primary-container/40">close</span>
+<span class="absolute bottom-3 left-3 material-symbols-outlined text-[10px] text-primary-container/40">add</span>
+<!-- Header -->
+<div class="flex flex-col items-center mb-8 text-center relative z-10">
+<div class="w-24 h-24 mb-6 relative">
+<!-- Subtle glow behind logo -->
+<div class="absolute inset-0 bg-primary-container/20 blur-xl rounded-full"></div>
+<img alt="Arytale Logo" class="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(0,242,255,0.3)]" src="https://lh3.googleusercontent.com/aida/AP1WRLu5Q_0TmVmP7jKjRLlJv4t2Zxe3ufIR2I4FdpWpEhRnv0BAefGy2-s2rGu_TJ6RnWIPoinfA6SNmDkf0dypDwHdoKvNNA-tsmjxSf4Oqj9b0Tpu2JH0w79GnEqAMAFYqog1nIUxAoyNgt3cGGEvxfJHLGxW71dZbwULx3hAKO6FJlXjOK-DRmdU3NB01yxqMxq9hWyd0TyrLPBD8M0xtt7Mn8rgsAvobi1lmhlMJdARHMZIYQXPfqOCg_E"/>
+</div>
+<h1 class="font-headline-md text-headline-md text-primary-fixed-dim uppercase tracking-wider mb-2">Link Start</h1>
+<p class="font-technical-label text-technical-label text-on-surface-variant/70 uppercase">Initialize NerveGear Authentication</p>
+</div>
+<!-- Form -->
+<form action="#" class="space-y-6 relative z-10" method="POST">
+<!-- System Status Indicator (Decorative) -->
+<div class="flex items-center gap-2 mb-4 justify-end">
+<span class="font-technical-label text-[8px] text-tertiary-fixed tracking-widest uppercase">System Online</span>
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></div>
+</div>
+<div class="space-y-4">
+<!-- Username Input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant/50 text-sm">person</span>
+</div>
+<input class="block w-full pl-10 pr-3 py-3 bg-white/5 border border-white/10 rounded-DEFAULT text-on-surface placeholder-on-surface-variant/40 font-technical-label text-xs tracking-wider uppercase transition-all duration-300 input-glow focus:ring-1 focus:ring-primary-container outline-none" id="username" name="username" placeholder="User ID" type="text"/>
+<!-- Decorative input accent -->
+<div class="absolute right-0 top-0 bottom-0 w-1 bg-white/5 rounded-r-DEFAULT pointer-events-none"></div>
+</div>
+<!-- Password Input -->
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-on-surface-variant/50 text-sm">lock</span>
+</div>
+<input class="block w-full pl-10 pr-10 py-3 bg-white/5 border border-white/10 rounded-DEFAULT text-on-surface placeholder-on-surface-variant/40 font-technical-label text-xs tracking-wider uppercase transition-all duration-300 input-glow focus:ring-1 focus:ring-primary-container outline-none" id="password" name="password" placeholder="Passcode" type="password"/>
+<!-- Decorative input accent -->
+<div class="absolute right-0 top-0 bottom-0 w-1 bg-white/5 rounded-r-DEFAULT pointer-events-none"></div>
+</div>
+</div>
+<!-- Action Button -->
+<div class="pt-2">
+<button class="w-full relative group overflow-hidden rounded-DEFAULT bg-primary-container/10 border border-primary-container/30 text-primary-fixed hover:text-surface-lowest hover:border-primary-container transition-all duration-300 btn-pulse" type="button">
+<!-- Hover background fill -->
+<div class="absolute inset-0 w-0 bg-primary-container transition-all duration-500 ease-out group-hover:w-full z-0"></div>
+<div class="relative z-10 flex items-center justify-center py-4 font-headline-md text-[18px] tracking-[0.1em] uppercase shadow-[0_0_20px_rgba(0,242,255,0.1)] group-hover:shadow-none">
+<span>Initialize</span>
+<span class="material-symbols-outlined ml-2 text-lg transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</div>
+</button>
+</div>
+<!-- Links -->
+<div class="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
+<a class="font-technical-label text-[10px] text-on-surface-variant/60 hover:text-primary-fixed transition-colors flex items-center gap-1 group uppercase tracking-widest" href="#">
+<span class="w-1 h-1 bg-on-surface-variant/60 rounded-full group-hover:bg-primary-fixed transition-colors"></span>
+                        Create Profile
+                    </a>
+<a class="font-technical-label text-[10px] text-on-surface-variant/60 hover:text-primary-fixed transition-colors flex items-center gap-1 group uppercase tracking-widest" href="#">
+                        Recovery
+                        <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+</a>
+</div>
+</form>
+<!-- Watermark / Small App Icon -->
+<div class="absolute -bottom-10 -right-10 w-40 h-40 opacity-[0.03] pointer-events-none mix-blend-overlay rotate-12">
+<img alt="Arytale Icon Mark" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AP1WRLsP5h0wn71klTpkWe5fDD5iqQQ2NGD8QrePo77UzmQF9UqTUOGl8sZQd5cCvUqDup4OXvsf7oCYjLMdwpkOg9aWH3bNtU9PJM-nOukiqXhfGfVbz-YrT5LhwL85WK2axW4szIkZ2beR-pZ2AUZ4JSrRsFnKoFc50GQDzZAi8gNuapLfIyPz41tHfSgzwvP3njgFLvPhXcWJuavSbTv_opI43GwR0UNwxseER0kz0NWsLNXGrqH39rdgCMw"/>
+</div>
+</div>
+<!-- Environmental Decorative Elements (Floating text/data left of panel) -->
+</div>
+</body></html>

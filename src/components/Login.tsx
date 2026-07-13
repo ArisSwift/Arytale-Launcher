@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useMemo, useRef, useState } from "react";
-import arytaleLoginBg from "../assets/arytale-login.jpeg";
+import arytaleLoginBg from "../assets/arytale-login.png";
 import arytaleLogo from "../assets/arytale-logo.png";
 import DragBar from "./DragBar";
 import { useTranslation } from "react-i18next";
