@@ -1067,13 +1067,18 @@ const Launcher: React.FC<{ onLogout?: () => void; hasCustomBg?: boolean }> = ({ 
 
     const onPatched = () => void refreshOnlinePatchHealth();
     const onUnpatched = () => void refreshOnlinePatchHealth();
+    const onPatchError = (_e: any, err: any) => {
+      console.error("[online-patch] error:", err);
+    };
 
     window.ipcRenderer.on("online-patch-finished", onPatched);
     window.ipcRenderer.on("online-unpatch-finished", onUnpatched);
+    window.ipcRenderer.on("online-patch-error", onPatchError);
 
     return () => {
       window.ipcRenderer.off("online-patch-finished", onPatched);
       window.ipcRenderer.off("online-unpatch-finished", onUnpatched);
+      window.ipcRenderer.off("online-patch-error", onPatchError);
     };
   }, [gameDir, refreshOnlinePatchHealth]);
 

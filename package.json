@@ -5,7 +5,7 @@
   "private": true,
   "license": "MIT",
   "version": "2.2.0",
-  "build_date": "ArytaleLauncher_07-12-2026",
+  "build_date": "ArytaleLauncher_07-13-2026",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {

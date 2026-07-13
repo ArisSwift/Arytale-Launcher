@@ -143,9 +143,10 @@
       "btnDisable": "Desactivar Patch",
       "btnUpdate": "Actualizar Patch",
       "notesNone": "No hay notas del patch para este build.",
-      "confirmTitle": "Online Patch",
-      "confirmCancel": "No parchear",
-      "confirmApply": "Parchear"
+      "confirmTitle": "¿Activar Online Patch?",
+      "confirmDescription": "Esto parcheará el cliente del juego antes de cada lanzamiento para conectarse a servidores personalizados. El archivo original se restaura automáticamente al cerrar el juego.",
+      "confirmCancel": "Cancelar",
+      "confirmApply": "Activar Patch"
     },
     "hytaleFeed": {
       "title": "Noticias de Hytale",

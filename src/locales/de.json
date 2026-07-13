@@ -88,9 +88,10 @@
       "btnDisable": "Patch deaktivieren",
       "btnUpdate": "Patch aktualisieren",
       "notesNone": "Keine Patch-Notizen für diesen Build gefunden.",
-      "confirmTitle": "Online-Patch",
-      "confirmCancel": "Nicht anwenden",
-      "confirmApply": "Anwenden"
+      "confirmTitle": "Online-Patch aktivieren?",
+      "confirmDescription": "Der Spieleclient wird vor jedem Start gepatcht, um eine Verbindung zu benutzerdefinierten Servern herzustellen. Die Originaldatei wird beim Schließen des Spiels automatisch wiederhergestellt.",
+      "confirmCancel": "Abbrechen",
+      "confirmApply": "Patch aktivieren"
     },
     "hytaleFeed": {
       "title": "Hytale-News",

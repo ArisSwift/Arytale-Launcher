@@ -5458,35 +5458,40 @@ ipcMain.on(
     const win = BrowserWindow.fromWebContents(e.sender);
     if (!win) return;
 
+    logger.info("[online-patch] enable IPC received", { gameDir, version });
+
     if (isGameRunning && runningGameBuildKey && runningGameBuildKey === buildKey(version)) {
+      logger.info("[online-patch] game is running, aborting");
       win.webContents.send("online-patch-error", { code: ErrorCodes.FILE_IN_USE });
       return;
     }
 
     const key = onlinePatchKey(gameDir, version);
     if (onlinePatchInFlight.has(key)) {
+      logger.info("[online-patch] already in-flight, aborting");
       win.webContents.send("online-patch-error", { code: ErrorCodes.OP_IN_PROGRESS });
       return;
     }
     onlinePatchInFlight.add(key);
 
-    // Flip UI into progress state immediately (hash checks can take a moment).
     win.webContents.send("online-patch-progress", {
       phase: "online-patch",
       percent: -1,
     });
 
     try {
+      logger.info("[online-patch] calling enableOnlinePatch...");
       const result = await enableOnlinePatch(
         gameDir,
         version,
         win,
         "online-patch-progress",
       );
+      logger.info("[online-patch] enableOnlinePatch returned", { result });
       win.webContents.send("online-patch-finished", result);
     } catch (err) {
       const code = mapErrorToCode(err, { area: "online-patch" });
-      logger.error("Online patch failed", { code }, err);
+      logger.error("[online-patch] enableOnlinePatch failed", { code, err });
       win.webContents.send("online-patch-error", { code });
     } finally {
       onlinePatchInFlight.delete(key);

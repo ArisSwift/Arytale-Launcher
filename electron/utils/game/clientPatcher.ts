@@ -1,44 +1,25 @@
 import fs from "fs";
-import path from "path";
 
 const CUSTOM_DOMAIN = "api.aris-swift.com";
 const ORIGINAL_DOMAIN = "hytale.com";
 
-/**
- * Convert a string to UTF-16LE byte array
- */
-function stringToUtf16le(str: string): Buffer {
-  const buf = Buffer.alloc(str.length * 2);
-  for (let i = 0; i < str.length; i++) {
-    buf.writeUInt16LE(str.charCodeAt(i), i * 2);
-  }
-  return buf;
-}
-
-/**
- * Find all occurrences of a UTF-16LE encoded string in a buffer
- */
 function findAllOccurrences(haystack: Buffer, needle: Buffer): number[] {
   const positions: number[] = [];
   const needleLen = needle.length;
-
   for (let i = 0; i <= haystack.length - needleLen; i++) {
     if (haystack.subarray(i, i + needleLen).equals(needle)) {
       positions.push(i);
     }
   }
-
   return positions;
 }
 
 /**
  * Patch the Hytale client binary to redirect auth traffic to a custom domain.
  *
- * This replaces all occurrences of "hytale.com" (UTF-16LE) in the binary
- * with the custom domain. The domain must be 4-16 characters.
- *
- * For domains ≤10 characters: direct replacement (padded with spaces)
- * For domains 11-16 characters: split mode (distributes across domain slots)
+ * Tries both UTF-8 (.NET assemblies) and UTF-16LE (native binaries).
+ * Finds full URL patterns (e.g. "sessions.hytale.com") and replaces them
+ * with the custom domain, padded with null bytes.
  */
 export function patchClientBinary(
   clientPath: string,
@@ -50,119 +31,64 @@ export function patchClientBinary(
     );
   }
 
-  // Note: Domain length >16 may not work with some game versions
-  // but we allow it as the user requested
-
-  const originalDomain = ORIGINAL_DOMAIN;
-
-  if (domain.length <= originalDomain.length) {
-    // Simple case: replacement is shorter or same length
-    return patchSimple(clientPath, originalDomain, domain);
-  } else {
-    // Replacement is longer - use split mode
-    return patchSplit(clientPath, originalDomain, domain);
-  }
-}
-
-/**
- * Simple patching for domains ≤10 characters.
- * Replaces "hytale.com" with the custom domain (padded with null bytes).
- */
-function patchSimple(
-  clientPath: string,
-  originalDomain: string,
-  customDomain: string,
-): { patched: boolean; backupPath: string; patchedPath: string } {
   const backupPath = clientPath + ".original";
-  const patchedPath = clientPath;
-
-  // Create backup if it doesn't exist
-  if (!fs.existsSync(backupPath)) {
-    fs.copyFileSync(clientPath, backupPath);
-  }
-
-  const data = fs.readFileSync(clientPath);
-  const originalBytes = stringToUtf16le(originalDomain);
-  const positions = findAllOccurrences(data, originalBytes);
-
-  if (positions.length === 0) {
-    return { patched: false, backupPath, patchedPath };
-  }
-
-  // Create patched data
-  const patched = Buffer.from(data);
-
-  for (const pos of positions) {
-    // Write custom domain
-    const customBytes = stringToUtf16le(customDomain);
-    customBytes.copy(patched, pos, 0, Math.min(customBytes.length, originalBytes.length));
-
-    // Pad with spaces if custom domain is shorter
-    if (customBytes.length < originalBytes.length) {
-      const padding = Buffer.alloc(
-        originalBytes.length - customBytes.length,
-        0x20,
-      ); // space character
-      padding.copy(patched, pos + customBytes.length);
-    }
-  }
-
-  fs.writeFileSync(patchedPath, patched);
-  return { patched: true, backupPath, patchedPath };
-}
-
-/**
- * Split patching for domains 11-16 characters.
- * Distributes the domain across the subdomain prefix and main domain slots.
- */
-function patchSplit(
-  clientPath: string,
-  originalDomain: string,
-  customDomain: string,
-): { patched: boolean; backupPath: string; patchedPath: string } {
-  const backupPath = clientPath + ".original";
-  const patchedPath = clientPath;
-
-  // Create backup if it doesn't exist
   if (!fs.existsSync(backupPath)) {
     fs.copyFileSync(clientPath, backupPath);
   }
 
   const data = fs.readFileSync(clientPath);
 
-  // Find all full URLs containing hytale.com
-  // The binary contains strings like "sessions.hytale.com", "account-data.hytale.com", etc.
-  // We need to find these full domain strings and replace them
-
-  // First, try to find common patterns
   const patterns = [
     "sessions.hytale.com",
     "account-data.hytale.com",
+    "api.hytale.com",
     "telemetry.hytale.com",
     "hytale.com",
   ];
 
+  // Try UTF-8 first (.NET assemblies store strings as UTF-8 in #Strings heap)
+  const utf8Result = patchWithEncoding(data, patterns, domain, "utf8");
+  if (utf8Result.anyPatched) {
+    fs.writeFileSync(clientPath, utf8Result.patched);
+    return { patched: true, backupPath, patchedPath: clientPath };
+  }
+
+  // Fall back to UTF-16LE (native binaries)
+  const utf16Result = patchWithEncoding(data, patterns, domain, "utf16le");
+  if (utf16Result.anyPatched) {
+    fs.writeFileSync(clientPath, utf16Result.patched);
+    return { patched: true, backupPath, patchedPath: clientPath };
+  }
+
+  return { patched: false, backupPath, patchedPath: clientPath };
+}
+
+function patchWithEncoding(
+  data: Buffer,
+  patterns: string[],
+  domain: string,
+  encoding: "utf8" | "utf16le",
+): { patched: boolean; patched: Buffer } {
   let patched = Buffer.from(data);
   let anyPatched = false;
 
   for (const pattern of patterns) {
-    const patternBytes = stringToUtf16le(pattern);
+    const patternBytes =
+      encoding === "utf8"
+        ? Buffer.from(pattern, "utf-8")
+        : Buffer.from(pattern, "utf16le");
+
     const positions = findAllOccurrences(patched, patternBytes);
 
     for (const pos of positions) {
-      // For split mode, we distribute the custom domain across the available space
-      // The pattern is: subdomain.domain.tld
-      // We replace with: custom.domain (single endpoint)
+      const customBytes =
+        encoding === "utf8"
+          ? Buffer.from(domain, "utf-8")
+          : Buffer.from(domain, "utf16le");
 
-      // Calculate how much space we have
-      const availableBytes = patternBytes.length;
-      const customBytes = stringToUtf16le(customDomain);
-
-      if (customBytes.length <= availableBytes) {
-        // Custom domain fits - write it and pad with null bytes
+      if (customBytes.length <= patternBytes.length) {
         customBytes.copy(patched, pos);
-        // Fill remaining space with null bytes
-        for (let i = customBytes.length; i < availableBytes; i++) {
+        for (let i = customBytes.length; i < patternBytes.length; i++) {
           patched[pos + i] = 0x00;
         }
         anyPatched = true;
@@ -170,12 +96,7 @@ function patchSplit(
     }
   }
 
-  if (!anyPatched) {
-    return { patched: false, backupPath, patchedPath };
-  }
-
-  fs.writeFileSync(patchedPath, patched);
-  return { patched: true, backupPath, patchedPath };
+  return { patched: anyPatched, patched };
 }
 
 /**
@@ -205,10 +126,15 @@ export function isClientPatched(
   }
 
   const data = fs.readFileSync(clientPath);
-  const domainBytes = stringToUtf16le(domain);
-  const positions = findAllOccurrences(data, domainBytes);
 
-  return positions.length > 0;
+  // Check both encodings
+  const utf8Bytes = Buffer.from(domain, "utf-8");
+  if (findAllOccurrences(data, utf8Bytes).length > 0) return true;
+
+  const utf16Bytes = Buffer.from(domain, "utf16le");
+  if (findAllOccurrences(data, utf16Bytes).length > 0) return true;
+
+  return false;
 }
 
 /**
